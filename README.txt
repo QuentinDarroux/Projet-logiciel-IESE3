@@ -1,1 +1,1 @@
-ce fichier est un fichier text
+ce fichier est un fichier test
