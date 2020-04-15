@@ -30,6 +30,10 @@ sert à fusionner le répertoire en ligne avec le répertoire git locale
 
 suprimme *fichier* du répertoire git locale
 
+`git push origin --delete branche`
+
+sert à suprimmer la branche *branche*
+
 1 - DEMARAGE
  
 0) installer GitHub
