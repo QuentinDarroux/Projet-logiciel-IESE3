@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #define MAX_NOM 30
+#define MAX_REP 4
 
 typedef struct {
 	int		etat;	/*0-->écurie  1-->tour du plateau  2-->centre du plateau*/
@@ -17,11 +18,12 @@ typedef struct {
 	int etat;		/*0 si inactif, 1 si actif*/
 } JOUEUR;
 
-void test_alea(int taille_tab,int min, int max);
-int jet();	/*cette fonction simule le jet d'un dé à 6 faces*/
-void petits_chevaux_2_joueurs(char* nom1, char* nom2);
-void petits_chevaux_3_joueurs(char* nom1, char* nom2, char* nom3);
-void petits_chevaux_4_joueurs(char* nom1, char* nom2, char* nom3, char* nom4);
+void	test_alea(int taille_tab,int min, int max);
+int		jet();	/*cette fonction simule le jet d'un dé à 6 faces*/
+void	bouger_pion(JOUEUR joueur, PION pion, int de);
+void	petits_chevaux_2_joueurs(char* nom1, char* nom2);
+void	petits_chevaux_3_joueurs(char* nom1, char* nom2, char* nom3);
+void	petits_chevaux_4_joueurs(char* nom1, char* nom2, char* nom3, char* nom4);
 
 int main()
 {
@@ -110,13 +112,22 @@ int jet()
 	return 1+rand()*6.0/(RAND_MAX+1.0);
 }
 
+void	bouger_pion(JOUEUR joueur,PION pion, int de)
+{
+	int nouv_case=pion.case_tour+de;
+	
+	}
+}
+
 void petits_chevaux_2_joueurs(char* nom1, char* nom2)
 {
 	/*initialisation des variables*/
 
 	int		fin=1;	/*cette variable sera passé à 0 lorsque quelqu'un aura gagné*/
 	int		de;
-	char	rep_sortir_pion[4];
+	char	rep_sortir_pion[MAX_REP];
+	char	rep_bouger_pion[MAX_REP];
+	char	rep_avancer_pion[MAX_REP];
 
 	/*initialisation des joueurs*/
 
@@ -153,8 +164,8 @@ void petits_chevaux_2_joueurs(char* nom1, char* nom2)
 		
 		de=jet();
 
-		if(j1.etat==1){
-			if((j1.p1.etat==0)&&(j1.etat==1)){
+		if(j1.etat){
+			if((j1.p1.etat==0)&&(j1.etat)){
 				if(de==6){
 					do{
 						printf("voulez vous sortir le pion 1 (oui ou non) ? ");
@@ -179,7 +190,7 @@ void petits_chevaux_2_joueurs(char* nom1, char* nom2)
 					}
 				}
 			}
-			if((j1.p2.etat==0)&&(j1.etat==1)){
+			if((j1.p2.etat==0)&&(j1.etat)){
 				if(de==6){
 					do{
 						printf("voulez vous sortir le pion 2 (oui ou non) ? ");
@@ -203,14 +214,228 @@ void petits_chevaux_2_joueurs(char* nom1, char* nom2)
 					}
 				}
 			}
-			
 
+			if((j1.p1.etat==1)&&(j1.etat)){
+				do{
+					printf("voulez vous bouger le pion 1 (oui ou non) ? ");
+					scanf("%s",rep_bouger_pion);
+				} while((strcmp(rep_sortir_pion,"oui"))||(strcmp(rep_sortir_pion,"non")));
+				if(!strcmp(rep_sortir_pion,"oui")){
+					while(de==6){
+						bouger_pion(j1,j1.p1,de);
+					}
+					bouger_pion(j1,j1.p1,de);
+					j1.etat=0;
+				}
+				if(!strcmp(rep_sortir_pion,"non")){
+					printf("vous avez choisit de ne pas bouger le pion 1");
+				}
+			}
+
+			if((j1.p2.etat==1)&&(j1.etat)){
+				do{
+					printf("voulez vous bouger le pion 2 (oui ou non) ? ");
+					scanf("%s",rep_bouger_pion);
+				} while((strcmp(rep_bouger_pion,"oui"))||(strcmp(rep_bouger_pion,"non")));
+				if(!strcmp(rep_bouger_pion,"oui")){
+					while(de==6){
+						bouger_pion(j1,j1.p2,de);
+					}
+					bouger_pion(j1,j1.p2,de);
+					j1.etat=0;
+				}
+				if(!strcmp(rep_bouger_pion,"non")){
+					printf("vous avez choisit de ne pas bouger le pion 2");
+				}
+			}
+
+			if((j1.p1.etat==2)&&(j1.etat)){
+				if((de==1)&&(j1.p1.case_centre==0)){
+
+					do{
+					printf("voulez vous avancer le pion 1 (oui ou non) ? ");
+					scanf("%s",rep_avancer_pion);
+					} while((strcmp(rep_avancer_pion,"oui"))||(strcmp(rep_avancer_pion,"non")));
+
+					if(!strcmp(rep_acancer_pion,"oui")){
+						j1.p1.case_centre=de;
+						j1.etat=0;
+					}
+					if(!strcmp(rep_acancer_pion,"non")){
+						printf("vous avez choisit de ne pas avancer le pion 1")
+					}
+				}
+				if((de==2)&&(j1.p1.case_centre==1)){
+					do{
+					printf("voulez vous avancer le pion 1 (oui ou non) ? ");
+					scanf("%s",rep_avancer_pion);
+					} while((strcmp(rep_avancer_pion,"oui"))||(strcmp(rep_avancer_pion,"non")));
+
+					if(!strcmp(rep_acancer_pion,"oui")){
+						j1.p1.case_centre=de;
+						j1.etat=0;
+					}
+					if(!strcmp(rep_acancer_pion,"non")){
+						printf("vous avez choisit de ne pas avancer le pion 1")
+					}
+				}
+				if((de==3)&&(j1.p1.case_centre==2)){
+					do{
+					printf("voulez vous avancer le pion 1 (oui ou non) ? ");
+					scanf("%s",rep_avancer_pion);
+					} while((strcmp(rep_avancer_pion,"oui"))||(strcmp(rep_avancer_pion,"non")));
+
+					if(!strcmp(rep_acancer_pion,"oui")){
+						j1.p1.case_centre=de;
+						j1.etat=0;
+					}
+					if(!strcmp(rep_acancer_pion,"non")){
+						printf("vous avez choisit de ne pas avancer le pion 1")
+					}
+				}
+				if((de==4)&&(j1.p1.case_centre==3)){
+					do{
+					printf("voulez vous avancer le pion 1 (oui ou non) ? ");
+					scanf("%s",rep_avancer_pion);
+					} while((strcmp(rep_avancer_pion,"oui"))||(strcmp(rep_avancer_pion,"non")));
+
+					if(!strcmp(rep_acancer_pion,"oui")){
+						j1.p1.case_centre=de;
+						j1.etat=0;
+					}
+					if(!strcmp(rep_acancer_pion,"non")){
+						printf("vous avez choisit de ne pas avancer le pion 1")
+					}
+				}
+				if((de==5)&&(j1.p1.case_centre==4)){
+					do{
+					printf("voulez vous avancer le pion 1 (oui ou non) ? ");
+					scanf("%s",rep_avancer_pion);
+					} while((strcmp(rep_avancer_pion,"oui"))||(strcmp(rep_avancer_pion,"non")));
+
+					if(!strcmp(rep_acancer_pion,"oui")){
+						j1.p1.case_centre=de;
+						j1.etat=0;
+					}
+					if(!strcmp(rep_acancer_pion,"non")){
+						printf("vous avez choisit de ne pas avancer le pion 1")
+					}
+				}
+				if((de==6)&&(j1.p1.case_centre==5)){
+					do{
+					printf("voulez vous avancer le pion 1 (oui ou non) ? ");
+					scanf("%s",rep_avancer_pion);
+					} while((strcmp(rep_avancer_pion,"oui"))||(strcmp(rep_avancer_pion,"non")));
+
+					if(!strcmp(rep_acancer_pion,"oui")){
+						j1.p1.case_centre=de;
+						j1.etat=0;
+					}
+					if(!strcmp(rep_acancer_pion,"non")){
+						printf("vous avez choisit de ne pas avancer le pion 1")
+					}
+				}
+			}
+
+			if((j1.p2.etat==2)&&(j1.etat)){
+				if((de==1)&&(j1.p2.case_centre==0)){
+					do{
+					printf("voulez vous avancer le pion 2 (oui ou non) ? ");
+					scanf("%s",rep_avancer_pion);
+					} while((strcmp(rep_avancer_pion,"oui"))||(strcmp(rep_avancer_pion,"non")));
+
+					if(!strcmp(rep_acancer_pion,"oui")){
+						j1.p2.case_centre=de;
+						j1.etat=0;
+					}
+					if(!strcmp(rep_acancer_pion,"non")){
+						printf("vous avez choisit de ne pas avancer le pion 2")
+					}
+				}
+				if((de==2)&&(j1.p2.case_centre==1)){
+					do{
+					printf("voulez vous avancer le pion 2 (oui ou non) ? ");
+					scanf("%s",rep_avancer_pion);
+					} while((strcmp(rep_avancer_pion,"oui"))||(strcmp(rep_avancer_pion,"non")));
+
+					if(!strcmp(rep_acancer_pion,"oui")){
+						j1.p2.case_centre=de;
+						j1.etat=0;
+					}
+					if(!strcmp(rep_acancer_pion,"non")){
+						printf("vous avez choisit de ne pas avancer le pion 2")
+					}
+				}
+				if((de==3)&&(j1.p2.case_centre==2)){
+					do{
+					printf("voulez vous avancer le pion 2 (oui ou non) ? ");
+					scanf("%s",rep_avancer_pion);
+					} while((strcmp(rep_avancer_pion,"oui"))||(strcmp(rep_avancer_pion,"non")));
+
+					if(!strcmp(rep_acancer_pion,"oui")){
+						j1.p2.case_centre=de;
+						j1.etat=0;
+					}
+					if(!strcmp(rep_acancer_pion,"non")){
+						printf("vous avez choisit de ne pas avancer le pion 2")
+					}
+				}
+				if((de==4)&&(j1.p2.case_centre==3)){
+					do{
+					printf("voulez vous avancer le pion 2 (oui ou non) ? ");
+					scanf("%s",rep_avancer_pion);
+					} while((strcmp(rep_avancer_pion,"oui"))||(strcmp(rep_avancer_pion,"non")));
+
+					if(!strcmp(rep_acancer_pion,"oui")){
+						j1.p2.case_centre=de;
+						j1.etat=0;
+					}
+					if(!strcmp(rep_acancer_pion,"non")){
+						printf("vous avez choisit de ne pas avancer le pion 2")
+					}
+				}
+				if((de==5)&&(j1.p2.case_centre==4)){
+					do{
+					printf("voulez vous avancer le pion 2 (oui ou non) ? ");
+					scanf("%s",rep_avancer_pion);
+					} while((strcmp(rep_avancer_pion,"oui"))||(strcmp(rep_avancer_pion,"non")));
+
+					if(!strcmp(rep_acancer_pion,"oui")){
+						j1.p2.case_centre=de;
+						j1.etat=0;
+					}
+					if(!strcmp(rep_acancer_pion,"non")){
+						printf("vous avez choisit de ne pas avancer le pion 2")
+					}
+				}
+				if((de==6)&&(j1.p2.case_centre==5)){
+					do{
+					printf("voulez vous avancer le pion 2 (oui ou non) ? ");
+					scanf("%s",rep_avancer_pion);
+					} while((strcmp(rep_avancer_pion,"oui"))||(strcmp(rep_avancer_pion,"non")));
+
+					if(!strcmp(rep_acancer_pion,"oui")){
+						j1.p2.case_centre=de;
+						j1.etat=0;
+					}
+					if(!strcmp(rep_acancer_pion,"non")){
+						printf("vous avez choisit de ne pas avancer le pion 2")
+					}
+				}
+			}
+
+			if((j1.p1.case_centre==6)&&(j1.p2.case_centre==6)) fin=0;
 
 			j1.etat=0;
 			j2.etat=1;
 		}
 
+		if(fin==0) break;
+
 		else{
+
+			if((j2.p1.case_centre==6)&&(j2.p2.case_centre==6)) fin=0;
+
 			j2.etat=0;
 			j1.etat=1;
 		}
