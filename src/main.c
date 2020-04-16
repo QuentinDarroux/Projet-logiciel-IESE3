@@ -8,7 +8,7 @@
 #define MAX_JOUEURS 4
 
 typedef struct {
-	int		etat;						/*0-->écurie  1-->tour du plateau  2-->centre du plateau*/
+	int		etat;						/*0-->ecurie  1-->tour du plateau  2-->centre du plateau*/
 	int		tour;						/*emplacement entre 0 et 57*/
 	int		centre;						/*emplacement entre 0 et 6*/
 	int		d[TAILLE_LISTE_DRAPEAUX];	/*liste de drapeaux qui permet de connaître*/
@@ -18,8 +18,8 @@ typedef struct {
 typedef struct {
 	char nom[MAX_NOM];	/*le nom du joueur*/
 	PION p[2];			/*les 2 pion du joueur*/
-	int depart;			/*la case de départ des pions du joueur à la sortie de l'écurie*/
-	int arrivee;		/*la case d'arrivée des pions du joueur à l'entrée du centre du plateau*/
+	int depart;			/*la case de départ des pions du joueur a la sortie de l'écurie*/
+	int arrivee;		/*la case d'arrivee des pions du joueur a l'entrée du centre du plateau*/
 	int etat;			/*1 si actif, 0 sinon*/
 } JOUEUR;
 
@@ -68,7 +68,7 @@ int main()
 		scanf("%s",j[i].nom);
 	}
 
-	/*tous les pion sont placés dans l'écurie et les drapeaux sont mient à 0*/
+	/*tous les pion sont places dans l'ecurie et les drapeaux sont mient à 0*/
 
 	for(i=0;i<nb_joueurs;i++){
 		for(k=0;k<2;k++){
@@ -83,7 +83,7 @@ int main()
 
 	petits_chevaux(nb_joueurs,j);
 
-	/*suppression des fichier d'exécution temporaire*/
+	/*suppression des fichier d'execution*/
 
 	remove("exe/code");
 	remove("exe/main.o");
@@ -93,27 +93,27 @@ int main()
 
 int jet()
 {
-	/*cette fonction simule le jet d'un dé à 6 faces*/
+	/*cette fonction simule le jet d'un de a 6 faces*/
 	return 1+rand()*6.0/(RAND_MAX+1.0);
 }
 
 void	liste_actions_possibles(JOUEUR *j, int num_j, int de){
 	if(j[num_j].p[0].etat==0){
-		if(de==6) j[num_j].p[0].d[0]=1;							/*le pion 1 peu sortir de l'écurie*/
+		if(de==6) j[num_j].p[0].d[0]=1;							/*le pion 1 peu sortir de l'ecurie*/
 		else j[num_j].p[0].d[3]=1;								/*le pion 1 ne peut pas bouger*/
 	}
-	if(j[num_j].p[0].etat==1) j[num_j].p[0].d[1]=1;				/*le pion 1 peu se déplacer autour du plateau*/
+	if(j[num_j].p[0].etat==1) j[num_j].p[0].d[1]=1;				/*le pion 1 peu se deplacer autour du plateau*/
 	if(j[num_j].p[0].etat==2){
-		if(j[num_j].p[0].centre==de-1) j[num_j].p[0].d[2]=1;	/*le pion 1 peu se déplacer au centre du plateua*/
+		if(j[num_j].p[0].centre==de-1) j[num_j].p[0].d[2]=1;	/*le pion 1 peu se deplacer au centre du plateua*/
 		else j[num_j].p[0].d[3]=1;								/*le pion 1 ne peut pas bouger*/
 	}
 	if(j[num_j].p[1].etat==0){
-		if(de==6) j[num_j].p[1].d[0]=1;							/*le pion 2 peu sortir de l'écurie*/
+		if(de==6) j[num_j].p[1].d[0]=1;							/*le pion 2 peu sortir de l'ecurie*/
 		else j[num_j].p[1].d[3]=1;								/*le pion 2 ne peut pas bouger*/
 	}
-	if(j[num_j].p[1].etat==1) j[num_j].p[1].d[1]=1;				/*le pion 2 peu se déplacer autour du plateau*/
+	if(j[num_j].p[1].etat==1) j[num_j].p[1].d[1]=1;				/*le pion 2 peu se deplacer autour du plateau*/
 	if(j[num_j].p[1].etat==2){
-		if(j[num_j].p[1].centre==de-1) j[num_j].p[1].d[2]=1;	/*le pion 2 peu se déplacer au centre du plateua*/
+		if(j[num_j].p[1].centre==de-1) j[num_j].p[1].d[2]=1;	/*le pion 2 peu se deplacer au centre du plateua*/
 		else j[num_j].p[1].d[3]=1;								/*le pion 2 ne peut pas bouger*/
 	}
 }
@@ -122,8 +122,12 @@ void	sortir(JOUEUR *j, int nb_joueurs, int num_j, int num_p)
 {
 	int i,k;
 
+	/*on sort le pion*/
+
 	j[num_j].p[num_p].etat=1;
 	j[num_j].p[num_p].tour=j[num_j].depart;
+
+	/*on verifie si le pion doit manger un pion en sortant*/
 
 	for(i=0;i<nb_joueurs;i++){
 		if(i==num_j) continue;
@@ -132,7 +136,7 @@ void	sortir(JOUEUR *j, int nb_joueurs, int num_j, int num_p)
 				if(j[i].p[k].tour==j[num_j].depart){
 					j[i].p[k].tour=0;
 					j[i].p[k].etat=0;
-					printf("\nle pion %d de %s s'est fait mangé\n",k,j[i].nom);
+					printf("\nle pion %d de %s s'est fait mange\n",k,j[i].nom);
 				}
 			}
 		}
@@ -167,7 +171,7 @@ void	tour(JOUEUR *j, int nb_joueurs, int num_j, int num_p, int de)
 				if(ecart<=de){
 					j[i].p[k].tour=0;
 					j[i].p[k].etat=0;
-					printf("\nle pion %d de %s s'est fait mangé\n",k,j[i].nom);
+					printf("\nle pion %d de %s s'est fait mange\n",k,j[i].nom);
 				}
 			}
 		}
@@ -184,10 +188,11 @@ void petits_chevaux(int nb_joueurs, JOUEUR *j)
 	/*initialisation des variables*/
 
 	int		i,k,o;	/*indices de compatge*/
+	int		stoper_partie=0;
 	int		de;
 	char	rep[MAX_REP];
 
-	i=0;		/*le joueur 1 commence*/
+	i=0;			/*le joueur 1 commence*/
 
 	while(1){
 
@@ -200,7 +205,7 @@ void petits_chevaux(int nb_joueurs, JOUEUR *j)
 				printf("\t%d : ",o+1);
 				switch(j[k].p[o].etat){
 					case 0:
-						printf("écurie\n");
+						printf("ecurie\n");
 						break;
 					case 1:
 						printf("case %d du tour\n",j[k].p[o].tour);
@@ -219,34 +224,31 @@ void petits_chevaux(int nb_joueurs, JOUEUR *j)
 
 		while(de==6){
 			liste_actions_possibles(j,i,de);
+			printf("vous pouvez :\n");
+			if(j[i].p[0].d[0]==1) printf("sortir_p1\n");
+			if(j[i].p[0].d[1]==1) printf("tour_p1\n");
+			if(j[i].p[0].d[2]==1) printf("centre_p1\n");
+			if(j[i].p[1].d[0]==1) printf("sortir_p2\n");
+			if(j[i].p[1].d[1]==1) printf("tour_p2\n");
+			if(j[i].p[1].d[2]==1) printf("centre_p2\n");
+			if((j[i].p[0].d[3]==1)&&(j[i].p[1].d[3]==1)) printf("rien faire, tapez ok\n");
+			printf("quitter tapez q\n");
+			do{
+				printf("que voulez vous faire ? ");
+				scanf("%s",rep);
+			} while(!((!strcmp(rep,"sortir_p1")&&(j[i].p[0].d[0]==1))||((!strcmp(rep,"tour_p1"))&&(j[i].p[0].d[1]==1))||((!strcmp(rep,"centre_p1"))&&(j[i].p[0].d[2]==1))||((!strcmp(rep,"sortir_p2"))&&(j[i].p[1].d[0]==1))||((!strcmp(rep,"tour_p2"))&&(j[i].p[1].d[1]==1))||((!strcmp(rep,"centre_p2"))&&(j[i].p[1].d[2]==1))||(!strcmp(rep,"ok")&&(j[i].p[0].d[3]==1)&&(j[i].p[1].d[3]==1))||(!strcmp(rep,"q"))));
 
-			if((j[i].p[0].d[3]==1)&&(j[i].p[1].d[3]==1)){
-				do{
-					printf("vous ne pouvez rien faire, tapez ok :  ");
-					scanf("%s",rep);
-				} while(strcmp(rep,"ok"));
-				printf("\n\n");
+			if((!strcmp(rep,"sortir_p1"))&&(j[i].p[0].d[0]==1))	sortir(j,nb_joueurs,i,0);
+			if((!strcmp(rep,"tour_p1"))&&(j[i].p[0].d[1]==1))	tour(j,nb_joueurs,i,0,de);
+			if((!strcmp(rep,"centre_p1"))&&(j[i].p[0].d[2]==1))	centre(j,nb_joueurs,i,0,de);
+			if((!strcmp(rep,"sortir_p2"))&&(j[i].p[1].d[0]==1))	sortir(j,nb_joueurs,i,1);
+			if((!strcmp(rep,"tour_p2"))&&(j[i].p[1].d[1]==1))	tour(j,nb_joueurs,i,1,de);
+			if((!strcmp(rep,"centre_p2"))&&(j[i].p[1].d[2]==1))	centre(j,nb_joueurs,i,1,de);
+			if(!strcmp(rep,"q")){
+				stoper_partie=1;
+				break;	
 			}
-			else{
-				printf("vous pouvez :\n");
-				if(j[i].p[0].d[0]==1) printf("sortir_p1\n");
-				if(j[i].p[0].d[1]==1) printf("tour_p1\n");
-				if(j[i].p[0].d[2]==1) printf("centre_p1\n");
-				if(j[i].p[1].d[0]==1) printf("sortir_p2\n");
-				if(j[i].p[1].d[1]==1) printf("tour_p2\n");
-				if(j[i].p[1].d[2]==1) printf("centre_p2\n");
-				do{
-					printf("que voulez vous faire ? ");
-					scanf("%s",rep);
-				} while(!((!strcmp(rep,"sortir_p1")&&(j[i].p[0].d[0]==1))||((!strcmp(rep,"tour_p1"))&&(j[i].p[0].d[1]==1))||((!strcmp(rep,"centre_p1"))&&(j[i].p[0].d[2]==1))||((!strcmp(rep,"sortir_p2"))&&(j[i].p[1].d[0]==1))||((!strcmp(rep,"tour_p2"))&&(j[i].p[1].d[1]==1))||((!strcmp(rep,"centre_p2"))&&(j[i].p[1].d[2]==1))));
-
-				if((!strcmp(rep,"sortir_p1"))&&(j[i].p[0].d[0]==1))	sortir(j,nb_joueurs,i,0);
-				if((!strcmp(rep,"tour_p1"))&&(j[i].p[0].d[1]==1))	tour(j,nb_joueurs,i,0,de);
-				if((!strcmp(rep,"centre_p1"))&&(j[i].p[0].d[2]==1))	centre(j,nb_joueurs,i,0,de);
-				if((!strcmp(rep,"sortir_p2"))&&(j[i].p[1].d[0]==1))	sortir(j,nb_joueurs,i,1);
-				if((!strcmp(rep,"tour_p2"))&&(j[i].p[1].d[1]==1))	tour(j,nb_joueurs,i,1,de);
-				if((!strcmp(rep,"centre_p2"))&&(j[i].p[1].d[2]==1))	centre(j,nb_joueurs,i,1,de);
-			}
+			
 			for(k=0;k<2;k++){
 				for(o=0;o<4;o++) j[i].p[k].d[o]=0;
 			}
@@ -276,34 +278,33 @@ void petits_chevaux(int nb_joueurs, JOUEUR *j)
 			printf("\ntour de %s\njet : %d\n\n",j[i].nom,de);
 		}
 
-		liste_actions_possibles(j,i,de);
-		if((j[i].p[0].d[3]==1)&&(j[i].p[1].d[3]==1)){
-			do{
-				printf("vous ne pouvez rien faire, tapez ok : ");
-				scanf("%s",rep);
-			} while(strcmp(rep,"ok"));
-			printf("\n\n");
-		}
-		else{
-			printf("vous pouvez :\n");
-			if(j[i].p[0].d[0]==1) printf("sortir_p1\n");
-			if(j[i].p[0].d[1]==1) printf("tour_p1\n");
-			if(j[i].p[0].d[2]==1) printf("centre_p1\n");
-			if(j[i].p[1].d[0]==1) printf("sortir_p2\n");
-			if(j[i].p[1].d[1]==1) printf("tour_p2\n");
-			if(j[i].p[1].d[2]==1) printf("centre_p2\n");
-			do{
-				printf("que voulez vous faire ? ");
-				scanf("%s",rep);
-			} while(!((!strcmp(rep,"sortir_p1")&&(j[i].p[0].d[0]==1))||((!strcmp(rep,"tour_p1"))&&(j[i].p[0].d[1]==1))||((!strcmp(rep,"centre_p1"))&&(j[i].p[0].d[2]==1))||((!strcmp(rep,"sortir_p2"))&&(j[i].p[1].d[0]==1))||((!strcmp(rep,"tour_p2"))&&(j[i].p[1].d[1]==1))||((!strcmp(rep,"centre_p2"))&&(j[i].p[1].d[2]==1))));
+		if(stoper_partie) break;
 
-			if((!strcmp(rep,"sortir_p1"))&&(j[i].p[0].d[0]==1))	sortir(j,nb_joueurs,i,0);
-			if((!strcmp(rep,"tour_p1"))&&(j[i].p[0].d[1]==1))	tour(j,nb_joueurs,i,0,de);
-			if((!strcmp(rep,"centre_p1"))&&(j[i].p[0].d[2]==1))	centre(j,nb_joueurs,i,0,de);
-			if((!strcmp(rep,"sortir_p2"))&&(j[i].p[1].d[0]==1))	sortir(j,nb_joueurs,i,1);
-			if((!strcmp(rep,"tour_p2"))&&(j[i].p[1].d[1]==1))	tour(j,nb_joueurs,i,1,de);
-			if((!strcmp(rep,"centre_p2"))&&(j[i].p[1].d[2]==1))	centre(j,nb_joueurs,i,1,de);
-		}
+		liste_actions_possibles(j,i,de);
+		printf("vous pouvez :\n");
+		if(j[i].p[0].d[0]==1) printf("sortir_p1\n");
+		if(j[i].p[0].d[1]==1) printf("tour_p1\n");
+		if(j[i].p[0].d[2]==1) printf("centre_p1\n");
+		if(j[i].p[1].d[0]==1) printf("sortir_p2\n");
+		if(j[i].p[1].d[1]==1) printf("tour_p2\n");
+		if(j[i].p[1].d[2]==1) printf("centre_p2\n");
+		if((j[i].p[0].d[3]==1)&&(j[i].p[1].d[3]==1)) printf("rien faire, tapez ok\n");
+		printf("quitter tapez q\n");
+		do{
+			printf("que voulez vous faire ? ");
+			scanf("%s",rep);
+		} while(!((!strcmp(rep,"sortir_p1")&&(j[i].p[0].d[0]==1))||((!strcmp(rep,"tour_p1"))&&(j[i].p[0].d[1]==1))||((!strcmp(rep,"centre_p1"))&&(j[i].p[0].d[2]==1))||((!strcmp(rep,"sortir_p2"))&&(j[i].p[1].d[0]==1))||((!strcmp(rep,"tour_p2"))&&(j[i].p[1].d[1]==1))||((!strcmp(rep,"centre_p2"))&&(j[i].p[1].d[2]==1))||(!strcmp(rep,"ok")&&(j[i].p[0].d[3]==1)&&(j[i].p[1].d[3]==1))||(!strcmp(rep,"q"))));
+
+		if((!strcmp(rep,"sortir_p1"))&&(j[i].p[0].d[0]==1))	sortir(j,nb_joueurs,i,0);
+		if((!strcmp(rep,"tour_p1"))&&(j[i].p[0].d[1]==1))	tour(j,nb_joueurs,i,0,de);
+		if((!strcmp(rep,"centre_p1"))&&(j[i].p[0].d[2]==1))	centre(j,nb_joueurs,i,0,de);
+		if((!strcmp(rep,"sortir_p2"))&&(j[i].p[1].d[0]==1))	sortir(j,nb_joueurs,i,1);
+		if((!strcmp(rep,"tour_p2"))&&(j[i].p[1].d[1]==1))	tour(j,nb_joueurs,i,1,de);
+		if((!strcmp(rep,"centre_p2"))&&(j[i].p[1].d[2]==1))	centre(j,nb_joueurs,i,1,de);
+		if(!strcmp(rep,"q")){
+				stoper_partie=1;
+				break;	
+			}
 
 		j[i].etat=0;
 		for(k=0;k<2;k++){
@@ -316,6 +317,9 @@ void petits_chevaux(int nb_joueurs, JOUEUR *j)
 		if(i==nb_joueurs) i=0;
 	}
 
-	printf("\n");
-	printf("%s a gagné\n",j[i].nom);
+	if(stoper_partie) printf("partie stopee\n");
+	else{
+		printf("\n");
+		printf("%s a gagne\n",j[i].nom);
+	}
 }
