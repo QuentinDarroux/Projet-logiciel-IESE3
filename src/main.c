@@ -258,6 +258,7 @@ void petits_chevaux(int nb_joueurs, JOUEUR *j)
 					}
 				}
 			}
+			printf("jet : %d\n",de);
 		}
 
 		liste_actions_possibles(j,i,de);
