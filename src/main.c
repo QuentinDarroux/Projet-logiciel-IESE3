@@ -221,8 +221,8 @@ void petits_chevaux(int nb_joueurs, JOUEUR *j)
 				if(j[i].p[1].d[1]==1) printf("tour_p2\n");
 				if(j[i].p[1].d[2]==1) printf("centre_p2\n");
 				do{
-				printf("que voulez vous faire ? ");
-				scanf("%s",rep);
+					printf("que voulez vous faire ? ");
+					scanf("%s",rep);
 				} while(!((!strcmp(rep,"sortir_p1")&&(j[i].p[0].d[0]==1))||((!strcmp(rep,"tour_p1"))&&(j[i].p[0].d[1]==1))||((!strcmp(rep,"centre_p1"))&&(j[i].p[0].d[2]==1))||((!strcmp(rep,"sortir_p2"))&&(j[i].p[1].d[0]==1))||((!strcmp(rep,"tour_p2"))&&(j[i].p[1].d[1]==1))||((!strcmp(rep,"centre_p2"))&&(j[i].p[1].d[2]==1))));
 
 				if((!strcmp(rep,"sortir_p1"))&&(j[i].p[0].d[0]==1))	sortir(j,nb_joueurs,i,0);
