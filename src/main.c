@@ -211,7 +211,13 @@ void petits_chevaux(int nb_joueurs, JOUEUR *j)
 		while(de==6){
 			liste_actions_possibles(j,i,de);
 
-			if((j[i].p[0].d[3]==1)&&(j[i].p[1].d[3]==1)) printf("vous ne pouvez rien faire\n\n");
+			if((j[i].p[0].d[3]==1)&&(j[i].p[1].d[3]==1)){
+				do{
+					printf("vous ne pouvez rien faire, tapez ok :  ");
+					scanf("%s",rep);
+				} while(strcmp(rep,"ok"));
+				printf("\n\n");
+			}
 			else{
 				printf("vous pouvez :\n");
 				if(j[i].p[0].d[0]==1) printf("sortir_p1\n");
@@ -258,11 +264,17 @@ void petits_chevaux(int nb_joueurs, JOUEUR *j)
 					}
 				}
 			}
-			printf("jet : %d\n",de);
+			printf("\ntour de %s\njet : %d\n\n",j[i].nom,de);
 		}
 
 		liste_actions_possibles(j,i,de);
-		if((j[i].p[0].d[3]==1)&&(j[i].p[1].d[3]==1)) printf("vous ne pouvez rien faire\n\n");
+		if((j[i].p[0].d[3]==1)&&(j[i].p[1].d[3]==1)){
+			do{
+				printf("vous ne pouvez rien faire, tapez ok : ");
+				scanf("%s",rep);
+			} while(strcmp(rep,"ok"));
+			printf("\n\n");
+		}
 		else{
 			printf("vous pouvez :\n");
 			if(j[i].p[0].d[0]==1) printf("sortir_p1\n");
