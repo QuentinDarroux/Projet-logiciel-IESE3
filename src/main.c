@@ -83,6 +83,11 @@ int main()
 
 	petits_chevaux(nb_joueurs,j);
 
+	/*suppression des fichier d'exécution temporaire*/
+
+	remove("exe/code");
+	remove("exe/main.o");
+
 	return 0;
 }
 
@@ -127,6 +132,7 @@ void	sortir(JOUEUR *j, int nb_joueurs, int num_j, int num_p)
 				if(j[i].p[k].tour==j[num_j].depart){
 					j[i].p[k].tour=0;
 					j[i].p[k].etat=0;
+					printf("\nle pion %d de %s s'est fait mangé\n",k,j[i].nom);
 				}
 			}
 		}
@@ -156,9 +162,12 @@ void	tour(JOUEUR *j, int nb_joueurs, int num_j, int num_p, int de)
 		if(i==num_j) continue;
 		else{
 			for(k=0;k<2;k++){
-				if((j[i].p[k].tour>case_actuelle)&&(j[i].p[k].tour<=nouv_case)){
+				if(j[i].p[k].tour>=case_actuelle) ecart=j[i].p[k].tour-case_actuelle;
+				else ecart=57-case_actuelle+j[i].p[k].tour;
+				if(ecart<=de){
 					j[i].p[k].tour=0;
 					j[i].p[k].etat=0;
+					printf("\nle pion %d de %s s'est fait mangé\n",k,j[i].nom);
 				}
 			}
 		}
