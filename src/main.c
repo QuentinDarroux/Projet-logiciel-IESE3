@@ -133,7 +133,7 @@ void	sortir(JOUEUR *j, int nb_joueurs, int num_j, int num_p)
 		if(i==num_j) continue;
 		else{
 			for(k=0;k<2;k++){
-				if(j[i].p[k].tour==j[num_j].depart){
+				if((j[i].p[k].tour==j[num_j].depart)&&(j[i].p[k].tour!=0)){
 					j[i].p[k].tour=0;
 					j[i].p[k].etat=0;
 					printf("\nle pion %d de %s s'est fait mange\n",k,j[i].nom);
@@ -158,7 +158,6 @@ void	tour(JOUEUR *j, int nb_joueurs, int num_j, int num_p, int de)
 	else{
 		if(ecart==de){
 			j[num_j].p[num_p].etat=2;
-			j[num_j].p[num_p].tour=0;
 		}
 		else j[num_j].p[num_p].tour=2*j[num_j].arrivee-case_actuelle-de;
 	}
@@ -168,7 +167,7 @@ void	tour(JOUEUR *j, int nb_joueurs, int num_j, int num_p, int de)
 			for(k=0;k<2;k++){
 				if(j[i].p[k].tour>=case_actuelle) ecart=j[i].p[k].tour-case_actuelle;
 				else ecart=57-case_actuelle+j[i].p[k].tour;
-				if(ecart<=de){
+				if((ecart<=de)&&(j[i].p[k].tour!=0)){
 					j[i].p[k].tour=0;
 					j[i].p[k].etat=0;
 					printf("\nle pion %d de %s s'est fait mange\n",k,j[i].nom);
@@ -181,6 +180,7 @@ void	tour(JOUEUR *j, int nb_joueurs, int num_j, int num_p, int de)
 void	centre(JOUEUR *j, int nb_joueurs, int num_j, int num_p, int de)
 {
 	if(j[num_j].p[num_p].centre==de-1) j[num_j].p[num_p].centre=de;
+	if(j[num_j].p[num_p].centre==1) j[num_j].p[nump_p].tour=0;
 }
 
 void petits_chevaux(int nb_joueurs, JOUEUR *j)
