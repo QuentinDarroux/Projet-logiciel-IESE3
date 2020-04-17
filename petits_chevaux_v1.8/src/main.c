@@ -10,28 +10,28 @@
 
 
 typedef struct {
-	int		etat;						/*0-->ecurie  1-->tour du plateau  2-->centre du plateau*/
-	int		tour;						/*emplacement entre 0 et 57*/
-	int		centre;						/*emplacement entre 0 et 6*/
+	int		etat;				/*0-->ecurie  1-->tour du plateau  2-->centre du plateau*/
+	int		tour;				/*emplacement entre 0 et 57*/
+	int		centre;				/*emplacement entre 0 et 6*/
 	int		d[TAILLE_LISTE_DRAPEAUX];	/*liste de drapeaux qui permet de connaître*/
-										/*la liste d'acion possible pour le pion*/
+							/*la liste d'acion possible pour le pion*/
 } PION;
 
 
 
 typedef struct {
 	char nom[MAX_NOM];	/*le nom du joueur*/
-	PION p[2];			/*les 2 pion du joueur*/
-	int depart;			/*la case de départ des pions du joueur a la sortie de l'écurie*/
+	PION p[2];		/*les 2 pion du joueur*/
+	int depart;		/*la case de départ des pions du joueur a la sortie de l'écurie*/
 	int arrivee;		/*la case d'arrivee des pions du joueur a l'entrée du centre du plateau*/
-	int etat;			/*1 si actif, 0 sinon*/
+	int etat;		/*1 si actif, 0 sinon*/
 } JOUEUR;
 
 
 
 void	afficher_plateau(JOUEUR* j, int i, int nb_joueurs, int de);
 void	liste_actions_possibles(JOUEUR *j, int num_j, int de);
-int		jet();	/*cette fonction simule le jet d'un dé à 6 faces*/
+int	jet();
 void	sortir(JOUEUR *j, int nb_joueurs, int num_j, int num_p);
 void	tour(JOUEUR *j, int nb_joueurs, int num_j, int num_p, int de);
 void	centre(JOUEUR *j, int nb_joueurs, int num_j, int num_p, int de);
@@ -47,15 +47,15 @@ void	supprimer_fichiers_exe();
 
 
 
-int		main()
+int	main()
 {
 	JOUEUR	j[4];
 	int		nb_joueurs;	/*explicite, cette variable édité par l'utilisateur*/
 						/*permet de connaître le nombre de joueur de la partie*/
-	int		i,k,o;
-	int		quitter_partie=0;
-	int		victoire=0;
-	int		de;
+	int	i,k,o;
+	int	quitter_partie=0;
+	int	victoire=0;
+	int	de;
 	char	rep[MAX_REP];
 
 	/*détermination du nombre de joueurs (de 2 à 4)*/
@@ -69,7 +69,7 @@ int		main()
 
 	j[0].depart=1;
 	j[0].arrivee=57;
-	j[0].etat=0;		/*le joueur 1 commence*/
+	j[0].etat=0;
 
 	j[1].depart=15;
 	j[1].arrivee=14;
@@ -216,7 +216,7 @@ void	afficher_plateau(JOUEUR* j, int i, int nb_joueurs, int de)
 
 
 
-int		jet()
+int	jet()
 {
 	/*cette fonction simule le jet d'un de a 6 faces*/
 	return 1+rand()*6.0/(RAND_MAX+1.0);
@@ -232,22 +232,22 @@ int		jet()
 
 void	liste_actions_possibles(JOUEUR *j, int num_j, int de){
 	if(j[num_j].p[0].etat==0){
-		if(de==6) j[num_j].p[0].d[0]=1;							/*le pion 1 peu sortir de l'ecurie*/
-		else j[num_j].p[0].d[3]=1;								/*le pion 1 ne peut pas bouger*/
+		if(de==6) j[num_j].p[0].d[0]=1;				/*le pion 1 peu sortir de l'ecurie*/
+		else j[num_j].p[0].d[3]=1;				/*le pion 1 ne peut pas bouger*/
 	}
-	if(j[num_j].p[0].etat==1) j[num_j].p[0].d[1]=1;				/*le pion 1 peu se deplacer autour du plateau*/
+	if(j[num_j].p[0].etat==1) j[num_j].p[0].d[1]=1;			/*le pion 1 peu se deplacer autour du plateau*/
 	if(j[num_j].p[0].etat==2){
 		if(j[num_j].p[0].centre==de-1) j[num_j].p[0].d[2]=1;	/*le pion 1 peu se deplacer au centre du plateua*/
-		else j[num_j].p[0].d[3]=1;								/*le pion 1 ne peut pas bouger*/
+		else j[num_j].p[0].d[3]=1;				/*le pion 1 ne peut pas bouger*/
 	}
 	if(j[num_j].p[1].etat==0){
-		if(de==6) j[num_j].p[1].d[0]=1;							/*le pion 2 peu sortir de l'ecurie*/
-		else j[num_j].p[1].d[3]=1;								/*le pion 2 ne peut pas bouger*/
+		if(de==6) j[num_j].p[1].d[0]=1;				/*le pion 2 peu sortir de l'ecurie*/
+		else j[num_j].p[1].d[3]=1;				/*le pion 2 ne peut pas bouger*/
 	}
-	if(j[num_j].p[1].etat==1) j[num_j].p[1].d[1]=1;				/*le pion 2 peu se deplacer autour du plateau*/
+	if(j[num_j].p[1].etat==1) j[num_j].p[1].d[1]=1;			/*le pion 2 peu se deplacer autour du plateau*/
 	if(j[num_j].p[1].etat==2){
 		if(j[num_j].p[1].centre==de-1) j[num_j].p[1].d[2]=1;	/*le pion 2 peu se deplacer au centre du plateua*/
-		else j[num_j].p[1].d[3]=1;								/*le pion 2 ne peut pas bouger*/
+		else j[num_j].p[1].d[3]=1;				/*le pion 2 ne peut pas bouger*/
 	}
 }
 
@@ -395,7 +395,7 @@ void	supprimer_fichiers_exe()
 
 	/*non fonctionnel pour le moment*/
 
-	int erreur;		/*pour tester si la fonction remove s'execute correctement*/
+	int erreur;	/*pour tester si la fonction remove s'execute correctement*/
 
 	erreur=remove("exe/code");
 	if(erreur==-1)	printf("la suppression du fichier 'exe/code' a echouee\n");
