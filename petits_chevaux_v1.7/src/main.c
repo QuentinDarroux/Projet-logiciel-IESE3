@@ -180,7 +180,7 @@ void	tour(JOUEUR *j, int nb_joueurs, int num_j, int num_p, int de)
 void	centre(JOUEUR *j, int nb_joueurs, int num_j, int num_p, int de)
 {
 	if(j[num_j].p[num_p].centre==de-1) j[num_j].p[num_p].centre=de;
-	if(j[num_j].p[num_p].centre==1) j[num_j].p[nump_p].tour=0;
+	if(j[num_j].p[num_p].centre==1) j[num_j].p[num_p].tour=0;
 }
 
 void petits_chevaux(int nb_joueurs, JOUEUR *j)
@@ -208,42 +208,42 @@ void petits_chevaux(int nb_joueurs, JOUEUR *j)
 						printf("ecurie\n");
 						break;
 					case 1:
-						printf("case %d du tour\n",j[k].p[o].tour);
+						printf("tour\t\t%d\n",j[k].p[o].tour);
 						break;
 					case 2:
-						printf("case %d du centre\n",j[k].p[o].centre);
+						printf("centre\t\t%d\n",j[k].p[o].centre);
 						break;
 					default:
 						break;
 				}
 			}
 		}
-		printf("\ntour de %s\njet : %d\n\n",j[i].nom,de);
+		printf("\njoueur :\t\t\t%s\njet :\t\t\t\t%d\n\n",j[i].nom,de);
 
 		j[i].etat=1;
 
 		while(de==6){
 			liste_actions_possibles(j,i,de);
-			printf("vous pouvez :\n");
-			if(j[i].p[0].d[0]==1) printf("sortir_p1\n");
-			if(j[i].p[0].d[1]==1) printf("tour_p1\n");
-			if(j[i].p[0].d[2]==1) printf("centre_p1\n");
-			if(j[i].p[1].d[0]==1) printf("sortir_p2\n");
-			if(j[i].p[1].d[1]==1) printf("tour_p2\n");
-			if(j[i].p[1].d[2]==1) printf("centre_p2\n");
-			if((j[i].p[0].d[3]==1)&&(j[i].p[1].d[3]==1)) printf("rien faire, tapez ok\n");
-			printf("quitter tapez q\n");
+			printf("action(s) possible(s) :\n");
+			if(j[i].p[0].d[0]==1) printf("sortir le pion 1\t\tp1\n");
+			if(j[i].p[0].d[1]==1) printf("faire avancer le pion 1\t\tp1\n");
+			if(j[i].p[0].d[2]==1) printf("faire avancer le pion 1\t\tp1\n");
+			if(j[i].p[1].d[0]==1) printf("sortir le pion 2\t\tp2\n");
+			if(j[i].p[1].d[1]==1) printf("faire avancer le pion 2\t\tp2\n");
+			if(j[i].p[1].d[2]==1) printf("faire avancer le pion 2\t\tp2\n");
+			if((j[i].p[0].d[3]==1)&&(j[i].p[1].d[3]==1)) printf("aucune action possible\t\tok\n");
+			printf("quitter\t\t\t\tq\n\n");
 			do{
-				printf("que voulez vous faire ? ");
+				printf("action choisit :\t\t");
 				scanf("%s",rep);
-			} while(!((!strcmp(rep,"sortir_p1")&&(j[i].p[0].d[0]==1))||((!strcmp(rep,"tour_p1"))&&(j[i].p[0].d[1]==1))||((!strcmp(rep,"centre_p1"))&&(j[i].p[0].d[2]==1))||((!strcmp(rep,"sortir_p2"))&&(j[i].p[1].d[0]==1))||((!strcmp(rep,"tour_p2"))&&(j[i].p[1].d[1]==1))||((!strcmp(rep,"centre_p2"))&&(j[i].p[1].d[2]==1))||(!strcmp(rep,"ok")&&(j[i].p[0].d[3]==1)&&(j[i].p[1].d[3]==1))||(!strcmp(rep,"q"))));
+			} while(!((!strcmp(rep,"p1")&&(j[i].p[0].d[0]==1))||((!strcmp(rep,"p1"))&&(j[i].p[0].d[1]==1))||((!strcmp(rep,"p1"))&&(j[i].p[0].d[2]==1))||((!strcmp(rep,"p2"))&&(j[i].p[1].d[0]==1))||((!strcmp(rep,"p2"))&&(j[i].p[1].d[1]==1))||((!strcmp(rep,"p2"))&&(j[i].p[1].d[2]==1))||(!strcmp(rep,"ok")&&(j[i].p[0].d[3]==1)&&(j[i].p[1].d[3]==1))||(!strcmp(rep,"q"))));
 
-			if((!strcmp(rep,"sortir_p1"))&&(j[i].p[0].d[0]==1))	sortir(j,nb_joueurs,i,0);
-			if((!strcmp(rep,"tour_p1"))&&(j[i].p[0].d[1]==1))	tour(j,nb_joueurs,i,0,de);
-			if((!strcmp(rep,"centre_p1"))&&(j[i].p[0].d[2]==1))	centre(j,nb_joueurs,i,0,de);
-			if((!strcmp(rep,"sortir_p2"))&&(j[i].p[1].d[0]==1))	sortir(j,nb_joueurs,i,1);
-			if((!strcmp(rep,"tour_p2"))&&(j[i].p[1].d[1]==1))	tour(j,nb_joueurs,i,1,de);
-			if((!strcmp(rep,"centre_p2"))&&(j[i].p[1].d[2]==1))	centre(j,nb_joueurs,i,1,de);
+			if((!strcmp(rep,"p1"))&&(j[i].p[0].d[0]==1))	sortir(j,nb_joueurs,i,0);
+			if((!strcmp(rep,"p1"))&&(j[i].p[0].d[1]==1))	tour(j,nb_joueurs,i,0,de);
+			if((!strcmp(rep,"p1"))&&(j[i].p[0].d[2]==1))	centre(j,nb_joueurs,i,0,de);
+			if((!strcmp(rep,"p2"))&&(j[i].p[1].d[0]==1))	sortir(j,nb_joueurs,i,1);
+			if((!strcmp(rep,"p2"))&&(j[i].p[1].d[1]==1))	tour(j,nb_joueurs,i,1,de);
+			if((!strcmp(rep,"p2"))&&(j[i].p[1].d[2]==1))	centre(j,nb_joueurs,i,1,de);
 			if(!strcmp(rep,"q")){
 				stoper_partie=1;
 				break;	
@@ -262,45 +262,45 @@ void petits_chevaux(int nb_joueurs, JOUEUR *j)
 					printf("\t%d : ",o+1);
 					switch(j[k].p[o].etat){
 						case 0:
-							printf("écurie\n");
+							printf("ecurie\n");
 							break;
 						case 1:
-							printf("case %d du tour\n",j[k].p[o].tour);
+							printf("tour\t\t%d\n",j[k].p[o].tour);
 							break;
 						case 2:
-							printf("case %d du centre\n",j[k].p[o].centre);
+							printf("centre\t\t%d\n",j[k].p[o].centre);
 							break;
 						default:
 							break;
 					}
 				}
 			}
-			printf("\ntour de %s\njet : %d\n\n",j[i].nom,de);
+			printf("\njoueur :\t\t\t%s\njet :\t\t\t\t%d\n\n",j[i].nom,de);
 		}
 
 		if(stoper_partie) break;
 
 		liste_actions_possibles(j,i,de);
-		printf("vous pouvez :\n");
-		if(j[i].p[0].d[0]==1) printf("sortir_p1\n");
-		if(j[i].p[0].d[1]==1) printf("tour_p1\n");
-		if(j[i].p[0].d[2]==1) printf("centre_p1\n");
-		if(j[i].p[1].d[0]==1) printf("sortir_p2\n");
-		if(j[i].p[1].d[1]==1) printf("tour_p2\n");
-		if(j[i].p[1].d[2]==1) printf("centre_p2\n");
-		if((j[i].p[0].d[3]==1)&&(j[i].p[1].d[3]==1)) printf("rien faire, tapez ok\n");
-		printf("quitter tapez q\n");
+		printf("action(s) possible(s) :\n");
+		if(j[i].p[0].d[0]==1) printf("sortir le pion 1\t\tp1\n");
+		if(j[i].p[0].d[1]==1) printf("faire avancer le pion 1\t\tp1\n");
+		if(j[i].p[0].d[2]==1) printf("faire avancer le pion 1\t\tp1\n");
+		if(j[i].p[1].d[0]==1) printf("sortir le pion 2\t\tp2\n");
+		if(j[i].p[1].d[1]==1) printf("faire avancer le pion 2\t\tp2\n");
+		if(j[i].p[1].d[2]==1) printf("faire avancer le pion 2\t\tp2\n");
+		if((j[i].p[0].d[3]==1)&&(j[i].p[1].d[3]==1)) printf("aucune action possible\t\tok\n");
+		printf("quitter\t\t\t\tq\n\n");
 		do{
-			printf("que voulez vous faire ? ");
+			printf("action choisit :\t\t");
 			scanf("%s",rep);
-		} while(!((!strcmp(rep,"sortir_p1")&&(j[i].p[0].d[0]==1))||((!strcmp(rep,"tour_p1"))&&(j[i].p[0].d[1]==1))||((!strcmp(rep,"centre_p1"))&&(j[i].p[0].d[2]==1))||((!strcmp(rep,"sortir_p2"))&&(j[i].p[1].d[0]==1))||((!strcmp(rep,"tour_p2"))&&(j[i].p[1].d[1]==1))||((!strcmp(rep,"centre_p2"))&&(j[i].p[1].d[2]==1))||(!strcmp(rep,"ok")&&(j[i].p[0].d[3]==1)&&(j[i].p[1].d[3]==1))||(!strcmp(rep,"q"))));
+		} while(!((!strcmp(rep,"p1")&&(j[i].p[0].d[0]==1))||((!strcmp(rep,"p1"))&&(j[i].p[0].d[1]==1))||((!strcmp(rep,"p1"))&&(j[i].p[0].d[2]==1))||((!strcmp(rep,"p2"))&&(j[i].p[1].d[0]==1))||((!strcmp(rep,"p2"))&&(j[i].p[1].d[1]==1))||((!strcmp(rep,"p2"))&&(j[i].p[1].d[2]==1))||(!strcmp(rep,"ok")&&(j[i].p[0].d[3]==1)&&(j[i].p[1].d[3]==1))||(!strcmp(rep,"q"))));
 
-		if((!strcmp(rep,"sortir_p1"))&&(j[i].p[0].d[0]==1))	sortir(j,nb_joueurs,i,0);
-		if((!strcmp(rep,"tour_p1"))&&(j[i].p[0].d[1]==1))	tour(j,nb_joueurs,i,0,de);
-		if((!strcmp(rep,"centre_p1"))&&(j[i].p[0].d[2]==1))	centre(j,nb_joueurs,i,0,de);
-		if((!strcmp(rep,"sortir_p2"))&&(j[i].p[1].d[0]==1))	sortir(j,nb_joueurs,i,1);
-		if((!strcmp(rep,"tour_p2"))&&(j[i].p[1].d[1]==1))	tour(j,nb_joueurs,i,1,de);
-		if((!strcmp(rep,"centre_p2"))&&(j[i].p[1].d[2]==1))	centre(j,nb_joueurs,i,1,de);
+		if((!strcmp(rep,"p1"))&&(j[i].p[0].d[0]==1))	sortir(j,nb_joueurs,i,0);
+		if((!strcmp(rep,"p1"))&&(j[i].p[0].d[1]==1))	tour(j,nb_joueurs,i,0,de);
+		if((!strcmp(rep,"p1"))&&(j[i].p[0].d[2]==1))	centre(j,nb_joueurs,i,0,de);
+		if((!strcmp(rep,"p2"))&&(j[i].p[1].d[0]==1))	sortir(j,nb_joueurs,i,1);
+		if((!strcmp(rep,"p2"))&&(j[i].p[1].d[1]==1))	tour(j,nb_joueurs,i,1,de);
+		if((!strcmp(rep,"p2"))&&(j[i].p[1].d[2]==1))	centre(j,nb_joueurs,i,1,de);
 		if(!strcmp(rep,"q")){
 				stoper_partie=1;
 				break;	
