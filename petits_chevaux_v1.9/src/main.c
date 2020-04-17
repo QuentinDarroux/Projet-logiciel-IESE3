@@ -299,17 +299,28 @@ void	tour(JOUEUR *j, int nb_joueurs, int num_j, int num_p, int de)
 	int nouv_case=case_actuelle+de;
 	if(nouv_case>57) nouv_case=nouv_case-57;
 	int ecart;
-	
+
+	/*mesure de l'ecart separant la case actuelle est la case d'arrivee*/
+
 	if(j[num_j].arrivee>=case_actuelle) ecart=j[num_j].arrivee-case_actuelle;
 	else ecart=57-case_actuelle+j[num_j].arrivee;
 
+	/*si l'ecart est superieur a la valeur du de, on peut avancer sans soucis*/
+
 	if(ecart>de) j[num_j].p[num_p].tour=nouv_case;
+
+	/*sinon on verifie si le pion tombe parfaitement sur la case d'arrive*/
+
 	else{
 		if(ecart==de){
 			j[num_j].p[num_p].etat=2;
 		}
+		/*si le pion ne tombe pas parfaitement sur la case d'arrive, il est reflechit*/
 		else j[num_j].p[num_p].tour=2*j[num_j].arrivee-case_actuelle-de;
 	}
+
+	/*verification : le pion peut en manger un autre en se deplacant*/
+
 	for(i=0;i<nb_joueurs;i++){
 		if(i==num_j) continue;
 		else{
@@ -336,7 +347,9 @@ void	tour(JOUEUR *j, int nb_joueurs, int num_j, int num_p, int de)
 
 void	centre(JOUEUR *j, int nb_joueurs, int num_j, int num_p, int de)
 {
+	/*si le numero du de correspond a la case suivante, le pion peut avancer*/
 	if(j[num_j].p[num_p].centre==de-1) j[num_j].p[num_p].centre=de;
+	/*si le pion avance sur la premiere case du centre, il quitte le tour du plateau*/
 	if(j[num_j].p[num_p].centre==1) j[num_j].p[num_p].tour=0;
 }
 
@@ -353,6 +366,7 @@ void	jouer_de(JOUEUR* j, int i, int nb_joueurs, int de, char* rep, int* quitter_
 	int k,o;
 
 	liste_actions_possibles(j,i,de);
+	/*proposition au joueur des actions possibles*/
 	printf("action(s) possible(s) :\n");
 	if(j[i].p[0].d[0]==1) printf("sortir le pion 1\t\tp1\n");
 	if(j[i].p[0].d[1]==1) printf("faire avancer le pion 1\t\tp1\n");
@@ -361,7 +375,8 @@ void	jouer_de(JOUEUR* j, int i, int nb_joueurs, int de, char* rep, int* quitter_
 	if(j[i].p[1].d[1]==1) printf("faire avancer le pion 2\t\tp2\n");
 	if(j[i].p[1].d[2]==1) printf("faire avancer le pion 2\t\tp2\n");
 	if((j[i].p[0].d[3]==1)&&(j[i].p[1].d[3]==1)) printf("aucune action possible\t\tok\n");
-	printf("quitter\t\t\t\tq\n\n");
+	printf("quitter\t\t\t\tq\n\n");	/*le joueur peut quitter la partie a tout moment*/
+	/*le joueur selectionne l'action*/
 	do{
 		printf("action choisit :\t\t");
 		scanf("%s",rep);
@@ -375,8 +390,9 @@ void	jouer_de(JOUEUR* j, int i, int nb_joueurs, int de, char* rep, int* quitter_
 	if((!strcmp(rep,"p2"))&&(j[i].p[1].d[2]==1))	centre(j,nb_joueurs,i,1,de);
 
 	if(!strcmp(rep,"q")) *quitter_partie=1;
-	if((j[i].p[0].centre==6)&&(j[i].p[1].centre==6)) *victoire=1;
+	if((j[i].p[0].centre==6)&&(j[i].p[1].centre==6)) *victoire=1;	/*si les deux pions sont dans la case 6 du centre le joueur a gagné*/
 
+	/*on remet les drapeaux a 0*/
 	for(k=0;k<2;k++){
 		for(o=0;o<4;o++) j[i].p[k].d[o]=0;
 	}
