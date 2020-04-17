@@ -51,7 +51,7 @@ int	main()
 {
 	JOUEUR	j[4];
 	int		nb_joueurs;	/*explicite, cette variable édité par l'utilisateur*/
-						/*permet de connaître le nombre de joueur de la partie*/
+					/*permet de connaître le nombre de joueur de la partie*/
 	int	i,k,o;
 	int	quitter_partie=0;
 	int	victoire=0;
@@ -148,7 +148,7 @@ int	main()
 
 	/*suppression des fichier d'execution*/
 
-	int erreur;		/*pour tester si la fonction remove s'execute correctement*/
+	int erreur;	/*pour tester si la fonction remove s'execute correctement*/
 
 	erreur=remove("exe/code");
 	if(erreur==-1) printf("la suppression du fichier 'exe/code' à échouée\n");
