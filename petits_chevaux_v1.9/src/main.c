@@ -277,7 +277,7 @@ void	sortir(JOUEUR *j, int nb_joueurs, int num_j, int num_p)
 				if((j[i].p[k].tour==j[num_j].depart)&&(j[i].p[k].tour!=0)){
 					j[i].p[k].tour=0;
 					j[i].p[k].etat=0;
-					printf("\nle pion %d de %s s'est fait mange\n",k,j[i].nom);
+					printf("\nle pion %d de %s s'est fait mange\n",k+1,j[i].nom);
 				}
 			}
 		}
@@ -330,7 +330,7 @@ void	tour(JOUEUR *j, int nb_joueurs, int num_j, int num_p, int de)
 				if((ecart<=de)&&(j[i].p[k].tour!=0)){
 					j[i].p[k].tour=0;
 					j[i].p[k].etat=0;
-					printf("\nle pion %d de %s s'est fait mange\n",k,j[i].nom);
+					printf("\nle pion %d de %s s'est fait mange\n",k+1,j[i].nom);
 				}
 			}
 		}
