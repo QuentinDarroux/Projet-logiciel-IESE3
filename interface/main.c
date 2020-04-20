@@ -11,6 +11,19 @@
 
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
+#define FPS_LIMIT 16 		//60 fps
+
+/*MORPION*/
+//Variables globales
+int CROIX1=0;
+int CROIX2=0;
+int CROIX3=0;
+int CROIX4=0;
+int CROIX5=0;
+int CROIX6=0;
+int CROIX7=0;
+int CROIX8=0;
+int CROIX9=0;
 
 //Fonction erreur
 void SDL_ExitError(const char *message);
@@ -26,8 +39,17 @@ int clic_gauche(int x_min, int x_max, int y_min, int y_max, SDL_Event event);
 //Position
 int position(int x_min, int x_max, int y_min, int y_max, SDL_Event event);
 
+//Animation Bouton accueil
+int anim_bouton(int x_min, int x_max, int y_min, int y_max, SDL_Event event, int affiche_clear, SDL_Texture *texture);
+
+/*PROTOTYPES MORPION*/
 //Selection morpion
 void affiche_point_morpion(SDL_Renderer *renderer, SDL_Window *window, SDL_Event *event1);
+//Affichage croix
+void croix_morpion(SDL_Renderer *renderer, SDL_Window *window, SDL_Event *event1);
+
+//limitation fps
+void limit_fps(unsigned int limit);
 
 
 int main(int argc, char** argv){
@@ -44,6 +66,10 @@ int main(int argc, char** argv){
 	//pointeur pour rendu
 	SDL_Renderer *renderer = NULL;
 
+	/*test FPS*/
+	 unsigned int frame_limit = 0;
+	 frame_limit = SDL_GetTicks() + FPS_LIMIT;
+
 	//initialistion de la SDL
 	if(SDL_Init(SDL_INIT_VIDEO) != 0){
 		 SDL_ExitError("Initialisation echouee"); //affiche l'erreur
@@ -59,34 +85,6 @@ int main(int argc, char** argv){
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	if(renderer == NULL)
 		SDL_ExitError("Rendu fenetre echouee");
-
-	// TEST SDL_IMAGE //
-	// SDL_Surface *image_png;
-	// SDL_Texture *texture_png;
-	// SDL_Rect pos_png;
-	// pos_png.x = 0;
-	// pos_png.y = 0;
-	// pos_png.h = WINDOW_HEIGHT;
-	// pos_png.w = WINDOW_WIDTH;
-
-	// image_png = IMG_Load("image/test.png");
-	// if(image_png == NULL)
-	// 	SDL_ExitError2("Affichage image echouee", renderer, window);
-
-	// texture_png = SDL_CreateTextureFromSurface(renderer, image_png);
-	// SDL_FreeSurface(image_png);
-	// if(texture_png == NULL)
-	// 	SDL_ExitError2("Creation texture echouee", renderer, window);
-
-	// if(SDL_QueryTexture(texture_png, NULL, NULL, &pos_png.w, &pos_png.h) != 0)
-	// 	SDL_ExitError2("Chargement texture echouee", renderer, window);
-
-	// if(SDL_RenderCopy(renderer, texture_png, NULL, &pos_png) != 0)
-	// 	SDL_ExitError2("Affichage texture echouee", renderer, window);
-
-	// SDL_RenderPresent(renderer);
-
-	// SDL_Delay(2000);
 
     //** EVENEMENTS **//
 
@@ -113,9 +111,12 @@ int main(int argc, char** argv){
 			SDL_Rect pos_choix1;
 			pos_choix1.h = 150;
 			pos_choix1.w = 300;
-			pos_choix1.x = (WINDOW_WIDTH - pos_choix1.w - 800) / 2;
-			pos_choix1.y = (WINDOW_HEIGHT - pos_choix1.h + 150) / 2;
-			affiche_image(image_choix1, texture_choix1, pos_choix1, "image/choix_morpion.bmp", renderer, window);
+			pos_choix1.x = (WINDOW_WIDTH - pos_choix1.w - 925) / 2;
+			pos_choix1.y = (WINDOW_HEIGHT - pos_choix1.h + 60) / 2;
+
+			int anim_selec_morpion;
+			if(anim_selec_morpion == 1)
+				affiche_image(image_choix1, texture_choix1, pos_choix1, "image/choix_morpion.bmp", renderer, window);
 
 	        //affichage case Jeu 2
 	        SDL_Surface *image_choix2 = NULL;
@@ -123,9 +124,12 @@ int main(int argc, char** argv){
 			SDL_Rect pos_choix2;
 			pos_choix2.h = 150;
 			pos_choix2.w = 300;
-			pos_choix2.x = (WINDOW_WIDTH - pos_choix2.w) / 2;
-			pos_choix2.y = (WINDOW_HEIGHT - pos_choix2.h + 150) / 2;
-			affiche_image(image_choix2, texture_choix2, pos_choix2, "image/choix_pendu.bmp", renderer, window);
+			pos_choix2.x = (WINDOW_WIDTH - pos_choix2.w - 95) / 2;
+			pos_choix2.y = (WINDOW_HEIGHT - pos_choix2.h + 60) / 2;
+
+			int anim_selec_pendu;
+			if(anim_selec_pendu == 1)
+				affiche_image(image_choix2, texture_choix2, pos_choix2, "image/choix_pendu.bmp", renderer, window);
 
 	    	//affichage case Jeu 3
 	    	SDL_Surface *image_choix3 = NULL;
@@ -133,9 +137,12 @@ int main(int argc, char** argv){
 			SDL_Rect pos_choix3;
 			pos_choix3.h = 150;
 			pos_choix3.w = 300;
-			pos_choix3.x = (WINDOW_WIDTH - pos_choix3.w + 800) / 2;
-			pos_choix3.y = (WINDOW_HEIGHT - pos_choix3.h + 150) / 2;
-			affiche_image(image_choix3, texture_choix3, pos_choix3, "image/choix_cheval.bmp", renderer, window);
+			pos_choix3.x = (WINDOW_WIDTH - pos_choix3.w + 730) / 2;
+			pos_choix3.y = (WINDOW_HEIGHT - pos_choix3.h + 60) / 2;
+			
+			int anim_selec_cheval;
+			if(anim_selec_cheval == 1)
+				affiche_image(image_choix3, texture_choix3, pos_choix3, "image/choix_cheval.bmp", renderer, window);
 
 		    //affichage rendu page accueil
 		    SDL_RenderPresent(renderer); 
@@ -146,10 +153,10 @@ int main(int argc, char** argv){
     			//--- FENETRE ---//
     			case SDL_WINDOWEVENT:
 
-    				//redimensionnement de la fenêtre
+    				//redimensionnement de la fenêtre + position de la fenetre
     				//event.window.event
-    				//event.window.data1	//nouvelle largeur
-    				//event.window.data2	//nouvelle hauteur
+    				//event.window.data1	//nouvelle largeur	//nouvelle position x
+    				//event.window.data2	//nouvelle hauteur	//nouvelle position y
 
     				if(event.window.event == SDL_WINDOWEVENT_LEAVE)					//sortie de la fenetre
     					printf("La souris est sortie de la fenêtre ! \n"); 			
@@ -178,8 +185,11 @@ int main(int argc, char** argv){
     					printf("Double Clic ! \n"); 								//double clic
 
     				//**-- MORPION --**//
+    				
+
     				int morpion_running = 0;
     				morpion_running = clic_gauche(108, 370, 375, 485, event);	//clic gauche case Jeu 1 (bleu)		//*** LANCEMENT JEU MORPION ***//
+    				
     				if (morpion_running == 1){
 
     					printf("Clic case Jeu 1 ! ***LANCEMENT MORPION***\n");
@@ -187,15 +197,25 @@ int main(int argc, char** argv){
     					SDL_Surface *image_fond_morpion = NULL;
 						SDL_Texture *texture_fond_morpion = NULL;
 						affiche_image(image_fond_morpion, texture_fond_morpion, pos_image, "image/morpion.bmp", renderer, window);
-						//SDL_RenderPresent(renderer);
+						SDL_RenderPresent(renderer);
 
-		    				SDL_Event event1;									
+
+
+		    				SDL_Event event1;	
+		    				event1.button.button = 0;
+		    				event1.button.button = 0;
+		    				event1.motion.x = 0;
+		    				event1.motion.y = 0;
+
+		    				printf("BOUTON BUUUG : %d \n\n", event1.button.button);
+
 		    					while(morpion_running == 1){					//boucle de jeu morpion
 
 		    						while(SDL_PollEvent(&event1)){
 				    						
 		    							SDL_RenderPresent(renderer);
 		    							affiche_image(image_fond_morpion, texture_fond_morpion, pos_image, "image/morpion.bmp", renderer, window);
+		    							croix_morpion(renderer, window, &event1);
 
 				    						switch(event1.type){
 
@@ -203,7 +223,8 @@ int main(int argc, char** argv){
 
 				    							case SDL_MOUSEBUTTONDOWN:						//clic de la souris
 
-		
+													croix_morpion(renderer, window, &event1);
+
 				    								if(clic_gauche(1167, 1257, 8, 74, event1)){	//quitte le jeu (croix)
 				    									morpion_running = 0;
 				    									printf("FIN MORPION \n");
@@ -212,7 +233,7 @@ int main(int argc, char** argv){
 				    								break;
 
 				    							case SDL_MOUSEMOTION:							//position de la souris
-
+				    								printf("CROIX4 : %d", CROIX4);
 				    								printf("position souris : %d : %d \n", event1.motion.x, event1.motion.y);
 				    								affiche_point_morpion(renderer, window, &event1);
 
@@ -221,7 +242,7 @@ int main(int argc, char** argv){
 				    							case SDL_QUIT: 							//quitte morpion(croix)
 				    								programmed_launched = SDL_FALSE; 
 				    								morpion_running = 0;
-				    								printf("FIN MORPION \n");
+				    								printf("FIN GAME \n");
 				    								clear_image(NULL, NULL, texture_choix1);	//liberation texture case1
     												clear_image(NULL, NULL, texture_choix2);	//liberation texture case2
 									    			clear_image(NULL, NULL, texture_choix3);	//liberation texture case3
@@ -363,6 +384,16 @@ int main(int argc, char** argv){
     				printf("position souris : %d : %d \n", event.motion.x, event.motion.y);
     				//position x relative (deplacement), position y relative (deplacement)
     				printf("position souris relative : %d : %d \n", event.motion.xrel, event.motion.yrel);
+
+    				//**-- MORPION --**//
+    				anim_selec_morpion = anim_bouton(108, 370, 375, 485, event, anim_selec_morpion, texture_choix1);
+    				
+    				//**-- PENDU --**//
+    				anim_selec_pendu = anim_bouton(508, 772, 375, 485, event, anim_selec_pendu, texture_choix2);
+
+    				//**-- CHEVAL --**//
+    				anim_selec_cheval = anim_bouton(905, 1170, 375, 485, event, anim_selec_cheval, texture_choix3);
+
     				break;
 
     			//---- TOUCHE ----//
@@ -406,6 +437,9 @@ int main(int argc, char** argv){
 	//temps d'ouverture de la fenêtre en seconde
 	//SDL_Delay(3000); 
 
+    //test FPS
+    //frame_limit = SDL_GetTicks() + FPS_LIMIT;
+   
     //fonction clear
 		//fermeture du rendu
 		SDL_DestroyRenderer(renderer);
@@ -493,7 +527,109 @@ int position(int x_min, int x_max, int y_min, int y_max, SDL_Event event){
     return 0; //default
 }
 
+//AFFICHAGE CROIX MORPION
 
+void croix_morpion(SDL_Renderer *renderer, SDL_Window *window, SDL_Event *event1){
+
+	SDL_Surface *image_croix;
+ 	SDL_Texture *texture_croix;
+  	SDL_Rect pos_croix;
+	pos_croix.h = 90;
+	pos_croix.w = 90;
+	pos_croix.x = 380;
+	pos_croix.y = 250;
+
+	//clear_image(NULL, NULL, texture_point);
+	
+	//LIGNE 1
+	printf("%d", CROIX1);
+	if(clic_gauche(300, 500,190, 342, *event1))				//case 1
+		CROIX1 = 1;
+	if(CROIX1 == 1){
+		pos_croix.x = 370;
+		pos_croix.y = 230;
+		affiche_image(image_croix, texture_croix, pos_croix, "image/croix_morpion.bmp", renderer, window);
+	}
+
+	if(clic_gauche(520, 740,190, 342, *event1))				//case 2
+		CROIX2 = 1;
+	if(CROIX2 == 1){
+		pos_croix.x = 595;
+		pos_croix.y = 230;
+		affiche_image(image_croix, texture_croix, pos_croix, "image/croix_morpion.bmp", renderer, window);
+	}
+
+	if(clic_gauche(760, 980, 190, 342, *event1))				//case 3
+		CROIX3 = 1;
+	if(CROIX3 == 1){
+		pos_croix.x = 820;
+		pos_croix.y = 230;
+		affiche_image(image_croix, texture_croix, pos_croix, "image/croix_morpion.bmp", renderer, window);
+	}
+
+	//LIGNE2
+	if(clic_gauche(300, 500, 355, 507, *event1))				//case 4
+		CROIX4 = 1;
+	if(CROIX4 == 1){
+		pos_croix.x = 370;
+		pos_croix.y = 385;
+		affiche_image(image_croix, texture_croix, pos_croix, "image/croix_morpion.bmp", renderer, window);
+	}
+
+	if(clic_gauche(520, 740, 355, 507, *event1))				//case 5
+		CROIX5 = 1;
+	if(CROIX5 == 1){
+		pos_croix.x = 595;
+		pos_croix.y = 385;
+		affiche_image(image_croix, texture_croix, pos_croix, "image/croix_morpion.bmp", renderer, window);
+	}
+
+	if(clic_gauche(760, 980, 355, 507, *event1))				//case 6
+		CROIX6 = 1;
+	if(CROIX6 == 1){
+		pos_croix.x = 820;
+		pos_croix.y = 385;
+		affiche_image(image_croix, texture_croix, pos_croix, "image/croix_morpion.bmp", renderer, window);
+	}
+
+	//LIGNE3
+	if(clic_gauche(300, 500, 520, 672, *event1))				//case 7
+		CROIX7 = 1;
+	if(CROIX7 == 1){
+		pos_croix.x = 370;
+		pos_croix.y = 530;
+		affiche_image(image_croix, texture_croix, pos_croix, "image/croix_morpion.bmp", renderer, window);
+	}
+
+	if(clic_gauche(520, 740, 520, 672, *event1))				//case 8
+		CROIX8 = 1;
+	if(CROIX8 == 1){
+		pos_croix.x = 595;
+		pos_croix.y = 530;
+		affiche_image(image_croix, texture_croix, pos_croix, "image/croix_morpion.bmp", renderer, window);
+	}
+
+	if(clic_gauche(760, 980, 520, 672, *event1))				//case 9
+		CROIX9 = 1;
+	if(CROIX9 == 1){
+		pos_croix.x = 820;
+		pos_croix.y = 530;
+		affiche_image(image_croix, texture_croix, pos_croix, "image/croix_morpion.bmp", renderer, window);
+	}
+
+	//liberation des croix (restart, quitte, morpion ou quitte jeu)
+	if(clic_gauche(62, 242,645,681, *event1) || clic_gauche(1167, 1257, 8, 74, *event1)){
+		CROIX1 = 0; CROIX2 = 0; CROIX3 = 0; CROIX4 = 0; CROIX5 = 0; CROIX6 = 0; CROIX7 = 0; CROIX8 = 0; CROIX9 = 0; 
+		clear_image(NULL, NULL, texture_croix);
+		printf("clear croix\n");
+	}
+
+	if(event1->type == SDL_QUIT){
+		CROIX1 = 0; CROIX2 = 0; CROIX3 = 0; CROIX4 = 0; CROIX5 = 0; CROIX6 = 0; CROIX7 = 0; CROIX8 = 0; CROIX9 = 0; 
+		clear_image(NULL, NULL, texture_croix);
+		printf("clear croix\n");
+	}
+}
 
 
 
@@ -504,70 +640,111 @@ void affiche_point_morpion(SDL_Renderer *renderer, SDL_Window *window, SDL_Event
 	SDL_Surface *image_point;
  	SDL_Texture *texture_point;
   	SDL_Rect pos_point;
-	pos_point.h = 50;
-	pos_point.w = 50;
+	pos_point.h = 30;
+	pos_point.w = 30;
 	pos_point.x = 380;
 	pos_point.y = 250;
 
 	clear_image(NULL, NULL, texture_point);
 
 	//LIGNE 1
-	if(position(300, 500,190, 342, *event1)){				//case 1
-		pos_point.x = 380;
+	if(position(300, 500,190, 342, *event1) && (CROIX1 == 0)){				//case 1
+		pos_point.x = 395;
 		pos_point.y = 250;
 		affiche_image(image_point, texture_point, pos_point, "image/selection_morpion.bmp", renderer, window);
 	}
 
-	if(position(520, 740,190, 342, *event1)){				//case 2
-		pos_point.x = 610;
+	if(position(520, 740,190, 342, *event1)  && (CROIX2 == 0)){				//case 2
+		pos_point.x = 625;
 		pos_point.y = 250;
 		affiche_image(image_point, texture_point, pos_point, "image/selection_morpion.bmp", renderer, window);
 	}
 
-	if(position(760, 980, 190, 342, *event1)){				//case 3
-		pos_point.x = 840;
+	if(position(760, 980, 190, 342, *event1)  && (CROIX3 == 0)){				//case 3
+		pos_point.x = 855;
 		pos_point.y = 250;
 		affiche_image(image_point, texture_point, pos_point, "image/selection_morpion.bmp", renderer, window);
 	}
 
 	//LIGNE2
-	if(position(300, 500, 355, 507, *event1)){				//case 1
-		pos_point.x = 380;
+	if(position(300, 500, 355, 507, *event1)  && (CROIX4 == 0)){				//case 1
+		pos_point.x = 395;
 		pos_point.y = 415;
 		affiche_image(image_point, texture_point, pos_point, "image/selection_morpion.bmp", renderer, window);
 	}
 
-	if(position(520, 740, 355, 507, *event1)){				//case 2
-		pos_point.x = 610;
+	if(position(520, 740, 355, 507, *event1)  && (CROIX5 == 0)){				//case 2
+		pos_point.x = 625;
 		pos_point.y = 415;
 		affiche_image(image_point, texture_point, pos_point, "image/selection_morpion.bmp", renderer, window);
 	}
 
-	if(position(760, 980, 355, 507, *event1)){				//case 3
-		pos_point.x = 840;
+	if(position(760, 980, 355, 507, *event1)  && (CROIX6 == 0)){				//case 3
+		pos_point.x = 855;
 		pos_point.y = 415;
 		affiche_image(image_point, texture_point, pos_point, "image/selection_morpion.bmp", renderer, window);
 	}
 
 	//LIGNE3
-	if(position(300, 500, 520, 672, *event1)){				//case 1
-		pos_point.x = 380;
+	if(position(300, 500, 520, 672, *event1)  && (CROIX7 == 0)){				//case 1
+		pos_point.x = 395;
 		pos_point.y = 580;
 		affiche_image(image_point, texture_point, pos_point, "image/selection_morpion.bmp", renderer, window);
 	}
 
-	if(position(520, 740, 520, 672, *event1)){				//case 2
-		pos_point.x = 610;
+	if(position(520, 740, 520, 672, *event1)  && (CROIX8 == 0)){				//case 2
+		pos_point.x = 625;
 		pos_point.y = 580;
 		affiche_image(image_point, texture_point, pos_point, "image/selection_morpion.bmp", renderer, window);
 	}
 
-	if(position(760, 980, 520, 672, *event1)){				//case 3
-		pos_point.x = 840;
+	if(position(760, 980, 520, 672, *event1)  && (CROIX9 == 0)){				//case 3
+		pos_point.x = 855;
 		pos_point.y = 580;
 		affiche_image(image_point, texture_point, pos_point, "image/selection_morpion.bmp", renderer, window);
 	}
 
+
+}
+
+int anim_bouton(int x_min, int x_max, int y_min, int y_max, SDL_Event event, int affiche_clear, SDL_Texture *texture){
+
+   if(position(x_min, x_max, y_min, y_max, event))
+    	return 1;
+
+    else {
+	    	if(affiche_clear == 1)
+	    		clear_image(NULL, NULL, texture);
+	    	
+	    	return 0;
+    	}	
+
+}
+
+
+
+
+
+
+
+
+
+
+void limit_fps(unsigned int limit){
+
+	// 1000 / 30 = 33 (seconde / fps = val)
+	// 1000 / 60 = 16 (seconde / fps = val)
+
+	unsigned int ticks = SDL_GetTicks();
+	
+	if(limit < ticks)
+		return;
+
+	else if(limit > ticks + FPS_LIMIT)
+		SDL_Delay(FPS_LIMIT);
+
+	else
+		SDL_Delay(limit - ticks);
 
 }
 
@@ -591,12 +768,33 @@ void affiche_point_morpion(SDL_Renderer *renderer, SDL_Window *window, SDL_Event
 
 
 
+//*** TEST SDL_IMAGE ***//
+	// SDL_Surface *image_png;
+	// SDL_Texture *texture_png;
+	// SDL_Rect pos_png;
+	// pos_png.x = 0;
+	// pos_png.y = 0;
+	// pos_png.h = WINDOW_HEIGHT;
+	// pos_png.w = WINDOW_WIDTH;
 
+	// image_png = IMG_Load("image/test.png");
+	// if(image_png == NULL)
+	// 	SDL_ExitError2("Affichage image echouee", renderer, window);
 
+	// texture_png = SDL_CreateTextureFromSurface(renderer, image_png);
+	// SDL_FreeSurface(image_png);
+	// if(texture_png == NULL)
+	// 	SDL_ExitError2("Creation texture echouee", renderer, window);
 
+	// if(SDL_QueryTexture(texture_png, NULL, NULL, &pos_png.w, &pos_png.h) != 0)
+	// 	SDL_ExitError2("Chargement texture echouee", renderer, window);
 
+	// if(SDL_RenderCopy(renderer, texture_png, NULL, &pos_png) != 0)
+	// 	SDL_ExitError2("Affichage texture echouee", renderer, window);
 
+	// SDL_RenderPresent(renderer);
 
+	// SDL_Delay(2000);
 
 
 
