@@ -1,0 +1,39 @@
+#include "struct.h"
+#include "pile_LIFO.h"
+
+void init_pile(Pile *p){
+	int i;
+	for(i=0;i<MAX;i++) p->T[i]=0;
+	p->sommet=0;
+}
+
+int pile_est_pleine(Pile *p){
+	if(p->sommet==MAX) return 1;
+	else return 0;
+}
+
+int pile_est_vide(Pile *p){
+	if(p->sommet==0) return 1;
+	else return 0;
+}
+
+void empiler(Pile *p,ElemPile elem){
+	if(pile_est_pleine(p)){
+		printf("Erreure : la pile est pleine");
+		return;
+	}
+	p->T[p->sommet]=elem;
+	p->sommet=p->sommet+1;
+}
+
+PARTIE depiler(Pile *p){
+	PARTIE ret;
+	if(pile_est_vide(p)){
+		printf("Erreur : la pile est vide");
+		return 0;
+	}
+	p->sommet=p->sommet-1;
+	ret=p->T[p->sommet];
+	p->T[p->sommet]=0;
+	return ret;
+}
