@@ -7,7 +7,7 @@ int	main()
 	PILE pile_p;
 	int		nb_joueurs;	/*explicite, cette variable édité par l'utilisateur*/
 					/*permet de connaître le nombre de joueur de la partie*/
-	int	i,k,o;
+	int	i,j,k,o;
 	int id_joueur;
 	int retour=0;
 	int	quitter_partie=0;
@@ -66,6 +66,22 @@ int	main()
 
 		de=jet();
 
+		if(retour){
+			partie=depiler(&pile_p);
+			for(i=0;i<4;i++){
+			tab_j[i].depart=partie.tab_j[i].depart;
+			tab_j[i].arrivee=partie.tab_j[i].arrivee;
+			tab_j[i].etat=partie.tab_j[i].etat;
+			for(j=0;j<2;j++){
+				tab_j[i].p[j].etat=partie.tab_j[i].p[j].etat;
+				tab_j[i].p[j].tour=partie.tab_j[i].p[j].tour;
+				tab_j[i].p[j].centre=partie.tab_j[i].p[j].centre;
+				for(k=0;k<4;k++) tab_j[i].p[j].d[k]=partie.tab_j[i].p[j].d[k];
+		}
+	}
+			retour=0;
+		}
+
 		copier(&partie,id_joueur,de,tab_j);
 
 		/*affichage du plateau*/
@@ -81,21 +97,27 @@ int	main()
 
 		while(de==6){
 
-			jouer_de(tab_j,pile_p,id_joueur,nb_joueurs,de,rep,&retour,&quitter_partie,&victoire);
+			jouer_de(tab_j,partie,pile_p,id_joueur,nb_joueurs,de,rep,&retour,&quitter_partie,&victoire);
 
-			if(quitter_partie||victoire) break;
+			if(quitter_partie||victoire||retour) break;
 
 			de=jet();
 			copier(&partie,id_joueur,de,tab_j);
 			afficher_plateau(tab_j,id_joueur,nb_joueurs,de);
 		}
 
-		jouer_de(tab_j,pile_p,id_joueur,nb_joueurs,de,rep,&retour,&quitter_partie,&victoire);
-
 		if(quitter_partie||victoire) break;
+		if(!retour){
 
-		id_joueur++;
-		if(id_joueur==nb_joueurs) id_joueur=0;
+			jouer_de(tab_j,partie,pile_p,id_joueur,nb_joueurs,de,rep,&retour,&quitter_partie,&victoire);
+
+			if(quitter_partie||victoire) break;
+
+			if(!retour){
+				id_joueur++;
+				if(id_joueur==nb_joueurs) id_joueur=0;
+			}
+		}
 	}
 
 	if(quitter_partie) printf("\n\n\npartie stopee\n\n\n");

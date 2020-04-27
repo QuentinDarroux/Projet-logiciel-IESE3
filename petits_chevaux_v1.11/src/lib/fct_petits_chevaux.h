@@ -51,7 +51,7 @@ int	jet();
 void	sortir(JOUEUR *j, int nb_joueurs, int num_j, int num_p);
 void	tour(JOUEUR *j, int nb_joueurs, int num_j, int num_p, int de);
 void	centre(JOUEUR *j, int nb_joueurs, int num_j, int num_p, int de);
-void	jouer_de(JOUEUR* tab_j, PILE pile_p, int id_joueur, int nb_joueurs, int de, char* rep, int* retour, int* quitter_partie, int* victoire);
+void	jouer_de(JOUEUR* tab_j, PARTIE partie, PILE pile_p, int id_joueur, int nb_joueurs, int de, char* rep, int* retour, int* quitter_partie, int* victoire);
 void	petits_chevaux(int nb_joueurs, JOUEUR* j);
 
 /*fonctions pile LIFO*/

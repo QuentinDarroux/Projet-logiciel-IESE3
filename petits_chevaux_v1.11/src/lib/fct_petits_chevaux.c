@@ -210,7 +210,7 @@ void	centre(JOUEUR *j, int nb_joueurs, int num_j, int num_p, int de)
 
 
 
-void	jouer_de(JOUEUR* tab_j, PILE pile_p, int id_joueur, int nb_joueurs, int de, char* rep, int* retour, int* quitter_partie, int* victoire)
+void	jouer_de(JOUEUR* tab_j, PARTIE partie, PILE pile_p, int id_joueur, int nb_joueurs, int de, char* rep, int* retour, int* quitter_partie, int* victoire)
 {
 	int i,j;
 
@@ -223,7 +223,7 @@ void	jouer_de(JOUEUR* tab_j, PILE pile_p, int id_joueur, int nb_joueurs, int de,
 	if(tab_j[id_joueur].p[1].d[0]==1)	printf("sortir le pion 2\t\tp2\n");
 	if(tab_j[id_joueur].p[1].d[1]==1)	printf("faire avancer le pion 2\t\tp2\n");
 	if(tab_j[id_joueur].p[1].d[2]==1)	printf("faire avancer le pion 2\t\tp2\n");
-	if(!pile_est_vide(&pile_p))				printf("retour en arriere\t\tr\n");
+	if(!pile_est_vide(&pile_p))			printf("retour en arriere\t\tr\n");
 	if((tab_j[id_joueur].p[0].d[3]==1)&&(tab_j[id_joueur].p[1].d[3]==1)) printf("aucune action possible\t\tok\n");
 	printf("quitter\t\t\t\tq\n\n");	/*le joueur peut quitter la partie a tout moment*/
 	/*le joueur selectionne l'action*/
@@ -240,6 +240,7 @@ void	jouer_de(JOUEUR* tab_j, PILE pile_p, int id_joueur, int nb_joueurs, int de,
 	if((!strcmp(rep,"p2"))&&(tab_j[id_joueur].p[1].d[2]==1))	centre(tab_j,nb_joueurs,id_joueur,1,de);
 
 	if(!strcmp(rep,"q")&&(!pile_est_vide(&pile_p))) *retour=1;
+	else empiler(&pile_p,partie);
 
 	if(!strcmp(rep,"q")) *quitter_partie=1;
 	if((tab_j[id_joueur].p[0].centre==6)&&(tab_j[id_joueur].p[1].centre==6)) *victoire=1;	/*si les deux pions sont dans la case 6 du centre le joueur a gagné*/
