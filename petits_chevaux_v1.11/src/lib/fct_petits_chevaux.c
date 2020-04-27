@@ -37,6 +37,34 @@ void	afficher_plateau(JOUEUR* j, int i, int nb_joueurs, int de)
 
 
 
+void	copier(PARTIE *partie, int id_joueur, int de, JOUEUR *tab_j)
+{
+	int i,j,k;
+	partie->id_joueur=id_joueur;
+	partie->de=de;
+
+	for(i=0;i<4;i++){
+		partie->tab_j[i].depart=tab_j[i].depart;
+		partie->tab_j[i].arrivee=tab_j[i].arrivee;
+		partie->tab_j[i].etat=tab_j[i].etat;
+		for(j=0;j<2;j++){
+			partie->tab_j[i].p[j].etat=tab_j[i].p[j].etat;
+			partie->tab_j[i].p[j].tour=tab_j[i].p[j].tour;
+			partie->tab_j[i].p[j].centre=tab_j[i].p[j].centre;
+			for(k=0;k<4;k++) partie->tab_j[i].p[j].d[k]=tab_j[i].p[j].d[k];
+		}
+	}
+
+}
+
+
+
+
+
+
+
+
+
 int	jet()
 {
 	/*cette fonction simule le jet d'un de a 6 faces*/

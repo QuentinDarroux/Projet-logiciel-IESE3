@@ -45,6 +45,7 @@ typedef struct {
 /*fonctions petits chevaux*/
 
 void	afficher_plateau(JOUEUR* j, int i, int nb_joueurs, int de);
+void	copier(PARTIE *partie, int id_joueur, int de, JOUEUR *tab_j);
 void	liste_actions_possibles(JOUEUR *j, int num_j, int de);
 int	jet();
 void	sortir(JOUEUR *j, int nb_joueurs, int num_j, int num_p);

@@ -3,6 +3,8 @@
 int	main()
 {
 	JOUEUR	j[4];
+	PARTIE partie;
+	PILE pile_p;
 	int		nb_joueurs;	/*explicite, cette variable édité par l'utilisateur*/
 					/*permet de connaître le nombre de joueur de la partie*/
 	int	i,k,o;
@@ -62,6 +64,8 @@ int	main()
 
 		de=jet();
 
+		copier(&partie,i,de,j);
+
 		/*affichage du plateau*/
 	
 		afficher_plateau(j,i,nb_joueurs,de);
@@ -80,8 +84,8 @@ int	main()
 			if(quitter_partie||victoire) break;
 
 			de=jet();
-
-				afficher_plateau(j,i,nb_joueurs,de);
+			copier(&partie,i,de,j);
+			afficher_plateau(j,i,nb_joueurs,de);
 		}
 
 		jouer_de(j,i,nb_joueurs,de,rep,&quitter_partie,&victoire);
