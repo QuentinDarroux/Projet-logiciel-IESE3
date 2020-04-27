@@ -210,40 +210,43 @@ void	centre(JOUEUR *j, int nb_joueurs, int num_j, int num_p, int de)
 
 
 
-void	jouer_de(JOUEUR* j, int i, int nb_joueurs, int de, char* rep, int* quitter_partie, int* victoire)
+void	jouer_de(JOUEUR* tab_j, PILE pile_p, int id_joueur, int nb_joueurs, int de, char* rep, int* retour, int* quitter_partie, int* victoire)
 {
-	int k,o;
+	int i,j;
 
-	liste_actions_possibles(j,i,de);
+	liste_actions_possibles(tab_j,id_joueur,de);
 	/*proposition au joueur des actions possibles*/
 	printf("action(s) possible(s) :\n");
-	if(j[i].p[0].d[0]==1) printf("sortir le pion 1\t\tp1\n");
-	if(j[i].p[0].d[1]==1) printf("faire avancer le pion 1\t\tp1\n");
-	if(j[i].p[0].d[2]==1) printf("faire avancer le pion 1\t\tp1\n");
-	if(j[i].p[1].d[0]==1) printf("sortir le pion 2\t\tp2\n");
-	if(j[i].p[1].d[1]==1) printf("faire avancer le pion 2\t\tp2\n");
-	if(j[i].p[1].d[2]==1) printf("faire avancer le pion 2\t\tp2\n");
-	if((j[i].p[0].d[3]==1)&&(j[i].p[1].d[3]==1)) printf("aucune action possible\t\tok\n");
+	if(tab_j[id_joueur].p[0].d[0]==1)	printf("sortir le pion 1\t\tp1\n");
+	if(tab_j[id_joueur].p[0].d[1]==1)	printf("faire avancer le pion 1\t\tp1\n");
+	if(tab_j[id_joueur].p[0].d[2]==1)	printf("faire avancer le pion 1\t\tp1\n");
+	if(tab_j[id_joueur].p[1].d[0]==1)	printf("sortir le pion 2\t\tp2\n");
+	if(tab_j[id_joueur].p[1].d[1]==1)	printf("faire avancer le pion 2\t\tp2\n");
+	if(tab_j[id_joueur].p[1].d[2]==1)	printf("faire avancer le pion 2\t\tp2\n");
+	if(!pile_est_vide(&pile_p))				printf("retour en arriere\t\tr\n");
+	if((tab_j[id_joueur].p[0].d[3]==1)&&(tab_j[id_joueur].p[1].d[3]==1)) printf("aucune action possible\t\tok\n");
 	printf("quitter\t\t\t\tq\n\n");	/*le joueur peut quitter la partie a tout moment*/
 	/*le joueur selectionne l'action*/
 	do{
 		printf("action choisit :\t\t");
 		scanf("%s",rep);
-	} while(!((!strcmp(rep,"p1")&&(j[i].p[0].d[0]==1||j[i].p[0].d[1]==1||j[i].p[0].d[2]==1))||(!strcmp(rep,"p2")&&(j[i].p[1].d[0]==1||j[i].p[1].d[1]==1||j[i].p[1].d[2]==1))||(!strcmp(rep,"ok")&&(j[i].p[0].d[3]==1)&&(j[i].p[1].d[3]==1))||(!strcmp(rep,"q"))));
+	} while(!((!strcmp(rep,"p1")&&(tab_j[id_joueur].p[0].d[0]==1||tab_j[id_joueur].p[0].d[1]==1||tab_j[id_joueur].p[0].d[2]==1))||(!strcmp(rep,"p2")&&(tab_j[id_joueur].p[1].d[0]==1||tab_j[id_joueur].p[1].d[1]==1||tab_j[id_joueur].p[1].d[2]==1))||(!strcmp(rep,"ok")&&(tab_j[id_joueur].p[0].d[3]==1)&&(tab_j[id_joueur].p[1].d[3]==1))||(!strcmp(rep,"q")&&(!pile_est_vide(&pile_p)))||(!strcmp(rep,"q"))));
 
-	if((!strcmp(rep,"p1"))&&(j[i].p[0].d[0]==1))	sortir(j,nb_joueurs,i,0);
-	if((!strcmp(rep,"p1"))&&(j[i].p[0].d[1]==1))	tour(j,nb_joueurs,i,0,de);
-	if((!strcmp(rep,"p1"))&&(j[i].p[0].d[2]==1))	centre(j,nb_joueurs,i,0,de);
-	if((!strcmp(rep,"p2"))&&(j[i].p[1].d[0]==1))	sortir(j,nb_joueurs,i,1);
-	if((!strcmp(rep,"p2"))&&(j[i].p[1].d[1]==1))	tour(j,nb_joueurs,i,1,de);
-	if((!strcmp(rep,"p2"))&&(j[i].p[1].d[2]==1))	centre(j,nb_joueurs,i,1,de);
+	if((!strcmp(rep,"p1"))&&(tab_j[id_joueur].p[0].d[0]==1))	sortir(tab_j,nb_joueurs,id_joueur,0);
+	if((!strcmp(rep,"p1"))&&(tab_j[id_joueur].p[0].d[1]==1))	tour(tab_j,nb_joueurs,id_joueur,0,de);
+	if((!strcmp(rep,"p1"))&&(tab_j[id_joueur].p[0].d[2]==1))	centre(tab_j,nb_joueurs,id_joueur,0,de);
+	if((!strcmp(rep,"p2"))&&(tab_j[id_joueur].p[1].d[0]==1))	sortir(tab_j,nb_joueurs,id_joueur,1);
+	if((!strcmp(rep,"p2"))&&(tab_j[id_joueur].p[1].d[1]==1))	tour(tab_j,nb_joueurs,id_joueur,1,de);
+	if((!strcmp(rep,"p2"))&&(tab_j[id_joueur].p[1].d[2]==1))	centre(tab_j,nb_joueurs,id_joueur,1,de);
+
+	if(!strcmp(rep,"q")&&(!pile_est_vide(&pile_p))) *retour=1;
 
 	if(!strcmp(rep,"q")) *quitter_partie=1;
-	if((j[i].p[0].centre==6)&&(j[i].p[1].centre==6)) *victoire=1;	/*si les deux pions sont dans la case 6 du centre le joueur a gagné*/
+	if((tab_j[id_joueur].p[0].centre==6)&&(tab_j[id_joueur].p[1].centre==6)) *victoire=1;	/*si les deux pions sont dans la case 6 du centre le joueur a gagné*/
 
 	/*on remet les drapeaux a 0*/
-	for(k=0;k<2;k++){
-		for(o=0;o<4;o++) j[i].p[k].d[o]=0;
+	for(i=0;i<2;i++){
+		for(j=0;j<4;j++) tab_j[id_joueur].p[i].d[j]=0;
 	}
 }
 
