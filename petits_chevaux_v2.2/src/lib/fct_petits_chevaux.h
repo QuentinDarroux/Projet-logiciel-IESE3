@@ -45,20 +45,19 @@ typedef struct {
 /*fonctions petits chevaux*/
 
 void	afficher_plateau(JOUEUR* j, PILE *pile_p, int compteur_tours, int i, int nb_joueurs, int de);
-void	copier(PARTIE *partie, int id_joueur, int de, JOUEUR *tab_j);
-void	liste_actions_possibles(JOUEUR *j, int num_j, int de);
+void	copie_partie(PARTIE *partie, int id_joueur, int de, JOUEUR *tab_j);
+void	liste_actions_possibles(JOUEUR *tab_j, int num_j, int de);
 int	jet();
-void	sortir(JOUEUR *j, int nb_joueurs, int num_j, int num_p);
-void	tour(JOUEUR *j, int nb_joueurs, int num_j, int num_p, int de);
-void	centre(JOUEUR *j, int nb_joueurs, int num_j, int num_p, int de);
-void	jouer_de(JOUEUR* tab_j, PARTIE partie, PILE *pile_p, int id_joueur, int nb_joueurs, int de, char* rep, int* retour, int* quitter_partie, int* victoire);
-void	petits_chevaux(int nb_joueurs, JOUEUR* j);
+void	sortir(JOUEUR *tab_j, int nb_joueurs, int num_j, int num_p);
+void	tour(JOUEUR *tab_j, int nb_joueurs, int num_j, int num_p, int de);
+void	centre(JOUEUR *tab_j, int nb_joueurs, int num_j, int num_p, int de);
+void	jouer_de(JOUEUR* tab_j, PARTIE partie, PILE *pile_p, int id_joueur, int nb_joueurs, int de, char* rep,int* retour, int* quitter_partie, int* victoire);
 
 /*fonctions pile LIFO*/
 
-void init_pile(PILE *p);
-int pile_est_pliene(PILE *p);
-int pile_est_vide(PILE *p);
-void empiler(PILE *p, PARTIE elem);
-PARTIE depiler(PILE *p);
+void init_pile(PILE *pile_p);
+int pile_est_pliene(PILE *pile_p);
+int pile_est_vide(PILE *pile_p);
+void empiler(PILE *pile_p, PARTIE elem);
+PARTIE depiler(PILE *pile_p);
 void empiler_partie(PILE *pile_p, PARTIE partie);

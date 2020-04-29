@@ -75,6 +75,10 @@ int	main()
 
 		de=jet();
 
+		/*si le joueur a choisit de revenir en arriere,*/
+		/*la partie est remise dans l'etat dans lequelle*/
+		/*elle etait au tour precedent*/
+
 		if(retour){
 			partie=depiler(&pile_p);
 			for(i=0;i<4;i++){
@@ -93,7 +97,7 @@ int	main()
 			retour=0;
 		}
 
-		copier(&partie,id_joueur,de,tab_j);
+		copie_partie(&partie,id_joueur,de,tab_j);
 
 		/*affichage du plateau*/
 	
@@ -115,7 +119,7 @@ int	main()
 			compteur_tours++;
 
 			de=jet();
-			copier(&partie,id_joueur,de,tab_j);
+			copie_partie(&partie,id_joueur,de,tab_j);
 			afficher_plateau(tab_j,&pile_p,compteur_tours,id_joueur,nb_joueurs,de);
 		}
 
