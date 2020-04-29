@@ -2,31 +2,34 @@
 
 /*fonctions petits chevaux*/
 
-void	afficher_plateau(JOUEUR* j, int i, int nb_joueurs, int de)
+void	afficher_plateau(JOUEUR* tab_j, PILE *pile_p, int compteur_tours, int id_joueur, int nb_joueurs, int de)
 {
-	int k,o;
+	int i,j;
+
+	printf("\e[1;1H\e[2J");
+	printf("partie : %d pile : %d",compteur_tours,pile_p->sommet);
 
 	printf("\n");
-	for(k=0;k<nb_joueurs;k++){
-	printf("pions de %s :\n",j[k].nom);
-		for(o=0;o<2;o++){
-		printf("\t%d : ",o+1);
-			switch(j[k].p[o].etat){
+	for(i=0;i<nb_joueurs;i++){
+	printf("pions de %s :\n",tab_j[i].nom);
+		for(j=0;j<2;j++){
+		printf("\t%d : ",j+1);
+			switch(tab_j[i].p[j].etat){
 				case 0:
 					printf("ecurie\n");
 					break;
 				case 1:
-					printf("tour\t\t%d\n",j[k].p[o].tour);
+					printf("tour\t\t%d\n",tab_j[i].p[j].tour);
 					break;
 				case 2:
-					printf("centre\t\t%d\n",j[k].p[o].centre);
+					printf("centre\t\t%d\n",tab_j[i].p[j].centre);
 					break;
 				default:
 					break;
 			}
 		}
 	}
-	printf("\njoueur :\t\t\t%s\njet :\t\t\t\t%d\n\n",j[i].nom,de);
+	printf("\njoueur :\t\t\t%s\njet :\t\t\t\t%d\n\n",tab_j[id_joueur].nom,de);
 }
 
 
@@ -210,7 +213,7 @@ void	centre(JOUEUR *j, int nb_joueurs, int num_j, int num_p, int de)
 
 
 
-void	jouer_de(JOUEUR* tab_j, PARTIE partie, PILE pile_p, int id_joueur, int nb_joueurs, int de, char* rep, int* retour, int* quitter_partie, int* victoire)
+void	jouer_de(JOUEUR* tab_j, PARTIE partie, PILE *pile_p, int id_joueur, int nb_joueurs, int de, char* rep, int* retour, int* quitter_partie, int* victoire)
 {
 	int i,j;
 
@@ -223,14 +226,14 @@ void	jouer_de(JOUEUR* tab_j, PARTIE partie, PILE pile_p, int id_joueur, int nb_j
 	if(tab_j[id_joueur].p[1].d[0]==1)	printf("sortir le pion 2\t\tp2\n");
 	if(tab_j[id_joueur].p[1].d[1]==1)	printf("faire avancer le pion 2\t\tp2\n");
 	if(tab_j[id_joueur].p[1].d[2]==1)	printf("faire avancer le pion 2\t\tp2\n");
-	if(!pile_est_vide(&pile_p))			printf("retour en arriere\t\tr\n");
 	if((tab_j[id_joueur].p[0].d[3]==1)&&(tab_j[id_joueur].p[1].d[3]==1)) printf("aucune action possible\t\tok\n");
+	if(!pile_est_vide(pile_p))			printf("retour en arriere\t\tr\n");
 	printf("quitter\t\t\t\tq\n\n");	/*le joueur peut quitter la partie a tout moment*/
 	/*le joueur selectionne l'action*/
 	do{
 		printf("action choisit :\t\t");
 		scanf("%s",rep);
-	} while(!((!strcmp(rep,"p1")&&(tab_j[id_joueur].p[0].d[0]==1||tab_j[id_joueur].p[0].d[1]==1||tab_j[id_joueur].p[0].d[2]==1))||(!strcmp(rep,"p2")&&(tab_j[id_joueur].p[1].d[0]==1||tab_j[id_joueur].p[1].d[1]==1||tab_j[id_joueur].p[1].d[2]==1))||(!strcmp(rep,"ok")&&(tab_j[id_joueur].p[0].d[3]==1)&&(tab_j[id_joueur].p[1].d[3]==1))||(!strcmp(rep,"q")&&(!pile_est_vide(&pile_p)))||(!strcmp(rep,"q"))));
+	} while(!((!strcmp(rep,"p1")&&(tab_j[id_joueur].p[0].d[0]==1||tab_j[id_joueur].p[0].d[1]==1||tab_j[id_joueur].p[0].d[2]==1))||(!strcmp(rep,"p2")&&(tab_j[id_joueur].p[1].d[0]==1||tab_j[id_joueur].p[1].d[1]==1||tab_j[id_joueur].p[1].d[2]==1))||(!strcmp(rep,"ok")&&(tab_j[id_joueur].p[0].d[3]==1)&&(tab_j[id_joueur].p[1].d[3]==1))||(!strcmp(rep,"r")&&(!pile_est_vide(pile_p)))||(!strcmp(rep,"q"))));
 
 	if((!strcmp(rep,"p1"))&&(tab_j[id_joueur].p[0].d[0]==1))	sortir(tab_j,nb_joueurs,id_joueur,0);
 	if((!strcmp(rep,"p1"))&&(tab_j[id_joueur].p[0].d[1]==1))	tour(tab_j,nb_joueurs,id_joueur,0,de);
@@ -239,8 +242,8 @@ void	jouer_de(JOUEUR* tab_j, PARTIE partie, PILE pile_p, int id_joueur, int nb_j
 	if((!strcmp(rep,"p2"))&&(tab_j[id_joueur].p[1].d[1]==1))	tour(tab_j,nb_joueurs,id_joueur,1,de);
 	if((!strcmp(rep,"p2"))&&(tab_j[id_joueur].p[1].d[2]==1))	centre(tab_j,nb_joueurs,id_joueur,1,de);
 
-	if(!strcmp(rep,"q")&&(!pile_est_vide(&pile_p))) *retour=1;
-	else empiler(&pile_p,partie);
+	if((!strcmp(rep,"r"))&&(!pile_est_vide(pile_p))) *retour=1;
+	else empiler_partie(pile_p,partie);
 
 	if(!strcmp(rep,"q")) *quitter_partie=1;
 	if((tab_j[id_joueur].p[0].centre==6)&&(tab_j[id_joueur].p[1].centre==6)) *victoire=1;	/*si les deux pions sont dans la case 6 du centre le joueur a gagné*/
@@ -262,8 +265,35 @@ void	jouer_de(JOUEUR* tab_j, PARTIE partie, PILE pile_p, int id_joueur, int nb_j
 
 
 /*fonctions pile LIFO*/
+void init_pile(PILE *p)
+{
+	int i,j,k,l;
+	p->sommet=0;
+	for(i=0;i<MAX_PILE;i++){
+		for(j=0;j<4;j++){
+			p->T[i].tab_j[j].depart=0;
+			p->T[i].tab_j[j].arrivee=0;
+			p->T[i].tab_j[j].etat=0;
+			for(k=0;k<2;k++){
+				p->T[i].tab_j[j].p[k].etat=0;
+				p->T[i].tab_j[j].p[k].tour=0;
+				p->T[i].tab_j[j].p[k].centre=0;
+				for(l=0;l<4;l++) p->T[i].tab_j[j].p[k].d[l]=0;
+			}
+		}
+	}
+}
 
-int pile_est_pleine(PILE *p){
+
+
+
+
+
+
+
+
+int pile_est_pleine(PILE *p)
+{
 	if(p->sommet==MAX_PILE) return 1;
 	else return 0;
 }
@@ -276,7 +306,8 @@ int pile_est_pleine(PILE *p){
 
 
 
-int pile_est_vide(PILE *p){
+int pile_est_vide(PILE *p)
+{
 	if(p->sommet==0) return 1;
 	else return 0;
 }
@@ -289,9 +320,10 @@ int pile_est_vide(PILE *p){
 
 
 
-void empiler(PILE *p, PARTIE elem){
+void empiler(PILE *p, PARTIE elem)
+{
 	if(pile_est_pleine(p)){
-		printf("Erreure : la pile est pleine");
+		printf("Erreure : la pile est pleine\n");
 		return;
 	}
 	p->T[p->sommet]=elem;
@@ -306,7 +338,8 @@ void empiler(PILE *p, PARTIE elem){
 
 
 
-PARTIE depiler(PILE *p){
+PARTIE depiler(PILE *p)
+{
 	PARTIE ret;
 	PARTIE ret_zero;
 	int i,j,k;
@@ -327,11 +360,39 @@ PARTIE depiler(PILE *p){
 	}
 
 	if(pile_est_vide(p)){
-		printf("Erreur : la pile est vide");
+		printf("Erreur : la pile est vide\n");
 		return ret_zero;
 	}
 	p->sommet=p->sommet-1;
 	ret=p->T[p->sommet];
 	p->T[p->sommet]=ret_zero;
 	return ret;
+}
+
+
+
+
+
+
+
+
+
+void empiler_partie(PILE *pile_p, PARTIE partie)
+{
+	int i;
+	PILE pile_int;
+
+	init_pile(&pile_int);
+
+	if(pile_est_pleine(pile_p)){
+		for(i=0;i<MAX_PILE;i++){
+			empiler(&pile_int,depiler(pile_p));
+		}
+		depiler(&pile_int);
+		for(i=0;i<MAX_PILE-1;i++){
+			empiler(pile_p,depiler(&pile_int));
+		}
+	}
+
+	empiler(pile_p,partie);
 }
