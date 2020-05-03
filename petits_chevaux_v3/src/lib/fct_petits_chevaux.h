@@ -1,13 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #define MAX_PILE 20
 #define TAILLE_LISTE_DRAPEAUX 4
 #define MAX_NOM 30
-#define NB_PIONS 4
+#define NB_PIONS 2
 #define MAX_REP 10
 #define MAX_JOUEURS 4
+#define MAX_SAUVEGARDES 3
+#define MAX_DATE 30
 
 /*structures petits chevaux*/
 
@@ -35,6 +38,14 @@ typedef struct {
 	JOUEUR	tab_j[MAX_JOUEURS];
 } PARTIE;
 
+typedef struct {
+	char		date_sauvegarde[MAX_DATE];
+	int		nb_joueurs;
+	PARTIE	partie;
+	int		id_sauvegarde;
+	int		etat;
+} SAUVEGARDE;
+
 /*structure pile LIFO*/
 
 typedef struct {
@@ -44,14 +55,28 @@ typedef struct {
 
 /*fonctions petits chevaux*/
 
+void	init_partie(int* nb_joueurs, JOUEUR *tab_j, int* id_joueur);
 void	afficher_plateau(JOUEUR* j, PILE *pile_p, int compteur_tours, int i, int nb_joueurs, int de);
 void	copie_partie(PARTIE *partie, int id_joueur, int de, JOUEUR *tab_j);
 void	liste_actions_possibles(JOUEUR *tab_j, int num_j, int de);
-int	jet();
+int		jet();
 void	sortir(JOUEUR *tab_j, int nb_joueurs, int num_j, int num_p);
 void	tour(JOUEUR *tab_j, int nb_joueurs, int num_j, int num_p, int de);
 void	centre(JOUEUR *tab_j, int nb_joueurs, int num_j, int num_p, int de);
 void	jouer_de(JOUEUR* tab_j, PARTIE partie, PILE *pile_p, int id_joueur, int nb_joueurs, int de, char* rep,int* retour, int* quitter_partie, int* victoire);
+
+/*auvegardes*/
+
+void	init_sauvegarde();
+void	copier_sauvegarde();
+int		nombre_de_sauvegardes();
+int		emplacement_est_vide(int id_sauvegarde);
+void	afficher_sauvegardes();
+void	afficher_sauvegardes_inter();
+void	supprimmer_sauvegarde(int id_sauvegarde);
+void	sauvegarder(PARTIE partie, int nb_joueurs);
+void	charger_sauvegarde(PARTIE *partie, int* nb_joueurs);
+void	gerer_fichier_sauvegarde();
 
 /*fonctions pile LIFO*/
 
