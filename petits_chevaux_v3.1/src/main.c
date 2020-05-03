@@ -165,7 +165,6 @@ int	main()
 
 	if(quitter_partie){
 		printf("\e[1;1H\e[2J");
-		printf("\n\n\npartie stopee\n\n\n");
 		do{
 			printf("voulez-vous sauvegarder ? (o/n) : ");
 			scanf("%s",rep);

@@ -649,8 +649,8 @@ void	charger_sauvegarde(PARTIE *partie, int* nb_joueurs)
 				*partie=sauvegarde.partie;
 				*nb_joueurs=sauvegarde.nb_joueurs;
 			}
-			fclose(fichier);
 		}
+		fclose(fichier);
 	}
 	else printf("erreure lors de l'ouverture du fichier de sauvegarde\n");
 }
