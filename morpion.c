@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 /*---------------------------declaration des variables-------------------*/
 int Tjoue; /* Tjoue indique quel joueur dois jouer son tour 1 = humain , 0 = robot */
@@ -25,15 +26,24 @@ void afficher_grille(int ** grille );
 int main(){
     Partie =1;
     Tjoue =0; /* l'humain commence toujours,  */
-    int x,y; /* Y = Lignes X = Colonnes */
+    int x ;
+    int y ; /* Y = Lignes X = Colonnes */
     int **Grille = remplir_grille();
         while(Partie == 1){ /* la partie est en cours */
             printf("Tjoue = %d \n",Tjoue);
             afficher_grille(Grille);
+
             printf("choississez X\n");
             scanf("%d",&x);
             printf("choississez Y\n");
             scanf("%d",&y);
+        while(x > 2 || y > 2  || x<0 || y<0 ){
+            printf("les valeurs choisit ne sont pas bonnes\n");
+            printf("choississez X\n");
+            scanf("%d",&x);
+            printf("choississez Y\n");
+            scanf("%d",&y);
+        }
             if( verifierCaseValide(Grille,y,x) == 1){
                 printf("oui\n");
                 click_vide(y,x,Grille);
@@ -569,8 +579,13 @@ void ordiJoue(int X, int Y, char lignegagn , char lignedef, int ** Grille){
     else{
         int try =1;
         while(try == 1){
+            clock_t aleatoire = clock();
+            printf("ticks :%lu\n",aleatoire);
+            srand(aleatoire*time(NULL));
             X = rand()*3/(RAND_MAX+1.0);
+            srand(aleatoire*time(NULL)*96);
             Y = rand()*3/(RAND_MAX+1.0);
+            printf("x : %d; Y : %d \n",X,Y);
             if( verifierCaseValide(Grille,Y,X) == 1){
                 try = 0;
                 click_vide(Y,X,Grille);
