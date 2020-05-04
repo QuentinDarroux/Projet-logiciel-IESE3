@@ -562,11 +562,6 @@ void	sauvegarder(PARTIE partie, int nb_joueurs)
 
 	sauvegarde_vide.etat=0;
 
-	time_t		t = time(NULL);
-	struct tm	*tm = localtime(&t);
-
-	strftime(sauvegarde_partie.date_sauvegarde,20,"%c",tm);
-
 	sauvegarde_partie.nb_joueurs=nb_joueurs;
 	sauvegarde_partie.partie=partie;
 	sauvegarde_partie.etat=1;
@@ -589,6 +584,11 @@ void	sauvegarder(PARTIE partie, int nb_joueurs)
 	} while(!((rep==1||rep==2||rep==3)&&(sauvegarde_possible)));
 
 	copier_sauvegarde();
+
+	time_t		t = time(NULL);
+	struct tm	*tm = localtime(&t);
+
+	strftime(sauvegarde_partie.date_sauvegarde,20,"%c",tm);
 
 	fichier = fopen("sauvegardes.txt","wb");
 	fichier_inter = fopen("inter.txt","rb");
