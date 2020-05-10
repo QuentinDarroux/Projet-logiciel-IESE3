@@ -1,4 +1,6 @@
 //MAC OS, Linux : gcc main.c -o prog $(sdl2-config --cflags --libs) -> ./prog
+//#include <SDL_image.h>	//marche pas
+//#include <SDL_ttf.h>	//marche pas
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,10 +10,9 @@
 #include <stdbool.h>
 //audio
 #include "audio/audio.c"
-#include "audio/audio.h"
+//jeu petits chevaux
+#include "jeu_petit_chevaux/fct_petits_chevaux.c"
 
-//#include <SDL_image.h>
-//#include <SDL_ttf.h>
 
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
@@ -31,7 +32,7 @@ int CROIX1=0;
 	int CROIX7=0;
 	int CROIX8=0;
 	int CROIX9=0;
-/*PENDU*/
+/*fonction affiche_texte*/
 int A=0;
 	int B=0;
 	int C=0;
@@ -59,6 +60,11 @@ int A=0;
 	int Y=0;
 	int Z=0;
 	int _=0;
+	int SPACE=0;
+/*fonction affiche_scan*/
+int SCANF_J1 = 0;			//indique si on saisie le joueur 1
+int SCANF_J2 = 0;			//indique si on saisie le joueur 2
+int ECRITURE_OK = 0;	    //nb de caractere max pour l'ID du joueur (voir fonction)
 
 //Fonction erreur
 void SDL_ExitError(const char *message);
@@ -68,6 +74,11 @@ void SDL_ExitError2(const char *message, SDL_Renderer *renderer, SDL_Window *win
 void affiche_image(SDL_Surface *image, SDL_Texture *texture, SDL_Rect pos_image, const char* file, SDL_Renderer *renderer, SDL_Window *window);
 void clear_image(SDL_Window *w, SDL_Renderer *r, SDL_Texture *t);
 
+//Fonction texte
+void affiche_texte(char* chaine, SDL_Renderer *renderer, SDL_Window *window, int fontsize, int pos_x, int pos_y, int clear);
+void affiche_instruction(char* chaine, SDL_Renderer *renderer, SDL_Window *window, int pos_x, int pos_y, int clear);
+void sdl_scanf(char* chaine, SDL_Event *event, SDL_Renderer *renderer, SDL_Window *window, int fontsize, int pos_x, int pos_y);
+
 //Clic
 int clic_gauche(int x_min, int x_max, int y_min, int y_max, SDL_Event event);
 
@@ -76,8 +87,9 @@ int position(int x_min, int x_max, int y_min, int y_max, SDL_Event event);
 
 //Animation Bouton accueil
 int anim_bouton(int x_min, int x_max, int y_min, int y_max, SDL_Event event, int affiche_clear, SDL_Texture *texture);
-//Animation Select a game (prototype obligatoire pour timer)
-Uint32 clignotement_select_timer(Uint32 intervalle, void *parametre);
+
+//Clignotement (avec Timer)
+Uint32 clignotement_accueil(Uint32 intervalle, void *parametre);
 
 //audio-musique
 void audio_musique(int set, int play, const char* file, SDL_Renderer *renderer, SDL_Window *window);
@@ -89,7 +101,10 @@ void affiche_point_morpion(SDL_Renderer *renderer, SDL_Window *window, SDL_Event
 void croix_morpion(SDL_Renderer *renderer, SDL_Window *window, SDL_Event *event1, int restart);
 
 /*PROTOTYPES PENDU*/
-void affiche_texte(char* chaine, SDL_Renderer *renderer, SDL_Window *window, int clear);
+void	init_partie(int* nb_joueurs, JOUEUR *tab_j, int* id_joueur, SDL_Event *event3, SDL_Renderer *renderer, SDL_Window *window);
+
+/*PROTOTYPES CHEVAL*/
+
 
 //limitation fps
 void limit_fps(unsigned int limit);
@@ -129,9 +144,9 @@ int main(int argc, char** argv){
 	if(renderer == NULL)
 		SDL_ExitError("Rendu fenetre echouee");
 
-	/*clignotement select a game*/
+	/*clignotement select a game - Accueil*/
 	SDL_TimerID timer;
-	timer = SDL_AddTimer(500, clignotement_select_timer, NULL);//parametre : (nb de secondes entre chaque appel, fonction appelé, parametre pour la fonction)
+	timer = SDL_AddTimer(500, clignotement_accueil, NULL);//parametre : (nb de secondes entre chaque appel, fonction appelé, parametre pour la fonction)
     SDL_Surface *image_cli = NULL;
 	SDL_Texture *texture_cli = NULL;
 	SDL_Rect pos_cli; pos_cli.x = 490; pos_cli.y = 530; pos_cli.h = 40;	pos_cli.w = 400;
@@ -163,7 +178,6 @@ int main(int argc, char** argv){
     			affiche_image(image_cli, texture_cli, pos_cli, "image/cache_select.bmp", renderer, window);
     		else
     			clear_image(NULL, NULL, texture_cli);
-    		//SDL_RemoveTimer(timer); /* Arrêt du timer */
     		
     		//affichage case Jeu 1
     		SDL_Surface *image_choix1 = NULL;
@@ -290,8 +304,6 @@ int main(int argc, char** argv){
 
 				    						switch(event1.type){
 
-
-
 				    							case SDL_MOUSEBUTTONDOWN:						//clic de la souris
 				    								
 				    								croix_morpion(renderer, window, &event1, 0);
@@ -349,15 +361,17 @@ int main(int argc, char** argv){
 						//SDL_RenderPresent(renderer);
 
 						//affichage de texte
-						char texte[30] = "BINKSTOB_NKS";
+						char texte[30] = "BINKS TO B_NKS";
 
 		    				SDL_Event event2;									
 		    					while(pendu_running == 1){					//boucle de jeu morpion
 
 									SDL_RenderPresent(renderer);
 									affiche_image(image_fond_pendu, texture_fond_pendu, pos_image, "image/pendu.bmp", renderer, window);
-									affiche_texte(texte, renderer, window, 0);
-									//texte[0] = '\0';
+									affiche_texte(texte, renderer, window, 3, 90, 260, 0);
+									affiche_texte(texte, renderer, window, 2, 90, 360, 0);
+									affiche_texte(texte, renderer, window, 1, 90, 460, 0);
+									affiche_texte(texte, renderer, window, 0, 90, 560, 0);
 
 		    						while(SDL_PollEvent(&event2)){
 				    						
@@ -368,28 +382,26 @@ int main(int argc, char** argv){
 													
 				    								if(clic_gauche(62, 242,645,681, event2)){		//restart
 				    									texte[0] = '\0';
-				    									affiche_texte(texte, renderer, window, 1);
+				    									affiche_texte(texte, renderer, window, 2, 90, 360, 1);
 				    								}
 
 				    								if(clic_gauche(1167, 1257, 8, 74, event2)){	//quitte le jeu (croix)
 				    									pendu_running = 0;
-				    									affiche_texte(texte, renderer, window, 1);
+				    									affiche_texte(texte, renderer, window, 2, 90, 360, 1);
 				    									printf("FIN PENDU \n");
 				    								}
 
 				    								break;
 
 				    							case SDL_MOUSEMOTION:							//position de la souris
-					    							
 					    							printf("position souris : %d : %d \n", event2.motion.x, event2.motion.y);
-
 				    								break;
 
 				    							case SDL_QUIT: 							//quitte le programme (croix)
 				    								programmed_launched = SDL_FALSE; 
 				    								pendu_running = 0;
 				    								printf("FIN PENDU \n");
-				    								affiche_texte(texte, renderer, window, 1);
+				    								affiche_texte(texte, renderer, window, 2, 90, 360, 1);
 				    								clear_image(NULL, NULL, texture_choix1);	//liberation texture case1
     												clear_image(NULL, NULL, texture_choix2);	//liberation texture case2
 									    			clear_image(NULL, NULL, texture_choix3);	//liberation texture case3
@@ -419,20 +431,272 @@ int main(int argc, char** argv){
     					//affichage image de fond du jeu
     					SDL_Surface *image_fond_cheval = NULL;
 						SDL_Texture *texture_fond_cheval = NULL;
-						affiche_image(image_fond_cheval, texture_fond_cheval, pos_image, "image/cheval.bmp", renderer, window);
-						SDL_RenderPresent(renderer);
+
+						//saisie et affichage : NOM joueurs
+						char nom1[15] = "";//nom_joueur1
+						char nom2[15] = "";//nom_joueur2
+						char* clear = "";		//pour remmetre à zero les ID des joueurs quand on restart
 
 		    				SDL_Event event3;									
 		    					while(cheval_running == 1){					//boucle de jeu morpion
+									
+									SDL_RenderPresent(renderer);
+
+				    				//image de fond
+				    				affiche_image(image_fond_cheval, texture_fond_cheval, pos_image, "image/cheval.bmp", renderer, window);
+
+				    				//affichage instruction
+				    				if(SCANF_J1 || SCANF_J2){
+						    			affiche_instruction("ENTREZ VOTRE PSEUDO", renderer, window, 900, 600, 0);
+						    			affiche_instruction("TAPEZ ENTRER", renderer, window, 960, 630, 0);
+						    		}
+
+						    		//affichage : Nom joueurs
+						    		affiche_texte(&nom1[0], renderer, window, 0, 980, 300, 0);
+									affiche_texte(&nom2[0], renderer, window, 0, 980, 373, 0);
+									
 
 		    						while(SDL_PollEvent(&event3)){
-				    						
+				    					
+				    					//saisie : NOM joueurs
+				    					if(SCANF_J1)
+				    						sdl_scanf(nom1, &event3, renderer, window, 0, 100, 200);	//event, renderer, window, fontsize, pos_x, pos_y
+				    					
+				    					if(SCANF_J2)
+				    						sdl_scanf(nom2, &event3, renderer, window, 0, 100, 200);	//event, renderer, window, fontsize, pos_x, pos_y
+
 				    						switch(event3.type){
-
-
 
 				    							case SDL_MOUSEBUTTONDOWN:
 
+				    								//activation saisie et affichage de noms
+				    								if(clic_gauche(974,1235,292,345, event3)){	//saisie Nom_1
+				    									SCANF_J1 = 1;
+				    								}
+				    								if(clic_gauche(974,1235,365,417, event3)){	//saisie Nom_2
+				    									SCANF_J2 = 1;
+				    								}
+				    								
+				    								//JEU PETITS CHEVAUX (A adapter)
+				    								if(clic_gauche(0, 10, 0, 10, event3)){
+
+				    									printf("LANCEMENT JEU CHEVAUX\n\n");
+
+						    									printf("\e[1;1H\e[2J");
+
+																JOUEUR	tab_j[MAX_JOUEURS];
+																PARTIE	partie;
+																PILE	pile_p;
+
+																init_pile(&pile_p);
+
+																FILE*	fichier;
+
+																int		nb_joueurs;	/*explicite, cette variable édité par l'utilisateur*/
+																				/*permet de connaître le nombre de joueur de la partie*/
+																int		i,j,k;
+																int		id_joueur;
+																int		quitter_menu=1;
+																int		chargement_sauvegarde=0;
+																int		compteur_tours=0;
+																int		retour=0;
+																int		quitter_partie=0;
+																int		victoire=0;
+																int		de;
+																int		int_rep=0;
+																char	rep[MAX_REP];
+
+																/*verification que le fichier de sauvegarde existe*/
+
+																fichier = fopen("sauvegardes.txt","rb");
+																if(fichier==NULL)	init_sauvegarde();
+																else fclose(fichier);
+
+																/*switch*/
+
+																while(quitter_menu){
+																	while(SDL_PollEvent(&event3)){
+
+																	/**ORIGINAL**/
+																	// printf("\e[1;1H\e[2J");
+																	// printf("action(s) possible(s) :\n");
+																	// printf("lancer une nouvelle partie\t1\n");
+																	// printf("gerer le fichier de sauvegarde\t2\n");
+																	// if(nombre_de_sauvegardes()!=0) printf("charger une sauvegarde\t\t3\n");		//PAS OUBLIER VERIF !
+																	// printf("quitter\t\t\t\t0\n\n");
+
+																	// do{
+																	// 	printf("action choisit :\t\t");
+																	// 	scanf("%d",&int_rep);
+																	// } while(!(int_rep==0||int_rep==1||int_rep==2||int_rep==3));
+
+
+																	/**ADAPTATION SDL*/
+
+																		if(clic_gauche(53,320,286,330, event3)){
+																			int_rep = 1;
+																			printf("choix 1\n");
+																		}
+
+																		if(clic_gauche(53,320,360,405, event3)){
+																			int_rep = 3;
+																			printf("choix 2\n");
+																		}
+
+																		if(clic_gauche(53,320,433,485, event3)){
+																			int_rep = 2;
+																			printf("choix 3 \n");
+																		}
+
+
+																	switch(int_rep){
+																		case 0 :
+																			//return 0;
+																			break; //rajout
+																		case 1 :
+																			printf("\e[1;1H\e[2J");
+																			init_partie(&nb_joueurs,tab_j,&id_joueur, &event3, renderer, window);	//ADAPTER LA FONCTION (EN BAS)
+																			quitter_menu=0;
+																			break;
+																		case 2 :							//A FAIRE 
+																			gerer_fichier_sauvegarde(); 
+																			break;
+																		case 3 :							//A FAIRE 
+																			printf("\e[1;1H\e[2J");
+																			charger_sauvegarde(&partie,&nb_joueurs);
+																			for(i=0;i<MAX_JOUEURS;i++){
+																				tab_j[i].depart=partie.tab_j[i].depart;
+																				tab_j[i].arrivee=partie.tab_j[i].arrivee;
+																				tab_j[i].etat=partie.tab_j[i].etat;
+																				j=0;
+																				while(partie.tab_j[i].nom[j]!='\0'){
+																					tab_j[i].nom[j]=partie.tab_j[i].nom[j];
+																					printf("%c",partie.tab_j[i].nom[j]);
+																					j++;
+																				}
+																				tab_j[i].nom[j]='\0';
+																				for(j=0;j<NB_PIONS;j++){
+																					tab_j[i].p[j].etat=partie.tab_j[i].p[j].etat;
+																					tab_j[i].p[j].tour=partie.tab_j[i].p[j].tour;
+																					tab_j[i].p[j].centre=partie.tab_j[i].p[j].centre;
+																					for(k=0;k<TAILLE_LISTE_DRAPEAUX;k++) tab_j[i].p[j].d[k]=partie.tab_j[i].p[j].d[k];
+																				}
+																			}
+																			de=partie.de;
+																			id_joueur=partie.id_joueur;
+																			quitter_menu=0;
+																			chargement_sauvegarde=1;
+																			break;
+																		default :
+																			break;
+																	}
+																}
+																}
+
+																while(1){
+
+																	if(!chargement_sauvegarde) de=jet();
+																	else chargement_sauvegarde = 0;
+															 
+																	/*si le joueur a choisit de revenir en arriere,*/
+																	/*la partie est remise dans l'etat dans lequelle*/
+																	/*elle etait au tour precedent*/
+
+																	if(retour){
+																		partie=depiler(&pile_p);
+																		for(i=0;i<MAX_JOUEURS;i++){
+																			tab_j[i].depart=partie.tab_j[i].depart;
+																			tab_j[i].arrivee=partie.tab_j[i].arrivee;
+																			tab_j[i].etat=partie.tab_j[i].etat;
+																			for(j=0;j<NB_PIONS;j++){
+																				tab_j[i].p[j].etat=partie.tab_j[i].p[j].etat;
+																				tab_j[i].p[j].tour=partie.tab_j[i].p[j].tour;
+																				tab_j[i].p[j].centre=partie.tab_j[i].p[j].centre;
+																				for(k=0;k<TAILLE_LISTE_DRAPEAUX;k++) tab_j[i].p[j].d[k]=partie.tab_j[i].p[j].d[k];
+																			}
+																		}
+																		de=partie.de;
+																		id_joueur=partie.id_joueur;
+																		retour=0;
+																	}
+
+																	tab_j[id_joueur].etat=1;
+
+																	copie_partie(&partie,id_joueur,de,tab_j);
+
+																	/*affichage du plateau*/
+																
+																	afficher_plateau(tab_j,&pile_p,compteur_tours,id_joueur,nb_joueurs,de);
+
+																	/*activation du joueur i (ne sert à rien pour le moment mais peut etre utile par la suite)*/
+
+																	tab_j[id_joueur].etat=1;
+
+																	/*si le joueur tire un 6, il rejout. le joueur reste donc dans la boucle suivante tant qu'il tire des 6*/
+																	/*si le joueur ne tire pas de 6, il ne rentre pas dans la boucle*/
+
+																	while(de==6){
+
+																		jouer_de(tab_j,partie,&pile_p,id_joueur,nb_joueurs,de,rep,&retour,&quitter_partie,&victoire);
+
+																		if(quitter_partie||victoire||retour) break;
+
+																		compteur_tours++;
+
+																		de=jet();
+																		copie_partie(&partie,id_joueur,de,tab_j);
+																		afficher_plateau(tab_j,&pile_p,compteur_tours,id_joueur,nb_joueurs,de);
+																	}
+
+																	if(quitter_partie||victoire) break;
+																	if(!retour){
+
+																		jouer_de(tab_j,partie,&pile_p,id_joueur,nb_joueurs,de,rep,&retour,&quitter_partie,&victoire);
+
+																		if(quitter_partie||victoire) break;
+
+																		if(!retour){
+																			tab_j[id_joueur].etat=0;
+																			compteur_tours++;
+																			id_joueur++;
+																			if(id_joueur==nb_joueurs) id_joueur=0;
+																		}
+																	}
+																}
+
+																if(quitter_partie){
+																	printf("\e[1;1H\e[2J");
+																	do{
+																		printf("voulez-vous sauvegarder ? (o/n) : ");
+																		scanf("%s",rep);
+																	}while(!((!strcmp(rep,"o"))||(!strcmp(rep,"n"))));
+																	if(!strcmp(rep,"o")) sauvegarder(partie,nb_joueurs);
+																}
+																else{
+																	if(victoire){
+																		printf("\n\n%s a gagne\n\n",tab_j[id_joueur].nom);
+																	}
+																}
+
+
+
+
+
+
+
+
+				    								}
+
+
+
+				    								
+
+				    								if(clic_gauche(62, 242,645,681, event3)){		//restart
+				    									nom1[0] = *clear;
+				    									nom2[0] = *clear;
+				    									affiche_texte(&nom1[0], renderer, window, 2, 90, 360, 1); //clear le texte nom1
+				    									affiche_texte(&nom2[0], renderer, window, 2, 90, 360, 1); //clear le texte nom1
+				    								}
 		
 				    								if(clic_gauche(1167, 1257, 8, 74, event3)){	//quitte le jeu (croix)
 				    									cheval_running = 0;
@@ -449,9 +713,13 @@ int main(int argc, char** argv){
     												clear_image(NULL, NULL, texture_choix2);	//liberation texture case2
 									    			clear_image(NULL, NULL, texture_choix3);	//liberation texture case3
 									    			clear_image(NULL, NULL, texture);			//liberation texture fond accueil
-				    								break;		
-				    							
-				    							default: continue;
+				    								break;
+
+				    							case SDL_MOUSEMOTION:							//position de la souris
+					    							printf("position souris : %d : %d \n", event3.motion.x, event3.motion.y);
+				    								break;
+
+				    							default: break;
 				    						
 
 
@@ -823,20 +1091,19 @@ int anim_bouton(int x_min, int x_max, int y_min, int y_max, SDL_Event event, int
 }
 
 /* Fonction clignaotement select callback (sera appelée toutes les 1000 ms) */
-Uint32 clignotement_select_timer(Uint32 intervalle, void *parametre)
+Uint32 clignotement_accueil(Uint32 intervalle, void *parametre)
 {
 	CLIGNOTEMENT ^= 1;
     return intervalle;
 }
 
 
+
 /*fonction qui affiche du texte*/
 
 
-
-void affiche_texte(char* chaine, SDL_Renderer *renderer, SDL_Window *window, int clear){
-
-
+//fontsize : 0-minimal, 1-moyenne, 2-moyennne+, 3-maximal
+void affiche_texte(char* chaine, SDL_Renderer *renderer, SDL_Window *window, int fontsize, int pos_x, int pos_y, int clear){
 
 	int i = 0;
 
@@ -845,52 +1112,185 @@ void affiche_texte(char* chaine, SDL_Renderer *renderer, SDL_Window *window, int
   	SDL_Rect pos_lettre;
 	pos_lettre.h = 30;
 	pos_lettre.w = 30;
-	pos_lettre.x = 90;
-	pos_lettre.y = 360;
+	pos_lettre.x = pos_x;	//90
+	pos_lettre.y = pos_y;	//360
+
+	if(fontsize == 0){
+
+		while(chaine[i] != '\0'){
+
+			switch(chaine[i]){
 
 
-	while(chaine[i] != '\0'){
+				case 'A':  A = i+1; pos_lettre.x = pos_x + (A*26); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize0/A.bmp", renderer, window); break;
+				case 'B':  B = i+1; pos_lettre.x = pos_x + (B*26); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize0/B.bmp", renderer, window); break;
+				case 'C':  C = i+1; pos_lettre.x = pos_x + (C*26); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize0/C.bmp", renderer, window); break;
+				case 'D':  D = i+1; pos_lettre.x = pos_x + (D*26); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize0/D.bmp", renderer, window); break;
+				case 'E':  E = i+1; pos_lettre.x = pos_x + (E*26); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize0/E.bmp", renderer, window); break;
+				case 'F':  F = i+1; pos_lettre.x = pos_x + (F*26); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize0/F.bmp", renderer, window); break;
+				case 'G':  G = i+1; pos_lettre.x = pos_x + (G*26); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize0/G.bmp", renderer, window); break;
+				case 'H':  H = i+1; pos_lettre.x = pos_x + (H*26); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize0/H.bmp", renderer, window); break;
+				case 'I':  I = i+1; pos_lettre.x = pos_x + (I*26); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize0/I.bmp", renderer, window); break;
+				case 'J':  J = i+1; pos_lettre.x = pos_x + (J*26); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize0/J.bmp", renderer, window); break;
+				case 'K':  K = i+1; pos_lettre.x = pos_x + (K*26); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize0/K.bmp", renderer, window); break;
+				case 'L':  L = i+1; pos_lettre.x = pos_x + (L*26); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize0/L.bmp", renderer, window); break;
+				case 'M':  M = i+1; pos_lettre.x = pos_x + (M*26); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize0/M.bmp", renderer, window); break;
+				case 'N':  N = i+1; pos_lettre.x = pos_x + (N*26); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize0/N.bmp", renderer, window); break;
+				case 'O':  O = i+1; pos_lettre.x = pos_x + (O*26); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize0/O.bmp", renderer, window); break;
+				case 'P':  P = i+1; pos_lettre.x = pos_x + (P*26); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize0/P.bmp", renderer, window); break;
+				case 'Q':  Q = i+1; pos_lettre.x = pos_x + (Q*26); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize0/Q.bmp", renderer, window); break;
+				case 'R':  R = i+1; pos_lettre.x = pos_x + (R*26); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize0/R.bmp", renderer, window); break;
+				case 'S':  S = i+1; pos_lettre.x = pos_x + (S*26); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize0/S.bmp", renderer, window); break;
+				case 'T':  T = i+1; pos_lettre.x = pos_x + (T*26); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize0/T.bmp", renderer, window); break;
+				case 'U':  U = i+1; pos_lettre.x = pos_x + (U*26); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize0/U.bmp", renderer, window); break;
+				case 'V':  V = i+1; pos_lettre.x = pos_x + (V*26); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize0/V.bmp", renderer, window); break;
+				case 'W':  W = i+1; pos_lettre.x = pos_x + (W*26); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize0/W.bmp", renderer, window); break;
+				case 'X':  X = i+1; pos_lettre.x = pos_x + (X*26); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize0/X.bmp", renderer, window); break;
+				case 'Y':  Y = i+1; pos_lettre.x = pos_x + (Y*26); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize0/Y.bmp", renderer, window); break;
+				case 'Z':  Z = i+1; pos_lettre.x = pos_x + (Z*26); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize0/Z.bmp", renderer, window); break;
+				case '_':  _ = i+1; pos_lettre.x = pos_x + (_*26); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize0/_.bmp", renderer, window); break;
+				case ' ':  SPACE = i+1; pos_lettre.x = pos_x + (SPACE*26); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize0/space.bmp", renderer, window); break;
 
-		switch(chaine[i]){
+				default: break;
 
+			}
 
-			case 'A':  A = i+1; pos_lettre.x = 70 + (A*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/A.bmp", renderer, window); break;
-			case 'B':  B = i+1; pos_lettre.x = 70 + (B*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/B.bmp", renderer, window); break;
-			case 'C':  C = i+1; pos_lettre.x = 70 + (C*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/C.bmp", renderer, window); break;
-			case 'D':  D = i+1; pos_lettre.x = 70 + (D*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/D.bmp", renderer, window); break;
-			case 'E':  E = i+1; pos_lettre.x = 70 + (E*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/E.bmp", renderer, window); break;
-			case 'F':  F = i+1; pos_lettre.x = 70 + (F*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/F.bmp", renderer, window); break;
-			case 'G':  G = i+1; pos_lettre.x = 70 + (G*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/G.bmp", renderer, window); break;
-			case 'H':  H = i+1; pos_lettre.x = 70 + (H*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/H.bmp", renderer, window); break;
-			case 'I':  I = i+1; pos_lettre.x = 70 + (I*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/I.bmp", renderer, window); break;
-			case 'J':  J = i+1; pos_lettre.x = 70 + (J*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/J.bmp", renderer, window); break;
-			case 'K':  K = i+1; pos_lettre.x = 70 + (K*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/K.bmp", renderer, window); break;
-			case 'L':  L = i+1; pos_lettre.x = 70 + (L*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/L.bmp", renderer, window); break;
-			case 'M':  M = i+1; pos_lettre.x = 70 + (M*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/M.bmp", renderer, window); break;
-			case 'N':  N = i+1; pos_lettre.x = 70 + (N*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/N.bmp", renderer, window); break;
-			case 'O':  O = i+1; pos_lettre.x = 70 + (O*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/O.bmp", renderer, window); break;
-			case 'P':  P = i+1; pos_lettre.x = 70 + (P*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/P.bmp", renderer, window); break;
-			case 'Q':  Q = i+1; pos_lettre.x = 70 + (Q*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/Q.bmp", renderer, window); break;
-			case 'R':  R = i+1; pos_lettre.x = 70 + (R*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/R.bmp", renderer, window); break;
-			case 'S':  S = i+1; pos_lettre.x = 70 + (S*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/S.bmp", renderer, window); break;
-			case 'T':  T = i+1; pos_lettre.x = 70 + (T*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/T.bmp", renderer, window); break;
-			case 'U':  U = i+1; pos_lettre.x = 70 + (U*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/U.bmp", renderer, window); break;
-			case 'V':  V = i+1; pos_lettre.x = 70 + (V*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/V.bmp", renderer, window); break;
-			case 'W':  W = i+1; pos_lettre.x = 70 + (W*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/W.bmp", renderer, window); break;
-			case 'X':  X = i+1; pos_lettre.x = 70 + (X*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/X.bmp", renderer, window); break;
-			case 'Y':  Y = i+1; pos_lettre.x = 70 + (Y*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/Y.bmp", renderer, window); break;
-			case 'Z':  Z = i+1; pos_lettre.x = 70 + (Z*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/Z.bmp", renderer, window); break;
-			case '_':  _ = i+1; pos_lettre.x = 70 + (_*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/_.bmp", renderer, window); break;
-
-			default: break;
+		i++;
 
 		}
+	}
+	if(fontsize == 1){
 
-	i++;
+		while(chaine[i] != '\0'){
 
+			switch(chaine[i]){
+
+
+				case 'A':  A = i+1; pos_lettre.x = pos_x + (A*35); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize1/A.bmp", renderer, window); break;
+				case 'B':  B = i+1; pos_lettre.x = pos_x + (B*35); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize1/B.bmp", renderer, window); break;
+				case 'C':  C = i+1; pos_lettre.x = pos_x + (C*35); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize1/C.bmp", renderer, window); break;
+				case 'D':  D = i+1; pos_lettre.x = pos_x + (D*35); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize1/D.bmp", renderer, window); break;
+				case 'E':  E = i+1; pos_lettre.x = pos_x + (E*35); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize1/E.bmp", renderer, window); break;
+				case 'F':  F = i+1; pos_lettre.x = pos_x + (F*35); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize1/F.bmp", renderer, window); break;
+				case 'G':  G = i+1; pos_lettre.x = pos_x + (G*35); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize1/G.bmp", renderer, window); break;
+				case 'H':  H = i+1; pos_lettre.x = pos_x + (H*35); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize1/H.bmp", renderer, window); break;
+				case 'I':  I = i+1; pos_lettre.x = pos_x + (I*35); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize1/I.bmp", renderer, window); break;
+				case 'J':  J = i+1; pos_lettre.x = pos_x + (J*35); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize1/J.bmp", renderer, window); break;
+				case 'K':  K = i+1; pos_lettre.x = pos_x + (K*35); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize1/K.bmp", renderer, window); break;
+				case 'L':  L = i+1; pos_lettre.x = pos_x + (L*35); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize1/L.bmp", renderer, window); break;
+				case 'M':  M = i+1; pos_lettre.x = pos_x + (M*35); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize1/M.bmp", renderer, window); break;
+				case 'N':  N = i+1; pos_lettre.x = pos_x + (N*35); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize1/N.bmp", renderer, window); break;
+				case 'O':  O = i+1; pos_lettre.x = pos_x + (O*35); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize1/O.bmp", renderer, window); break;
+				case 'P':  P = i+1; pos_lettre.x = pos_x + (P*35); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize1/P.bmp", renderer, window); break;
+				case 'Q':  Q = i+1; pos_lettre.x = pos_x + (Q*35); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize1/Q.bmp", renderer, window); break;
+				case 'R':  R = i+1; pos_lettre.x = pos_x + (R*35); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize1/R.bmp", renderer, window); break;
+				case 'S':  S = i+1; pos_lettre.x = pos_x + (S*35); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize1/S.bmp", renderer, window); break;
+				case 'T':  T = i+1; pos_lettre.x = pos_x + (T*35); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize1/T.bmp", renderer, window); break;
+				case 'U':  U = i+1; pos_lettre.x = pos_x + (U*35); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize1/U.bmp", renderer, window); break;
+				case 'V':  V = i+1; pos_lettre.x = pos_x + (V*35); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize1/V.bmp", renderer, window); break;
+				case 'W':  W = i+1; pos_lettre.x = pos_x + (W*35); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize1/W.bmp", renderer, window); break;
+				case 'X':  X = i+1; pos_lettre.x = pos_x + (X*35); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize1/X.bmp", renderer, window); break;
+				case 'Y':  Y = i+1; pos_lettre.x = pos_x + (Y*35); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize1/Y.bmp", renderer, window); break;
+				case 'Z':  Z = i+1; pos_lettre.x = pos_x + (Z*35); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize1/Z.bmp", renderer, window); break;
+				case '_':  _ = i+1; pos_lettre.x = pos_x + (_*35); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize1/_.bmp", renderer, window); break;
+				case ' ':  SPACE = i+1; pos_lettre.x = pos_x + (SPACE*35); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize1/space.bmp", renderer, window); break;
+
+				default: break;
+
+			}
+
+		i++;
+
+		}
+	}
+	if(fontsize == 2){
+
+		while(chaine[i] != '\0'){
+
+			switch(chaine[i]){
+
+
+				case 'A':  A = i+1; pos_lettre.x = pos_x + (A*42); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize2/A.bmp", renderer, window); break;
+				case 'B':  B = i+1; pos_lettre.x = pos_x + (B*42); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize2/B.bmp", renderer, window); break;
+				case 'C':  C = i+1; pos_lettre.x = pos_x + (C*42); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize2/C.bmp", renderer, window); break;
+				case 'D':  D = i+1; pos_lettre.x = pos_x + (D*42); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize2/D.bmp", renderer, window); break;
+				case 'E':  E = i+1; pos_lettre.x = pos_x + (E*42); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize2/E.bmp", renderer, window); break;
+				case 'F':  F = i+1; pos_lettre.x = pos_x + (F*42); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize2/F.bmp", renderer, window); break;
+				case 'G':  G = i+1; pos_lettre.x = pos_x + (G*42); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize2/G.bmp", renderer, window); break;
+				case 'H':  H = i+1; pos_lettre.x = pos_x + (H*42); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize2/H.bmp", renderer, window); break;
+				case 'I':  I = i+1; pos_lettre.x = pos_x + (I*42); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize2/I.bmp", renderer, window); break;
+				case 'J':  J = i+1; pos_lettre.x = pos_x + (J*42); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize2/J.bmp", renderer, window); break;
+				case 'K':  K = i+1; pos_lettre.x = pos_x + (K*42); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize2/K.bmp", renderer, window); break;
+				case 'L':  L = i+1; pos_lettre.x = pos_x + (L*42); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize2/L.bmp", renderer, window); break;
+				case 'M':  M = i+1; pos_lettre.x = pos_x + (M*42); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize2/M.bmp", renderer, window); break;
+				case 'N':  N = i+1; pos_lettre.x = pos_x + (N*42); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize2/N.bmp", renderer, window); break;
+				case 'O':  O = i+1; pos_lettre.x = pos_x + (O*42); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize2/O.bmp", renderer, window); break;
+				case 'P':  P = i+1; pos_lettre.x = pos_x + (P*42); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize2/P.bmp", renderer, window); break;
+				case 'Q':  Q = i+1; pos_lettre.x = pos_x + (Q*42); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize2/Q.bmp", renderer, window); break;
+				case 'R':  R = i+1; pos_lettre.x = pos_x + (R*42); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize2/R.bmp", renderer, window); break;
+				case 'S':  S = i+1; pos_lettre.x = pos_x + (S*42); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize2/S.bmp", renderer, window); break;
+				case 'T':  T = i+1; pos_lettre.x = pos_x + (T*42); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize2/T.bmp", renderer, window); break;
+				case 'U':  U = i+1; pos_lettre.x = pos_x + (U*42); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize2/U.bmp", renderer, window); break;
+				case 'V':  V = i+1; pos_lettre.x = pos_x + (V*42); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize2/V.bmp", renderer, window); break;
+				case 'W':  W = i+1; pos_lettre.x = pos_x + (W*42); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize2/W.bmp", renderer, window); break;
+				case 'X':  X = i+1; pos_lettre.x = pos_x + (X*42); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize2/X.bmp", renderer, window); break;
+				case 'Y':  Y = i+1; pos_lettre.x = pos_x + (Y*42); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize2/Y.bmp", renderer, window); break;
+				case 'Z':  Z = i+1; pos_lettre.x = pos_x + (Z*42); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize2/Z.bmp", renderer, window); break;
+				case '_':  _ = i+1; pos_lettre.x = pos_x + (_*42); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize2/_.bmp", renderer, window); break;
+				case ' ':  SPACE = i+1; pos_lettre.x = pos_x + (SPACE*42); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize2/space.bmp", renderer, window); break;
+				default: break;
+
+			}
+
+		i++;
+
+		}
 	}
 
+	if(fontsize == 3){
 
+		while(chaine[i] != '\0'){
+
+			switch(chaine[i]){
+
+
+				case 'A':  A = i+1; pos_lettre.x = pos_x + (A*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize3/A.bmp", renderer, window); break;
+				case 'B':  B = i+1; pos_lettre.x = pos_x + (B*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize3/B.bmp", renderer, window); break;
+				case 'C':  C = i+1; pos_lettre.x = pos_x + (C*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize3/C.bmp", renderer, window); break;
+				case 'D':  D = i+1; pos_lettre.x = pos_x + (D*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize3/D.bmp", renderer, window); break;
+				case 'E':  E = i+1; pos_lettre.x = pos_x + (E*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize3/E.bmp", renderer, window); break;
+				case 'F':  F = i+1; pos_lettre.x = pos_x + (F*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize3/F.bmp", renderer, window); break;
+				case 'G':  G = i+1; pos_lettre.x = pos_x + (G*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize3/G.bmp", renderer, window); break;
+				case 'H':  H = i+1; pos_lettre.x = pos_x + (H*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize3/H.bmp", renderer, window); break;
+				case 'I':  I = i+1; pos_lettre.x = pos_x + (I*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize3/I.bmp", renderer, window); break;
+				case 'J':  J = i+1; pos_lettre.x = pos_x + (J*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize3/J.bmp", renderer, window); break;
+				case 'K':  K = i+1; pos_lettre.x = pos_x + (K*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize3/K.bmp", renderer, window); break;
+				case 'L':  L = i+1; pos_lettre.x = pos_x + (L*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize3/L.bmp", renderer, window); break;
+				case 'M':  M = i+1; pos_lettre.x = pos_x + (M*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize3/M.bmp", renderer, window); break;
+				case 'N':  N = i+1; pos_lettre.x = pos_x + (N*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize3/N.bmp", renderer, window); break;
+				case 'O':  O = i+1; pos_lettre.x = pos_x + (O*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize3/O.bmp", renderer, window); break;
+				case 'P':  P = i+1; pos_lettre.x = pos_x + (P*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize3/P.bmp", renderer, window); break;
+				case 'Q':  Q = i+1; pos_lettre.x = pos_x + (Q*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize3/Q.bmp", renderer, window); break;
+				case 'R':  R = i+1; pos_lettre.x = pos_x + (R*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize3/R.bmp", renderer, window); break;
+				case 'S':  S = i+1; pos_lettre.x = pos_x + (S*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize3/S.bmp", renderer, window); break;
+				case 'T':  T = i+1; pos_lettre.x = pos_x + (T*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize3/T.bmp", renderer, window); break;
+				case 'U':  U = i+1; pos_lettre.x = pos_x + (U*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize3/U.bmp", renderer, window); break;
+				case 'V':  V = i+1; pos_lettre.x = pos_x + (V*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize3/V.bmp", renderer, window); break;
+				case 'W':  W = i+1; pos_lettre.x = pos_x + (W*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize3/W.bmp", renderer, window); break;
+				case 'X':  X = i+1; pos_lettre.x = pos_x + (X*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize3/X.bmp", renderer, window); break;
+				case 'Y':  Y = i+1; pos_lettre.x = pos_x + (Y*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize3/Y.bmp", renderer, window); break;
+				case 'Z':  Z = i+1; pos_lettre.x = pos_x + (Z*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize3/Z.bmp", renderer, window); break;
+				case '_':  _ = i+1; pos_lettre.x = pos_x + (_*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize3/_.bmp", renderer, window); break;
+				case ' ':  SPACE = i+1; pos_lettre.x = pos_x + (SPACE*55); affiche_image(image_lettre, texture_lettre, pos_lettre, "image/alphabet/fontsize3/space.bmp", renderer, window); break;
+
+				default: break;
+
+			}
+
+		i++;
+
+		}
+	}
 
 	//liberation de la memoire
 	if(clear == 1){
@@ -899,6 +1299,148 @@ void affiche_texte(char* chaine, SDL_Renderer *renderer, SDL_Window *window, int
 		clear_image(NULL, NULL, texture_lettre);
 	}
 
+}
+
+
+//affichage texte + recuperation d'une chaine de caractere
+void sdl_scanf(char* chaine, SDL_Event *event, SDL_Renderer *renderer, SDL_Window *window, int fontsize, int pos_x, int pos_y){
+
+	int ecriture = 1;
+
+ 	ECRITURE_OK = strlen(chaine); //ECRITURE_OK -> nombre de caractere max 
+
+ 	if(ECRITURE_OK >= 5){
+ 		printf("impossible d'ecrire, nb de caractere max\n");
+ 		ecriture = 0;
+ 		SCANF_J1 = 0,			//fin saisie du joueur 1
+		SCANF_J2 = 0;			//fin saisie du joueur 2
+ 	}
+
+	 	while(ecriture){
+
+	 		while(SDL_PollEvent(event)){
+
+		 		if(event->type == SDL_KEYDOWN){
+
+		 			switch(event->key.keysym.sym){
+
+		 				case SDLK_a : printf("A\n"); chaine[0] = *strcat(chaine, "A"); ecriture=0; break;
+		 				case SDLK_b : printf("B\n"); chaine[0] = *strcat(chaine, "B"); ecriture=0; break;
+		 				case SDLK_c : printf("C\n"); chaine[0] = *strcat(chaine, "C"); ecriture=0; break;
+		 				case SDLK_d : printf("D\n"); chaine[0] = *strcat(chaine, "D"); ecriture=0; break;
+		 				case SDLK_e : printf("E\n"); chaine[0] = *strcat(chaine, "E"); ecriture=0; break;
+		 				case SDLK_f : printf("F\n"); chaine[0] = *strcat(chaine, "F"); ecriture=0; break;
+		 				case SDLK_g : printf("G\n"); chaine[0] = *strcat(chaine, "G"); ecriture=0; break;
+		 				case SDLK_h : printf("H\n"); chaine[0] = *strcat(chaine, "H"); ecriture=0; break;
+		 				case SDLK_i : printf("I\n"); chaine[0] = *strcat(chaine, "I"); ecriture=0; break;
+		 				case SDLK_j : printf("J\n"); chaine[0] = *strcat(chaine, "J"); ecriture=0; break;
+		 				case SDLK_k : printf("K\n"); chaine[0] = *strcat(chaine, "K"); ecriture=0; break;
+		 				case SDLK_l : printf("L\n"); chaine[0] = *strcat(chaine, "L"); ecriture=0; break;
+		 				case SDLK_m : printf("M\n"); chaine[0] = *strcat(chaine, "M"); ecriture=0; break;
+		 				case SDLK_n : printf("N\n"); chaine[0] = *strcat(chaine, "N"); ecriture=0; break;
+		 				case SDLK_o : printf("O\n"); chaine[0] = *strcat(chaine, "O"); ecriture=0; break;
+		 				case SDLK_p : printf("P\n"); chaine[0] = *strcat(chaine, "P"); ecriture=0; break;
+		 				case SDLK_q : printf("Q\n"); chaine[0] = *strcat(chaine, "Q"); ecriture=0; break;
+		 				case SDLK_r : printf("R\n"); chaine[0] = *strcat(chaine, "R"); ecriture=0; break;
+		 				case SDLK_s : printf("S\n"); chaine[0] = *strcat(chaine, "S"); ecriture=0; break;
+		 				case SDLK_t : printf("T\n"); chaine[0] = *strcat(chaine, "T"); ecriture=0; break;
+		 				case SDLK_u : printf("U\n"); chaine[0] = *strcat(chaine, "U"); ecriture=0; break;
+		 				case SDLK_v : printf("V\n"); chaine[0] = *strcat(chaine, "V"); ecriture=0; break;
+		 				case SDLK_w : printf("W\n"); chaine[0] = *strcat(chaine, "W"); ecriture=0; break;
+		 				case SDLK_x : printf("X\n"); chaine[0] = *strcat(chaine, "X"); ecriture=0; break;
+		 				case SDLK_y : printf("Y\n"); chaine[0] = *strcat(chaine, "Y"); ecriture=0; break;
+		 				case SDLK_z : printf("Z\n"); chaine[0] = *strcat(chaine, "Z"); ecriture=0; break;
+
+		 				case SDLK_SPACE : printf(" \n"); chaine[0] = *strcat(chaine, " "); ecriture=0; break;
+						
+						case SDLK_BACKSPACE : printf("Z\n"); 
+											  chaine[strlen(chaine)-1] =0; 
+											  ecriture=0; 
+											  break;
+
+		 				case SDLK_RETURN: printf("ENTRER\n"); 
+		 								  if(ECRITURE_OK != 0){ 
+			 								  SCANF_J1 = 0,			//fin saisie du joueur 1
+			 								  SCANF_J2 = 0;			//fin saisie du joueur 2
+			 								  return;
+				 						  }
+		 								  break;
+						
+						default: break;
+		 			}
+		 		}
+		 	}
+		 }
+	
+
+	printf("%s", chaine);
+	return;
+	
+ 	
+ }
+
+
+void affiche_instruction(char* chaine, SDL_Renderer *renderer, SDL_Window *window, int pos_x, int pos_y, int clear){
+
+	int i = 0;
+
+	//position texte
+	SDL_Surface *image_instruction;
+ 	SDL_Texture *texture_instruction;
+  	SDL_Rect pos_instruction;
+	pos_instruction.h = 30;
+	pos_instruction.w = 30;
+	pos_instruction.x = pos_x;	//90
+	pos_instruction.y = pos_y;	//360
+
+		while(chaine[i] != '\0'){
+
+			switch(chaine[i]){
+
+
+				case 'A':  A = i+1; pos_instruction.x = pos_x + (A*18); affiche_image(image_instruction, texture_instruction, pos_instruction, "image/alphabet/fontsize-i/A.bmp", renderer, window); break;
+				case 'B':  B = i+1; pos_instruction.x = pos_x + (B*18); affiche_image(image_instruction, texture_instruction, pos_instruction, "image/alphabet/fontsize-i/B.bmp", renderer, window); break;
+				case 'C':  C = i+1; pos_instruction.x = pos_x + (C*18); affiche_image(image_instruction, texture_instruction, pos_instruction, "image/alphabet/fontsize-i/C.bmp", renderer, window); break;
+				case 'D':  D = i+1; pos_instruction.x = pos_x + (D*18); affiche_image(image_instruction, texture_instruction, pos_instruction, "image/alphabet/fontsize-i/D.bmp", renderer, window); break;
+				case 'E':  E = i+1; pos_instruction.x = pos_x + (E*18); affiche_image(image_instruction, texture_instruction, pos_instruction, "image/alphabet/fontsize-i/E.bmp", renderer, window); break;
+				case 'F':  F = i+1; pos_instruction.x = pos_x + (F*18); affiche_image(image_instruction, texture_instruction, pos_instruction, "image/alphabet/fontsize-i/F.bmp", renderer, window); break;
+				case 'G':  G = i+1; pos_instruction.x = pos_x + (G*18); affiche_image(image_instruction, texture_instruction, pos_instruction, "image/alphabet/fontsize-i/G.bmp", renderer, window); break;
+				case 'H':  H = i+1; pos_instruction.x = pos_x + (H*18); affiche_image(image_instruction, texture_instruction, pos_instruction, "image/alphabet/fontsize-i/H.bmp", renderer, window); break;
+				case 'I':  I = i+1; pos_instruction.x = pos_x + (I*18); affiche_image(image_instruction, texture_instruction, pos_instruction, "image/alphabet/fontsize-i/I.bmp", renderer, window); break;
+				case 'J':  J = i+1; pos_instruction.x = pos_x + (J*18); affiche_image(image_instruction, texture_instruction, pos_instruction, "image/alphabet/fontsize-i/J.bmp", renderer, window); break;
+				case 'K':  K = i+1; pos_instruction.x = pos_x + (K*18); affiche_image(image_instruction, texture_instruction, pos_instruction, "image/alphabet/fontsize-i/K.bmp", renderer, window); break;
+				case 'L':  L = i+1; pos_instruction.x = pos_x + (L*18); affiche_image(image_instruction, texture_instruction, pos_instruction, "image/alphabet/fontsize-i/L.bmp", renderer, window); break;
+				case 'M':  M = i+1; pos_instruction.x = pos_x + (M*18); affiche_image(image_instruction, texture_instruction, pos_instruction, "image/alphabet/fontsize-i/M.bmp", renderer, window); break;
+				case 'N':  N = i+1; pos_instruction.x = pos_x + (N*18); affiche_image(image_instruction, texture_instruction, pos_instruction, "image/alphabet/fontsize-i/N.bmp", renderer, window); break;
+				case 'O':  O = i+1; pos_instruction.x = pos_x + (O*18); affiche_image(image_instruction, texture_instruction, pos_instruction, "image/alphabet/fontsize-i/O.bmp", renderer, window); break;
+				case 'P':  P = i+1; pos_instruction.x = pos_x + (P*18); affiche_image(image_instruction, texture_instruction, pos_instruction, "image/alphabet/fontsize-i/P.bmp", renderer, window); break;
+				case 'Q':  Q = i+1; pos_instruction.x = pos_x + (Q*18); affiche_image(image_instruction, texture_instruction, pos_instruction, "image/alphabet/fontsize-i/Q.bmp", renderer, window); break;
+				case 'R':  R = i+1; pos_instruction.x = pos_x + (R*18); affiche_image(image_instruction, texture_instruction, pos_instruction, "image/alphabet/fontsize-i/R.bmp", renderer, window); break;
+				case 'S':  S = i+1; pos_instruction.x = pos_x + (S*18); affiche_image(image_instruction, texture_instruction, pos_instruction, "image/alphabet/fontsize-i/S.bmp", renderer, window); break;
+				case 'T':  T = i+1; pos_instruction.x = pos_x + (T*18); affiche_image(image_instruction, texture_instruction, pos_instruction, "image/alphabet/fontsize-i/T.bmp", renderer, window); break;
+				case 'U':  U = i+1; pos_instruction.x = pos_x + (U*18); affiche_image(image_instruction, texture_instruction, pos_instruction, "image/alphabet/fontsize-i/U.bmp", renderer, window); break;
+				case 'V':  V = i+1; pos_instruction.x = pos_x + (V*18); affiche_image(image_instruction, texture_instruction, pos_instruction, "image/alphabet/fontsize-i/V.bmp", renderer, window); break;
+				case 'W':  W = i+1; pos_instruction.x = pos_x + (W*18); affiche_image(image_instruction, texture_instruction, pos_instruction, "image/alphabet/fontsize-i/W.bmp", renderer, window); break;
+				case 'X':  X = i+1; pos_instruction.x = pos_x + (X*18); affiche_image(image_instruction, texture_instruction, pos_instruction, "image/alphabet/fontsize-i/X.bmp", renderer, window); break;
+				case 'Y':  Y = i+1; pos_instruction.x = pos_x + (Y*18); affiche_image(image_instruction, texture_instruction, pos_instruction, "image/alphabet/fontsize-i/Y.bmp", renderer, window); break;
+				case 'Z':  Z = i+1; pos_instruction.x = pos_x + (Z*18); affiche_image(image_instruction, texture_instruction, pos_instruction, "image/alphabet/fontsize-i/Z.bmp", renderer, window); break;
+				case '_':  _ = i+1; pos_instruction.x = pos_x + (_*18); affiche_image(image_instruction, texture_instruction, pos_instruction, "image/alphabet/fontsize-i/_.bmp", renderer, window); break;
+				case ' ':  SPACE = i+1; pos_instruction.x = pos_x + (SPACE*18); affiche_image(image_instruction, texture_instruction, pos_instruction, "image/alphabet/fontsize-i/space.bmp", renderer, window); break;
+
+				default: break;
+
+			}
+
+		i++;
+		
+	}
+
+	//liberation de la memoire
+	if(clear == 1){
+		A=0;B=0;C=0;D=0;E=0;F=0;G=0;H=0;I=0;J=0;K=0;L=0;M=0;N=0;O=0;P=0;Q=0;R=0;S=0;T=0;U=0;V=0;W=0;X=0;Y=0;Z=0;_=0;
+		printf("clear instruction\n");
+		clear_image(NULL, NULL, texture_instruction);
+	}
 }
 
 
@@ -928,6 +1470,225 @@ void audio_musique(int set, int play, const char* file, SDL_Renderer *renderer, 
 	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/********************************************************FONCTIONS PENDU***********************************************************/
+
+void	init_partie(int* nb_joueurs, JOUEUR *tab_j, int* id_joueur, SDL_Event *event3, SDL_Renderer *renderer, SDL_Window *window)
+{
+	printf("INIT PARTIE \n");
+
+	int i,j,k;
+
+	 SDL_Surface *image_cheval;
+ 	 SDL_Texture *texture_cheval;
+     SDL_Rect pos_cheval;
+     pos_cheval.h = 720;
+	 pos_cheval.w = 1280;
+	 pos_cheval.x = 0;
+	 pos_cheval.y = 0;
+
+	int saisie_nb = 1;
+	int fin_saisie = 0;
+
+	while(saisie_nb){
+		while(SDL_PollEvent(event3)){
+
+			if(fin_saisie == 0)
+				affiche_image(image_cheval, texture_cheval, pos_cheval, "image/cheval/selection_nb_joueurs.bmp", renderer, window);
+			else
+				affiche_image(image_cheval, texture_cheval, pos_cheval, "image/cheval/cheval_vierge.bmp", renderer, window);
+
+			SDL_RenderPresent(renderer);
+
+			 if(fin_saisie)
+			 	saisie_nb = 0;
+
+			switch(event3->type){
+
+				/*détermination du nombre de joueurs (de 2 à 4)*/
+				case SDL_MOUSEBUTTONDOWN:						//clic de la souris
+
+					if(clic_gauche(19,104,380,425, *event3)){
+						*nb_joueurs = 2;
+						printf("2 joueurs\n");
+						fin_saisie = 1;
+					}
+					if(clic_gauche(140,223,380,425, *event3)){
+						*nb_joueurs = 3;
+						printf("3 joueurs\n");
+						fin_saisie = 1;
+					}
+					if(clic_gauche(258,343,380,425, *event3)){
+						*nb_joueurs = 4;
+						printf("4 joueurs\n");
+						fin_saisie = 1;
+					}
+
+					break;
+
+				default: break;
+
+			}
+		}
+	}
+			
+			printf("\e[1;1H\e[2J");
+
+			/*initialisation des joueurs et des pions*/
+
+			tab_j[0].depart=1;
+			tab_j[0].arrivee=56;
+			tab_j[0].etat=0;
+
+			tab_j[1].depart=15;
+			tab_j[1].arrivee=14;
+			tab_j[1].etat=0;
+
+			tab_j[2].depart=29;
+			tab_j[2].arrivee=28;
+			tab_j[2].etat=0;
+
+			tab_j[3].depart=43;
+			tab_j[3].arrivee=42;
+			tab_j[3].etat=0;
+
+			/*initialisation des nom*/
+			
+			 for(i=0;i<*nb_joueurs;i++){
+			 	//printf("nom du joueur %d : ",i+1);
+			 	//scanf("%s",tab_j[i].nom);
+			 	if(i==0){
+			 		SCANF_J1 = 1;
+			 		affiche_image(image_cheval, texture_cheval, pos_cheval, "image/cheval/cheval_vierge.bmp", renderer, window);
+			 		affiche_texte("SAISISSEZ",renderer, window, 0, 51, 250, 0); affiche_texte("LE NOM DU",renderer, window, 0, 50, 290, 0); 
+			 		affiche_texte("JOUEUR I",renderer, window, 0, 58, 330, 0);  affiche_texte("TAPER ENTRER",renderer, window, 0, 10, 430, 0);
+			 		while(SCANF_J1){
+			 			SDL_RenderPresent(renderer);
+			 			affiche_image(image_cheval, texture_cheval, pos_cheval, "image/cheval/cheval_vierge.bmp", renderer, window);
+			 			affiche_texte("SAISISSEZ",renderer, window, 0, 51, 250, 0); affiche_texte("LE NOM DU",renderer, window, 0, 50, 290, 0); 
+			 			affiche_texte("JOUEUR I",renderer, window, 0, 58, 330, 0);  affiche_texte("TAPER ENTRER",renderer, window, 0, 10, 430, 0);
+				 		sdl_scanf(tab_j[i].nom, event3, renderer, window, 0, 70, 400);
+				 		affiche_texte(tab_j[i].nom,renderer, window, 1, 980, 300, 0);
+			 		}
+			 	}
+
+			 	if(i==1){
+			 		SCANF_J2 = 1;
+			 		affiche_image(image_cheval, texture_cheval, pos_cheval, "image/cheval/cheval_vierge.bmp", renderer, window);
+			 		affiche_texte("SAISISSEZ",renderer, window, 0, 51, 250, 0); affiche_texte("LE NOM DU",renderer, window, 0, 50, 290, 0); 
+			 		affiche_texte("JOUEUR II",renderer, window, 0, 58, 330, 0);  affiche_texte("TAPER ENTRER",renderer, window, 0, 10, 430, 0);
+			 		affiche_texte(tab_j[0].nom,renderer, window, 1, 980, 300, 0);
+			 		while(SCANF_J2){
+			 			SDL_RenderPresent(renderer);
+			 			affiche_image(image_cheval, texture_cheval, pos_cheval, "image/cheval/cheval_vierge.bmp", renderer, window);
+			 			affiche_texte("SAISISSEZ",renderer, window, 0, 51, 250, 0); affiche_texte("LE NOM DU",renderer, window, 0, 50, 290, 0); 
+			 			affiche_texte("JOUEUR II",renderer, window, 0, 58, 330, 0);  affiche_texte("TAPER ENTRER",renderer, window, 0, 10, 430, 0);
+			 			affiche_texte(tab_j[0].nom,renderer, window, 1, 980, 300, 0);
+				 		sdl_scanf(tab_j[i].nom, event3, renderer, window, 0, 70, 400);
+				 		affiche_texte(tab_j[i].nom,renderer, window, 1, 980, 373, 0);
+			 		}
+			 	}
+
+			 	
+			 }
+			 	
+			 	
+			 	
+			 	
+			 	
+
+			 
+
+			/*tous les pion sont places dans l'ecurie et les drapeaux sont mient à 0*/
+
+			for(i=0;i<*nb_joueurs;i++){
+				for(j=0;j<NB_PIONS;j++){
+					tab_j[i].p[j].etat=0;
+					tab_j[i].p[j].tour=0;
+					tab_j[i].p[j].centre=0;
+					for(k=0;k<TAILLE_LISTE_DRAPEAUX;k++) tab_j[i].p[j].d[k]=0;
+				}
+			}
+
+			/*le joeur 1 commence*/
+
+			*id_joueur=0;
+		//}
+	//}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
