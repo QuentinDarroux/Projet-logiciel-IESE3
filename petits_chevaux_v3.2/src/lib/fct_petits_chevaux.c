@@ -317,7 +317,7 @@ void	jouer_de(JOUEUR* tab_j, PARTIE partie, PILE *pile_p, int id_joueur, int nb_
 
 	if(!strcmp(rep,"q")) *quitter_partie=1;
 	for(i=0;i<NB_PIONS;i++){
-		if(tab_j[id_joueur].p[0].centre==6) test_victoire++;
+		if(tab_j[id_joueur].p[i].centre==6) test_victoire++;
 	}
 	if(test_victoire==NB_PIONS) *victoire=1;	/*si les deux pions sont dans la case 6 du centre le joueur a gagné*/
 
