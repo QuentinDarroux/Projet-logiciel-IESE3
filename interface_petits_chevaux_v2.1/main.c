@@ -238,12 +238,14 @@ int main(int argc, char** argv){
 	int menu_sauvegarder=0;
 	int menu_ecraser=0;
 
+	//affichage page acceuil
+    SDL_Surface *image = NULL;
+	SDL_Texture *texture = NULL;
+	SDL_Rect pos_image;
+
     while(programme_launched){
 		
     	//affichage page acceuil
-    	SDL_Surface *image = NULL;
-		SDL_Texture *texture = NULL;
-		SDL_Rect pos_image;
 		pos_image.w = WINDOW_WIDTH;
 		pos_image.h = WINDOW_HEIGHT;
 		pos_image.x = 0;
@@ -696,7 +698,6 @@ int main(int argc, char** argv){
 							init_partie(nb_joueurs,tab_j,&id_joueur);
 							de=jet();
 							copie_partie(&partie,id_joueur,de,tab_j);
-							afficher_plateau(tab_j,&pile_p,compteur_tours,id_joueur,nb_joueurs,de);
 							tab_j[id_joueur].etat=1;
 							liste_actions_possibles(tab_j,id_joueur,de);
 							break;
@@ -711,7 +712,6 @@ int main(int argc, char** argv){
 							init_partie(nb_joueurs,tab_j,&id_joueur);
 							de=jet();
 							copie_partie(&partie,id_joueur,de,tab_j);
-							afficher_plateau(tab_j,&pile_p,compteur_tours,id_joueur,nb_joueurs,de);
 							tab_j[id_joueur].etat=1;
 							liste_actions_possibles(tab_j,id_joueur,de);
 							break;
@@ -726,7 +726,6 @@ int main(int argc, char** argv){
 							init_partie(nb_joueurs,tab_j,&id_joueur);
 							de=jet();
 							copie_partie(&partie,id_joueur,de,tab_j);
-							afficher_plateau(tab_j,&pile_p,compteur_tours,id_joueur,nb_joueurs,de);
 							tab_j[id_joueur].etat=1;
 							liste_actions_possibles(tab_j,id_joueur,de);
 							break;
@@ -745,7 +744,6 @@ int main(int argc, char** argv){
 							menu_partie = 1;
 
 							copie_partie(&partie,id_joueur,de,tab_j);
-							afficher_plateau(tab_j,&pile_p,compteur_tours,id_joueur,nb_joueurs,de);
 							tab_j[id_joueur].etat=1;
 							liste_actions_possibles(tab_j,id_joueur,de);
 							break;
@@ -759,7 +757,6 @@ int main(int argc, char** argv){
 							menu_partie = 1;
 
 							copie_partie(&partie,id_joueur,de,tab_j);
-							afficher_plateau(tab_j,&pile_p,compteur_tours,id_joueur,nb_joueurs,de);
 							tab_j[id_joueur].etat=1;
 							liste_actions_possibles(tab_j,id_joueur,de);
 							break;
@@ -773,7 +770,6 @@ int main(int argc, char** argv){
 							menu_partie = 1;
 
 							copie_partie(&partie,id_joueur,de,tab_j);
-							afficher_plateau(tab_j,&pile_p,compteur_tours,id_joueur,nb_joueurs,de);
 							tab_j[id_joueur].etat=1;
 							liste_actions_possibles(tab_j,id_joueur,de);
 							break;
@@ -838,6 +834,13 @@ int main(int argc, char** argv){
 
 					if(menu_partie)
 					{
+						if((tab_j[id_joueur].p[0].centre==6)&&(tab_j[id_joueur].p[1].centre==6))
+						{
+							menu_partie = 0;
+							menu_principale = 1;
+							break;
+						}
+
 						if((clic_gauche(760, 1240, 279, 321,event))&&(tab_j[id_joueur].p[0].d[0]==1))
 						{
 							sortir(tab_j,nb_joueurs,id_joueur,0);
@@ -845,7 +848,6 @@ int main(int argc, char** argv){
 
 							de=jet();
 							copie_partie(&partie,id_joueur,de,tab_j);
-							afficher_plateau(tab_j,&pile_p,compteur_tours,id_joueur,nb_joueurs,de);
 
 							for(i=0;i<NB_PIONS;i++){
 								for(j=0;j<TAILLE_LISTE_DRAPEAUX;j++) tab_j[id_joueur].p[i].d[j]=0;
@@ -868,7 +870,6 @@ int main(int argc, char** argv){
 
 							de=jet();
 							copie_partie(&partie,id_joueur,de,tab_j);
-							afficher_plateau(tab_j,&pile_p,compteur_tours,id_joueur,nb_joueurs,de);
 
 							for(i=0;i<NB_PIONS;i++){
 								for(j=0;j<TAILLE_LISTE_DRAPEAUX;j++) tab_j[id_joueur].p[i].d[j]=0;
@@ -900,7 +901,6 @@ int main(int argc, char** argv){
 
 							de=jet();
 							copie_partie(&partie,id_joueur,de,tab_j);
-							afficher_plateau(tab_j,&pile_p,compteur_tours,id_joueur,nb_joueurs,de);
 
 							for(i=0;i<NB_PIONS;i++){
 								for(j=0;j<TAILLE_LISTE_DRAPEAUX;j++) tab_j[id_joueur].p[i].d[j]=0;
@@ -918,7 +918,6 @@ int main(int argc, char** argv){
 
 							de=jet();
 							copie_partie(&partie,id_joueur,de,tab_j);
-							afficher_plateau(tab_j,&pile_p,compteur_tours,id_joueur,nb_joueurs,de);
 
 							for(i=0;i<NB_PIONS;i++){
 								for(j=0;j<TAILLE_LISTE_DRAPEAUX;j++) tab_j[id_joueur].p[i].d[j]=0;
@@ -941,7 +940,6 @@ int main(int argc, char** argv){
 
 							de=jet();
 							copie_partie(&partie,id_joueur,de,tab_j);
-							afficher_plateau(tab_j,&pile_p,compteur_tours,id_joueur,nb_joueurs,de);
 
 							for(i=0;i<NB_PIONS;i++){
 								for(j=0;j<TAILLE_LISTE_DRAPEAUX;j++) tab_j[id_joueur].p[i].d[j]=0;
@@ -973,7 +971,6 @@ int main(int argc, char** argv){
 
 							de=jet();
 							copie_partie(&partie,id_joueur,de,tab_j);
-							afficher_plateau(tab_j,&pile_p,compteur_tours,id_joueur,nb_joueurs,de);
 
 							for(i=0;i<NB_PIONS;i++){
 								for(j=0;j<TAILLE_LISTE_DRAPEAUX;j++) tab_j[id_joueur].p[i].d[j]=0;
@@ -994,7 +991,6 @@ int main(int argc, char** argv){
 
 							de=jet();
 							copie_partie(&partie,id_joueur,de,tab_j);
-							afficher_plateau(tab_j,&pile_p,compteur_tours,id_joueur,nb_joueurs,de);
 
 							for(i=0;i<NB_PIONS;i++){
 								for(j=0;j<TAILLE_LISTE_DRAPEAUX;j++) tab_j[id_joueur].p[i].d[j]=0;
@@ -1025,7 +1021,6 @@ int main(int argc, char** argv){
 							id_joueur=partie.id_joueur;
 
 							copie_partie(&partie,id_joueur,de,tab_j);
-							afficher_plateau(tab_j,&pile_p,compteur_tours,id_joueur,nb_joueurs,de);
 
 							for(i=0;i<NB_PIONS;i++){
 								for(j=0;j<TAILLE_LISTE_DRAPEAUX;j++) tab_j[id_joueur].p[i].d[j]=0;
@@ -1231,14 +1226,13 @@ int main(int argc, char** argv){
 	    		case SDL_QUIT: 
 					programme_launched = SDL_FALSE; 
 
-					clear_image(NULL, NULL, texture);			//liberation texture fond accueil
+					clear_image(NULL, NULL, texture);
 					break;		//quitte le programme (croix)
 
 	    		default:  break;	//affichage par defaut jul
 
 			}
 		}
-		clear_image(NULL, NULL, texture);
 	}
 	//capture evenement
 	//SDL_Event event;
@@ -1250,16 +1244,14 @@ int main(int argc, char** argv){
 
     //test FPS
     //frame_limit = SDL_GetTicks() + FPS_LIMIT;
-		//fermeture du rendu
-		SDL_DestroyRenderer(renderer);
-		//fermeture de la fenêtre
-		SDL_DestroyWindow(window);
+	//fermeture du rendu
+	SDL_DestroyRenderer(renderer);
+	//fermeture de la fenêtre
+	SDL_DestroyWindow(window);
 
 	//on quite la SDL, liberation de la mémoire
 	SDL_Quit();
 	return EXIT_SUCCESS;
-	return 0;
-
 }
 
 //ERREUR
@@ -2293,4 +2285,3 @@ void empiler_partie(PILE *pile_p, PARTIE partie)
 
 	empiler(pile_p,partie);
 }
-
