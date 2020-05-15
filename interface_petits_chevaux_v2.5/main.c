@@ -673,7 +673,7 @@ int main(int argc, char** argv){
 								menu = 1;
 								break;
 							}
-							if(clic_gauche(760, 1240, 197, 239,event))	//"charger partie"
+							if(clic_gauche(760, 1240, 197, 239,event)&&((!emplacement_est_vide(1))||(!emplacement_est_vide(2))||(!emplacement_est_vide(3))))	//"charger partie"
 							{
 								slct_charger_partie = 0;
 								menu = 2;
