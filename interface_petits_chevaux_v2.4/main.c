@@ -230,15 +230,7 @@ int main(int argc, char** argv){
 	int slct_retour=0;
 	int slct_oui=0;
 	int slct_non=0;
-	int menu_principale=1;
-	int menu_nb_joueurs=0;
-	int menu_charger_partie=0;
-	int menu_sauvegardes=0;
-	int menu_supprimer=0;
-	int menu_partie=0;
-	int menu_demmande_sauvegarder=0;
-	int menu_sauvegarder=0;
-	int menu_ecraser=0;
+	int menu=0;
 
 	SDL_Surface *image = NULL;
 	SDL_Texture *texture = NULL;
@@ -256,371 +248,387 @@ int main(int argc, char** argv){
 		pos_image.w = 480;
 		pos_image.h = 42;
 		pos_image.x = 720;
-
-		if(menu_principale)
+		
+		switch(menu)
 		{
-			//affichage "nouvelle partie"
+			case 0 : //menu principale
 
-			pos_image.y = 115;
-			affiche_animation(slct_nouvelle_partie, image, texture, pos_image, "nouvelle_partie.bmp", renderer, window);
+				//affichage "nouvelle partie"
 
-			//affichage "charger partie"
+				pos_image.y = 115;
+				affiche_animation(slct_nouvelle_partie, image, texture, pos_image, "nouvelle_partie.bmp", renderer, window);
 
-			pos_image.y = 197;
-	    	if(nombre_de_sauvegardes()==0) affiche_image(image, texture, pos_image, "image/imp_charger_partie.bmp", renderer, window);
-			else affiche_animation(slct_charger_partie, image, texture, pos_image, "charger_partie.bmp", renderer, window);
+				//affichage "charger partie"
 
-			//affichage "sauvegardes"
+				pos_image.y = 197;
+				if(nombre_de_sauvegardes()==0) affiche_image(image, texture, pos_image, "image/imp_charger_partie.bmp", renderer, window);
+				else affiche_animation(slct_charger_partie, image, texture, pos_image, "charger_partie.bmp", renderer, window);
 
-			pos_image.y = 279;
-	    	affiche_animation(slct_sauvegardes, image, texture, pos_image, "sauvegardes.bmp", renderer, window);
+				//affichage "sauvegardes"
 
-			//affichage "quitter"
+				pos_image.y = 279;
+				affiche_animation(slct_sauvegardes, image, texture, pos_image, "sauvegardes.bmp", renderer, window);
 
-			pos_image.y = 361;
-			affiche_animation(slct_quitter, image, texture, pos_image, "quitter.bmp", renderer, window);
-		}
+				//affichage "quitter"
 
-		if(menu_nb_joueurs)
-		{
-			//affichage nb_joueurs
+				pos_image.y = 361;
+				affiche_animation(slct_quitter, image, texture, pos_image, "quitter.bmp", renderer, window);
 
-			pos_image.y = 115;
-			affiche_image(image, texture, pos_image, "image/nb_joueurs.bmp", renderer, window);
+				break;
 
-			//affichage 2
+			case 1 : //menu nouvelle partie
 
-			pos_image.y = 197;
-			affiche_animation(slct_2, image, texture, pos_image, "2.bmp", renderer, window);
+				//affichage nb_joueurs
 
-			//affichage 3
+				pos_image.y = 115;
+				affiche_image(image, texture, pos_image, "image/nb_joueurs.bmp", renderer, window);
 
-			pos_image.y = 279;
-			affiche_animation(slct_3, image, texture, pos_image, "3.bmp", renderer, window);
+				//affichage 2
 
-			//affichage 4
+				pos_image.y = 197;
+				affiche_animation(slct_2, image, texture, pos_image, "2.bmp", renderer, window);
 
-			pos_image.y = 361;
-			affiche_animation(slct_4, image, texture, pos_image, "4.bmp", renderer, window);
-		}
+				//affichage 3
 
-		if(menu_charger_partie)
-		{
-			//affichage sauvegarde 1
+				pos_image.y = 279;
+				affiche_animation(slct_3, image, texture, pos_image, "3.bmp", renderer, window);
 
-			pos_image.y = 115;
-			if(emplacement_est_vide(1)) affiche_image(image, texture, pos_image, "image/imp_sauvegarde_vide.bmp", renderer, window);
-			else affiche_animation(slct_sauvegarde1, image, texture, pos_image, "sauvegarde1.bmp", renderer, window);
+				//affichage 4
 
-			//affichage sauvegarde 2
+				pos_image.y = 361;
+				affiche_animation(slct_4, image, texture, pos_image, "4.bmp", renderer, window);
 
-			pos_image.y = 197;
-			if(emplacement_est_vide(2)) affiche_image(image, texture, pos_image, "image/imp_sauvegarde_vide.bmp", renderer, window);
-			else affiche_animation(slct_sauvegarde2, image, texture, pos_image, "sauvegarde2.bmp", renderer, window);
+				break;
 
-			//affichage sauvegarde 3
+			case 2 : //menu charger partie
 
-			pos_image.y = 279;
-			if(emplacement_est_vide(3)) affiche_image(image, texture, pos_image, "image/imp_sauvegarde_vide.bmp", renderer, window);
-			else affiche_animation(slct_sauvegarde3, image, texture, pos_image, "sauvegarde3.bmp", renderer, window);
+				//affichage sauvegarde 1
 
-			//quitter
-			pos_image.y = 361;
-			affiche_animation(slct_quitter, image, texture, pos_image, "quitter.bmp", renderer, window);
-		}
+				pos_image.y = 115;
+				if(emplacement_est_vide(1)) affiche_image(image, texture, pos_image, "image/imp_sauvegarde_vide.bmp", renderer, window);
+				else affiche_animation(slct_sauvegarde1, image, texture, pos_image, "sauvegarde1.bmp", renderer, window);
 
-		if(menu_sauvegardes)
-		{
-			//affichage sauvegarde 1
+				//affichage sauvegarde 2
 
-			pos_image.y = 115;
-			if(emplacement_est_vide(1)) affiche_image(image, texture, pos_image, "image/imp_sauvegarde_vide.bmp", renderer, window);
-			else affiche_image(image, texture, pos_image, "image/imp_sauvegarde1.bmp", renderer, window);
+				pos_image.y = 197;
+				if(emplacement_est_vide(2)) affiche_image(image, texture, pos_image, "image/imp_sauvegarde_vide.bmp", renderer, window);
+				else affiche_animation(slct_sauvegarde2, image, texture, pos_image, "sauvegarde2.bmp", renderer, window);
 
-			//affichage sauvegarde 2
+				//affichage sauvegarde 3
 
-			pos_image.y = 197;
-			if(emplacement_est_vide(2)) affiche_image(image, texture, pos_image, "image/imp_sauvegarde_vide.bmp", renderer, window);
-			else affiche_image(image, texture, pos_image, "image/imp_sauvegarde2.bmp", renderer, window);
+				pos_image.y = 279;
+				if(emplacement_est_vide(3)) affiche_image(image, texture, pos_image, "image/imp_sauvegarde_vide.bmp", renderer, window);
+				else affiche_animation(slct_sauvegarde3, image, texture, pos_image, "sauvegarde3.bmp", renderer, window);
 
-			//affichage sauvegarde 3
+				//quitter
+				pos_image.y = 361;
+				affiche_animation(slct_quitter, image, texture, pos_image, "quitter.bmp", renderer, window);
 
-			pos_image.y = 279;
-			if(emplacement_est_vide(3)) affiche_image(image, texture, pos_image, "image/imp_sauvegarde_vide.bmp", renderer, window);
-			else affiche_image(image, texture, pos_image, "image/imp_sauvegarde3.bmp", renderer, window);
+				break;
 
-			//affichage "reinitialiser"
+			case 3 : //menu sauvegardes
 
-			pos_image.y = 361;
-			affiche_animation(slct_reinitialiser, image, texture, pos_image, "reinitialiser.bmp", renderer, window);
+				//affichage sauvegarde 1
 
-			//affichage "supprimer"
+				pos_image.y = 115;
+				if(emplacement_est_vide(1)) affiche_image(image, texture, pos_image, "image/imp_sauvegarde_vide.bmp", renderer, window);
+				else affiche_image(image, texture, pos_image, "image/imp_sauvegarde1.bmp", renderer, window);
 
-			pos_image.y = 443;
-			affiche_animation(slct_supprimer, image, texture, pos_image, "supprimer.bmp", renderer, window);
-
-			//affichage "quitter"
-
-			pos_image.y = 525;
-			affiche_animation(slct_quitter, image, texture, pos_image, "quitter.bmp", renderer, window);
-		}
-
-		if(menu_supprimer)
-		{
-			//affichage sauvegarde 1
-
-			pos_image.y = 115;
-			if(emplacement_est_vide(1)) affiche_image(image, texture, pos_image, "image/imp_sauvegarde_vide.bmp", renderer, window);
-			else affiche_animation(slct_sauvegarde1, image, texture, pos_image, "sauvegarde1.bmp", renderer, window);
-
-			//affichage sauvegarde 2
-
-			pos_image.y = 197;
-			if(emplacement_est_vide(2)) affiche_image(image, texture, pos_image, "image/imp_sauvegarde_vide.bmp", renderer, window);
-			else affiche_animation(slct_sauvegarde2, image, texture, pos_image, "sauvegarde2.bmp", renderer, window);
-
-			//affichage sauvegarde 3
-
-			pos_image.y = 279;
-			if(emplacement_est_vide(3)) affiche_image(image, texture, pos_image, "image/imp_sauvegarde_vide.bmp", renderer, window);
-			else affiche_animation(slct_sauvegarde3, image, texture, pos_image, "sauvegarde3.bmp", renderer, window);
-
-			//affichage "quitter"
-
-			pos_image.y = 361;
-			affiche_animation(slct_quitter, image, texture, pos_image, "quitter.bmp", renderer, window);
-		}
-
-		if(menu_partie)
-		{
-			//affichage pions
-
-			pos_image.w = 45;
-			pos_image.h = 45;
-
-			affichage_pions(plateau_tour, plateau_centre, plateau_ecurie, tab_j, 0, image, texture, pos_image, renderer, window);
-			affichage_pions(plateau_tour, plateau_centre, plateau_ecurie, tab_j, 1, image, texture, pos_image, renderer, window);
-			affichage_pions(plateau_tour, plateau_centre, plateau_ecurie, tab_j, 2, image, texture, pos_image, renderer, window);
-			affichage_pions(plateau_tour, plateau_centre, plateau_ecurie, tab_j, 3, image, texture, pos_image, renderer, window);
-
-			//affichage joueur
-
-			pos_image.w = 480;
-			pos_image.h = 42;
-			pos_image.x = 720;
-			pos_image.y = 115;
-			if(id_joueur==0) affiche_image(image, texture, pos_image, "image/joueur1.bmp", renderer, window);
-			if(id_joueur==1) affiche_image(image, texture, pos_image, "image/joueur2.bmp", renderer, window);
-			if(id_joueur==2) affiche_image(image, texture, pos_image, "image/joueur3.bmp", renderer, window);
-			if(id_joueur==3) affiche_image(image, texture, pos_image, "image/joueur4.bmp", renderer, window);
-
-			//affichage de
-
-			pos_image.y = 197;
-			switch(de)
-			{
-				case 1 :
-					switch(id_joueur)
-					{
-						case 0 :
-							affiche_image(image, texture, pos_image, "image/de_1_1.bmp", renderer, window);
-							break;
-						case 1 :
-							affiche_image(image, texture, pos_image, "image/de_2_1.bmp", renderer, window);
-							break;
-						case 2 :
-							affiche_image(image, texture, pos_image, "image/de_3_1.bmp", renderer, window);
-							break;
-						case 3 :
-							affiche_image(image, texture, pos_image, "image/de_4_1.bmp", renderer, window);
-							break;
-						default :
-							break;
-					}
-					break;
-				case 2 :
-					switch(id_joueur)
-					{
-						case 0 :
-							affiche_image(image, texture, pos_image, "image/de_1_2.bmp", renderer, window);
-							break;
-						case 1 :
-							affiche_image(image, texture, pos_image, "image/de_2_2.bmp", renderer, window);
-							break;
-						case 2 :
-							affiche_image(image, texture, pos_image, "image/de_3_2.bmp", renderer, window);
-							break;
-						case 3 :
-							affiche_image(image, texture, pos_image, "image/de_4_2.bmp", renderer, window);
-							break;
-						default :
-							break;
-					}
-					break;
-				case 3 :
-					switch(id_joueur)
-					{
-						case 0 :
-							affiche_image(image, texture, pos_image, "image/de_1_3.bmp", renderer, window);
-							break;
-						case 1 :
-							affiche_image(image, texture, pos_image, "image/de_2_3.bmp", renderer, window);
-							break;
-						case 2 :
-							affiche_image(image, texture, pos_image, "image/de_3_3.bmp", renderer, window);
-							break;
-						case 3 :
-							affiche_image(image, texture, pos_image, "image/de_4_3.bmp", renderer, window);
-							break;
-						default :
-							break;
-					}
-					break;
-				case 4 :
-					switch(id_joueur)
-					{
-						case 0 :
-							affiche_image(image, texture, pos_image, "image/de_1_4.bmp", renderer, window);
-							break;
-						case 1 :
-							affiche_image(image, texture, pos_image, "image/de_2_4.bmp", renderer, window);
-							break;
-						case 2 :
-							affiche_image(image, texture, pos_image, "image/de_3_4.bmp", renderer, window);
-							break;
-						case 3 :
-							affiche_image(image, texture, pos_image, "image/de_4_4.bmp", renderer, window);
-							break;
-						default :
-							break;
-					}
-					break;
-				case 5 :
-					switch(id_joueur)
-					{
-						case 0 :
-							affiche_image(image, texture, pos_image, "image/de_1_5.bmp", renderer, window);
-							break;
-						case 1 :
-							affiche_image(image, texture, pos_image, "image/de_2_5.bmp", renderer, window);
-							break;
-						case 2 :
-							affiche_image(image, texture, pos_image, "image/de_3_5.bmp", renderer, window);
-							break;
-						case 3 :
-							affiche_image(image, texture, pos_image, "image/de_4_5.bmp", renderer, window);
-							break;
-						default :
-							break;
-					}
-					break;
-				case 6 :
-					switch(id_joueur)
-					{
-						case 0 :
-							affiche_image(image, texture, pos_image, "image/de_1_6.bmp", renderer, window);
-							break;
-						case 1 :
-							affiche_image(image, texture, pos_image, "image/de_2_6.bmp", renderer, window);
-							break;
-						case 2 :
-							affiche_image(image, texture, pos_image, "image/de_3_6.bmp", renderer, window);
-							break;
-						case 3 :
-							affiche_image(image, texture, pos_image, "image/de_4_6.bmp", renderer, window);
-							break;
-						default :
-							break;
-					}
-					break;
-				default :
-					break;
-			}
-
-			//affichage pion 1
-
-			pos_image.y = 279;
-			if((tab_j[id_joueur].p[0].d[0]==1)||(tab_j[id_joueur].p[0].d[1]==1)||(tab_j[id_joueur].p[0].d[2]==1)) affiche_animation(slct_pion1, image, texture, pos_image, "bouger_pion_1.bmp", renderer, window);
-			else affiche_image(image, texture, pos_image, "image/imp_bouger_pion_1.bmp", renderer, window);
-
-			//affichage pion 2
-
-			pos_image.y = 361;
-			if((tab_j[id_joueur].p[1].d[0]==1)||(tab_j[id_joueur].p[1].d[1]==1)||(tab_j[id_joueur].p[1].d[2]==1)) affiche_animation(slct_pion2, image, texture, pos_image, "bouger_pion_2.bmp", renderer, window);
-			else affiche_image(image, texture, pos_image, "image/imp_bouger_pion_2.bmp", renderer, window);
-
-			//affichage suivant
-
-			pos_image.y = 443;
-			if((tab_j[id_joueur].p[0].d[3]==1)&&(tab_j[id_joueur].p[1].d[3]==1)) affiche_animation(slct_suivant, image, texture, pos_image, "suivant.bmp", renderer, window);
-			else affiche_image(image, texture, pos_image, "image/imp_suivant.bmp", renderer, window);
-
-			//affichage retour
-
-			pos_image.y = 525;
-			if(!pile_est_vide(&pile_p)) affiche_animation(slct_retour, image, texture, pos_image, "retour.bmp", renderer, window);
-			else affiche_image(image, texture, pos_image, "image/imp_retour.bmp", renderer, window);
-
-			//affichage quitter
-
-			pos_image.y = 607;
-			affiche_animation(slct_quitter, image, texture, pos_image, "quitter.bmp", renderer, window);
-		}
-
-		if(menu_demmande_sauvegarder)
-		{
-			//demande sauvegarder
-
-			pos_image.y=115;
-			affiche_image(image, texture, pos_image, "image/demmande_sauvegarde.bmp", renderer, window);
-
-			//"oui"
-
-			pos_image.y=197;
-			affiche_animation(slct_oui, image, texture, pos_image, "oui.bmp", renderer, window);
-
-			//"non"
-
-			pos_image.y=279;
-			affiche_animation(slct_non, image, texture, pos_image, "non.bmp", renderer, window);
-		}
-
-		if(menu_sauvegarder)
-		{
-			//affichage sauvegarde 1
-
-			pos_image.y = 115;
-			if(emplacement_est_vide(1)) affiche_animation(slct_sauvegarde1, image, texture, pos_image, "sauvegarde_vide.bmp", renderer, window);
-			else affiche_animation(slct_sauvegarde1, image, texture, pos_image, "sauvegarde1.bmp", renderer, window);
-
-			//affichage sauvegarde 2
-
-			pos_image.y = 197;
-			if(emplacement_est_vide(2)) affiche_animation(slct_sauvegarde2, image, texture, pos_image, "sauvegarde_vide.bmp", renderer, window);
-			else affiche_animation(slct_sauvegarde2, image, texture, pos_image, "sauvegarde2.bmp", renderer, window);
-
-			//affichage sauvegarde 3
-
-			pos_image.y = 279;
-			if(emplacement_est_vide(3)) affiche_animation(slct_sauvegarde3, image, texture, pos_image, "sauvegarde_vide.bmp", renderer, window);
-			else affiche_animation(slct_sauvegarde3, image, texture, pos_image, "sauvegarde3.bmp", renderer, window);		}
-
-		if(menu_ecraser)
-		{
-			//écraser ?
-
-			pos_image.y = 115;
-			affiche_image(image, texture, pos_image, "image/ecraser.bmp", renderer, window);
-
-			//"oui"
-
-			pos_image.y=197;
-			affiche_animation(slct_oui, image, texture, pos_image, "oui.bmp", renderer, window);
-
-			//"non"
-
-			pos_image.y=279;
-			affiche_animation(slct_non, image, texture, pos_image, "non.bmp", renderer, window);
+				//affichage sauvegarde 2
+
+				pos_image.y = 197;
+				if(emplacement_est_vide(2)) affiche_image(image, texture, pos_image, "image/imp_sauvegarde_vide.bmp", renderer, window);
+				else affiche_image(image, texture, pos_image, "image/imp_sauvegarde2.bmp", renderer, window);
+
+				//affichage sauvegarde 3
+
+				pos_image.y = 279;
+				if(emplacement_est_vide(3)) affiche_image(image, texture, pos_image, "image/imp_sauvegarde_vide.bmp", renderer, window);
+				else affiche_image(image, texture, pos_image, "image/imp_sauvegarde3.bmp", renderer, window);
+
+				//affichage "reinitialiser"
+
+				pos_image.y = 361;
+				affiche_animation(slct_reinitialiser, image, texture, pos_image, "reinitialiser.bmp", renderer, window);
+
+				//affichage "supprimer"
+
+				pos_image.y = 443;
+				affiche_animation(slct_supprimer, image, texture, pos_image, "supprimer.bmp", renderer, window);
+
+				//affichage "quitter"
+
+				pos_image.y = 525;
+				affiche_animation(slct_quitter, image, texture, pos_image, "quitter.bmp", renderer, window);
+
+				break;
+
+			case 4 : //menu surppimer
+
+				//affichage sauvegarde 1
+
+				pos_image.y = 115;
+				if(emplacement_est_vide(1)) affiche_image(image, texture, pos_image, "image/imp_sauvegarde_vide.bmp", renderer, window);
+				else affiche_animation(slct_sauvegarde1, image, texture, pos_image, "sauvegarde1.bmp", renderer, window);
+
+				//affichage sauvegarde 2
+
+				pos_image.y = 197;
+				if(emplacement_est_vide(2)) affiche_image(image, texture, pos_image, "image/imp_sauvegarde_vide.bmp", renderer, window);
+				else affiche_animation(slct_sauvegarde2, image, texture, pos_image, "sauvegarde2.bmp", renderer, window);
+
+				//affichage sauvegarde 3
+
+				pos_image.y = 279;
+				if(emplacement_est_vide(3)) affiche_image(image, texture, pos_image, "image/imp_sauvegarde_vide.bmp", renderer, window);
+				else affiche_animation(slct_sauvegarde3, image, texture, pos_image, "sauvegarde3.bmp", renderer, window);
+
+				//affichage "quitter"
+
+				pos_image.y = 361;
+				affiche_animation(slct_quitter, image, texture, pos_image, "quitter.bmp", renderer, window);
+
+				break;
+
+			case 5 : //menu partie
+
+				//affichage pions
+
+				pos_image.w = 45;
+				pos_image.h = 45;
+
+				affichage_pions(plateau_tour, plateau_centre, plateau_ecurie, tab_j, 0, image, texture, pos_image, renderer, window);
+				affichage_pions(plateau_tour, plateau_centre, plateau_ecurie, tab_j, 1, image, texture, pos_image, renderer, window);
+				affichage_pions(plateau_tour, plateau_centre, plateau_ecurie, tab_j, 2, image, texture, pos_image, renderer, window);
+				affichage_pions(plateau_tour, plateau_centre, plateau_ecurie, tab_j, 3, image, texture, pos_image, renderer, window);
+
+				//affichage joueur
+
+				pos_image.w = 480;
+				pos_image.h = 42;
+				pos_image.x = 720;
+				pos_image.y = 115;
+				if(id_joueur==0) affiche_image(image, texture, pos_image, "image/joueur1.bmp", renderer, window);
+				if(id_joueur==1) affiche_image(image, texture, pos_image, "image/joueur2.bmp", renderer, window);
+				if(id_joueur==2) affiche_image(image, texture, pos_image, "image/joueur3.bmp", renderer, window);
+				if(id_joueur==3) affiche_image(image, texture, pos_image, "image/joueur4.bmp", renderer, window);
+
+				//affichage de
+
+				pos_image.y = 197;
+				switch(de)
+				{
+					case 1 :
+						switch(id_joueur)
+						{
+							case 0 :
+								affiche_image(image, texture, pos_image, "image/de_1_1.bmp", renderer, window);
+								break;
+							case 1 :
+								affiche_image(image, texture, pos_image, "image/de_2_1.bmp", renderer, window);
+								break;
+							case 2 :
+								affiche_image(image, texture, pos_image, "image/de_3_1.bmp", renderer, window);
+								break;
+							case 3 :
+								affiche_image(image, texture, pos_image, "image/de_4_1.bmp", renderer, window);
+								break;
+							default :
+								break;
+						}
+						break;
+					case 2 :
+						switch(id_joueur)
+						{
+							case 0 :
+								affiche_image(image, texture, pos_image, "image/de_1_2.bmp", renderer, window);
+								break;
+							case 1 :
+								affiche_image(image, texture, pos_image, "image/de_2_2.bmp", renderer, window);
+								break;
+							case 2 :
+								affiche_image(image, texture, pos_image, "image/de_3_2.bmp", renderer, window);
+								break;
+							case 3 :
+								affiche_image(image, texture, pos_image, "image/de_4_2.bmp", renderer, window);
+								break;
+							default :
+								break;
+						}
+						break;
+					case 3 :
+						switch(id_joueur)
+						{
+							case 0 :
+								affiche_image(image, texture, pos_image, "image/de_1_3.bmp", renderer, window);
+								break;
+							case 1 :
+								affiche_image(image, texture, pos_image, "image/de_2_3.bmp", renderer, window);
+								break;
+							case 2 :
+								affiche_image(image, texture, pos_image, "image/de_3_3.bmp", renderer, window);
+								break;
+							case 3 :
+								affiche_image(image, texture, pos_image, "image/de_4_3.bmp", renderer, window);
+								break;
+							default :
+								break;
+						}
+						break;
+					case 4 :
+						switch(id_joueur)
+						{
+							case 0 :
+								affiche_image(image, texture, pos_image, "image/de_1_4.bmp", renderer, window);
+								break;
+							case 1 :
+								affiche_image(image, texture, pos_image, "image/de_2_4.bmp", renderer, window);
+								break;
+							case 2 :
+								affiche_image(image, texture, pos_image, "image/de_3_4.bmp", renderer, window);
+								break;
+							case 3 :
+								affiche_image(image, texture, pos_image, "image/de_4_4.bmp", renderer, window);
+								break;
+							default :
+								break;
+						}
+						break;
+					case 5 :
+						switch(id_joueur)
+						{
+							case 0 :
+								affiche_image(image, texture, pos_image, "image/de_1_5.bmp", renderer, window);
+								break;
+							case 1 :
+								affiche_image(image, texture, pos_image, "image/de_2_5.bmp", renderer, window);
+								break;
+							case 2 :
+								affiche_image(image, texture, pos_image, "image/de_3_5.bmp", renderer, window);
+								break;
+							case 3 :
+								affiche_image(image, texture, pos_image, "image/de_4_5.bmp", renderer, window);
+								break;
+							default :
+								break;
+						}
+						break;
+					case 6 :
+						switch(id_joueur)
+						{
+							case 0 :
+								affiche_image(image, texture, pos_image, "image/de_1_6.bmp", renderer, window);
+								break;
+							case 1 :
+								affiche_image(image, texture, pos_image, "image/de_2_6.bmp", renderer, window);
+								break;
+							case 2 :
+								affiche_image(image, texture, pos_image, "image/de_3_6.bmp", renderer, window);
+								break;
+							case 3 :
+								affiche_image(image, texture, pos_image, "image/de_4_6.bmp", renderer, window);
+								break;
+							default :
+								break;
+						}
+						break;
+					default :
+						break;
+				}
+
+				//affichage pion 1
+
+				pos_image.y = 279;
+				if((tab_j[id_joueur].p[0].d[0]==1)||(tab_j[id_joueur].p[0].d[1]==1)||(tab_j[id_joueur].p[0].d[2]==1)) affiche_animation(slct_pion1, image, texture, pos_image, "bouger_pion_1.bmp", renderer, window);
+				else affiche_image(image, texture, pos_image, "image/imp_bouger_pion_1.bmp", renderer, window);
+
+				//affichage pion 2
+
+				pos_image.y = 361;
+				if((tab_j[id_joueur].p[1].d[0]==1)||(tab_j[id_joueur].p[1].d[1]==1)||(tab_j[id_joueur].p[1].d[2]==1)) affiche_animation(slct_pion2, image, texture, pos_image, "bouger_pion_2.bmp", renderer, window);
+				else affiche_image(image, texture, pos_image, "image/imp_bouger_pion_2.bmp", renderer, window);
+
+				//affichage suivant
+
+				pos_image.y = 443;
+				if((tab_j[id_joueur].p[0].d[3]==1)&&(tab_j[id_joueur].p[1].d[3]==1)) affiche_animation(slct_suivant, image, texture, pos_image, "suivant.bmp", renderer, window);
+				else affiche_image(image, texture, pos_image, "image/imp_suivant.bmp", renderer, window);
+
+				//affichage retour
+
+				pos_image.y = 525;
+				if(!pile_est_vide(&pile_p)) affiche_animation(slct_retour, image, texture, pos_image, "retour.bmp", renderer, window);
+				else affiche_image(image, texture, pos_image, "image/imp_retour.bmp", renderer, window);
+
+				//affichage quitter
+
+				pos_image.y = 607;
+				affiche_animation(slct_quitter, image, texture, pos_image, "quitter.bmp", renderer, window);
+
+				break;
+
+			case 6 : //menu demander sauvegarde
+
+				//demande sauvegarder
+
+				pos_image.y=115;
+				affiche_image(image, texture, pos_image, "image/demmande_sauvegarde.bmp", renderer, window);
+
+				//"oui"
+
+				pos_image.y=197;
+				affiche_animation(slct_oui, image, texture, pos_image, "oui.bmp", renderer, window);
+
+				//"non"
+
+				pos_image.y=279;
+				affiche_animation(slct_non, image, texture, pos_image, "non.bmp", renderer, window);
+
+				break;
+
+			case 7 : //menu sauvegarder
+
+				//affichage sauvegarde 1
+
+				pos_image.y = 115;
+				if(emplacement_est_vide(1)) affiche_animation(slct_sauvegarde1, image, texture, pos_image, "sauvegarde_vide.bmp", renderer, window);
+				else affiche_animation(slct_sauvegarde1, image, texture, pos_image, "sauvegarde1.bmp", renderer, window);
+
+				//affichage sauvegarde 2
+
+				pos_image.y = 197;
+				if(emplacement_est_vide(2)) affiche_animation(slct_sauvegarde2, image, texture, pos_image, "sauvegarde_vide.bmp", renderer, window);
+				else affiche_animation(slct_sauvegarde2, image, texture, pos_image, "sauvegarde2.bmp", renderer, window);
+
+				//affichage sauvegarde 3
+
+				pos_image.y = 279;
+				if(emplacement_est_vide(3)) affiche_animation(slct_sauvegarde3, image, texture, pos_image, "sauvegarde_vide.bmp", renderer, window);
+				else affiche_animation(slct_sauvegarde3, image, texture, pos_image, "sauvegarde3.bmp", renderer, window);
+
+				break;
+
+			case 8 : //menu ecraser
+
+				//ecraser ?
+
+				pos_image.y = 115;
+				affiche_image(image, texture, pos_image, "image/ecraser.bmp", renderer, window);
+
+				//"oui"
+
+				pos_image.y=197;
+				affiche_animation(slct_oui, image, texture, pos_image, "oui.bmp", renderer, window);
+
+				//"non"
+
+				pos_image.y=279;
+				affiche_animation(slct_non, image, texture, pos_image, "non.bmp", renderer, window);
+
+				break;
+
+			default :
+				break;
 		}
 
 		//affichage rendu page accueil
@@ -655,506 +663,494 @@ int main(int argc, char** argv){
 
 	    		case SDL_MOUSEBUTTONUP:						//clic souris
 
-					if(menu_principale)
+					switch(menu)
 					{
-						if(clic_gauche(760, 1240, 115, 157,event)) //"nouvelle partie"
-						{
-							menu_principale = 0;
-							slct_nouvelle_partie = 0;
-							menu_nb_joueurs = 1;
-							break;
-						}
-						if(clic_gauche(760, 1240, 197, 239,event))	//"charger partie"
-						{
-							menu_principale = 0;
-							slct_charger_partie = 0;
-							menu_charger_partie = 1;
-							break;
-						}
-						if(clic_gauche(760, 1240, 279, 321, event))	//"sauvegardes"
-						{
-							menu_principale = 0;
-							slct_sauvegardes = 0;
-							menu_sauvegardes = 1;
-							break;
-						}
-						if(clic_gauche(760, 1240, 361, 403, event))	//"quitter"
-						{
-							programme_launched = SDL_FALSE;
-							clear_image(NULL, NULL, texture);
-							break;
-						}
-					}
+						case 0 : //menu principale
 
-					if(menu_nb_joueurs)
-					{
-						if(clic_gauche(760, 1240, 197, 239,event))	//1 joueurs
-						{
-							menu_nb_joueurs = 0;
-							slct_2 = 0;
-							menu_partie = 1;
-							nb_joueurs = 2;
+							if(clic_gauche(760, 1240, 115, 157,event)) //"nouvelle partie"
+							{
+								slct_nouvelle_partie = 0;
+								menu = 1;
+								break;
+							}
+							if(clic_gauche(760, 1240, 197, 239,event))	//"charger partie"
+							{
+								slct_charger_partie = 0;
+								menu = 2;
+								break;
+							}
+							if(clic_gauche(760, 1240, 279, 321, event))	//"sauvegardes"
+							{
+								slct_sauvegardes = 0;
+								menu = 3;
+								break;
+							}
+							if(clic_gauche(760, 1240, 361, 403, event))	//"quitter"
+							{
+								programme_launched = SDL_FALSE;
+								clear_image(NULL, NULL, texture);
+								break;
+							}
 
-							init_partie(nb_joueurs,tab_j,&id_joueur);
-							de=jet();
-							copie_partie(&partie,id_joueur,de,tab_j);
-							tab_j[id_joueur].etat=1;
-							liste_actions_possibles(tab_j,id_joueur,de);
 							break;
-						}
-						if(clic_gauche(760, 1240, 279, 321,event))	//2 joueurs
-						{
-							menu_nb_joueurs = 0;
-							slct_3 = 0;
-							menu_partie = 1;
-							nb_joueurs = 3;
 
-							init_partie(nb_joueurs,tab_j,&id_joueur);
-							de=jet();
-							copie_partie(&partie,id_joueur,de,tab_j);
-							tab_j[id_joueur].etat=1;
-							liste_actions_possibles(tab_j,id_joueur,de);
-							break;
-						}
-						if(clic_gauche(760, 1240, 361, 403,event))	//3 joueurs
-						{
-							menu_nb_joueurs = 0;
-							slct_3 = 0;
-							menu_partie = 1;
-							nb_joueurs = 4;
+						case 1 : //menu nouvelle partie
 
-							init_partie(nb_joueurs,tab_j,&id_joueur);
-							de=jet();
-							copie_partie(&partie,id_joueur,de,tab_j);
-							tab_j[id_joueur].etat=1;
-							liste_actions_possibles(tab_j,id_joueur,de);
-							break;
-							
-						}
-					}
+							if(clic_gauche(760, 1240, 197, 239,event))	//1 joueurs
+							{
+								slct_2 = 0;
+								menu = 5;
+								nb_joueurs = 2;
 
-					if(menu_charger_partie)
-					{
+								init_partie(nb_joueurs,tab_j,&id_joueur);
+								de=jet();
+								copie_partie(&partie,id_joueur,de,tab_j);
+								tab_j[id_joueur].etat=1;
+								liste_actions_possibles(tab_j,id_joueur,de);
+								break;
+							}
+							if(clic_gauche(760, 1240, 279, 321,event))	//2 joueurs
+							{
+								slct_3 = 0;
+								menu = 5;
+								nb_joueurs = 3;
+
+								init_partie(nb_joueurs,tab_j,&id_joueur);
+								de=jet();
+								copie_partie(&partie,id_joueur,de,tab_j);
+								tab_j[id_joueur].etat=1;
+								liste_actions_possibles(tab_j,id_joueur,de);
+								break;
+							}
+							if(clic_gauche(760, 1240, 361, 403,event))	//3 joueurs
+							{
+								slct_3 = 0;
+								menu = 5;
+								nb_joueurs = 4;
+
+								init_partie(nb_joueurs,tab_j,&id_joueur);
+								de=jet();
+								copie_partie(&partie,id_joueur,de,tab_j);
+								tab_j[id_joueur].etat=1;
+								liste_actions_possibles(tab_j,id_joueur,de);
+								break;	
+						}
+
+						break;
+
+					case 2 : //menu charger partie
+
 						if((!emplacement_est_vide(1))&&(clic_gauche(760, 1240, 115, 157,event)))	//sauvegarde 1
-						{
-							charger_sauvegarde(1,&partie,tab_j,&de,&id_joueur,&nb_joueurs);
-							menu_charger_partie = 0;
-							slct_sauvegarde1 = 0;
-							chargement_sauvegarde = 1;
-							menu_partie = 1;
-
-							copie_partie(&partie,id_joueur,de,tab_j);
-							tab_j[id_joueur].etat=1;
-							liste_actions_possibles(tab_j,id_joueur,de);
-							break;
-						}
-						if((!emplacement_est_vide(2))&&(clic_gauche(760, 1240, 197, 239,event)))	//sauvegarde 2
-						{
-							charger_sauvegarde(2,&partie,tab_j,&de,&id_joueur,&nb_joueurs);
-							menu_charger_partie = 0;
-							slct_sauvegarde2 = 0;
-							chargement_sauvegarde = 1;
-							menu_partie = 1;
-
-							copie_partie(&partie,id_joueur,de,tab_j);
-							tab_j[id_joueur].etat=1;
-							liste_actions_possibles(tab_j,id_joueur,de);
-							break;
-						}
-						if((!emplacement_est_vide(3))&&(clic_gauche(760, 1240, 279, 321,event)))	//sauvegarde 3
-						{
-							charger_sauvegarde(3,&partie,tab_j,&de,&id_joueur,&nb_joueurs);
-							menu_charger_partie = 0;
-							slct_sauvegarde3 = 0;
-							chargement_sauvegarde = 1;
-							menu_partie = 1;
-
-							copie_partie(&partie,id_joueur,de,tab_j);
-							tab_j[id_joueur].etat=1;
-							liste_actions_possibles(tab_j,id_joueur,de);
-							break;
-						}
-						if(clic_gauche(760, 1240, 361, 403,event))	//"quitter"
-						{
-							menu_charger_partie = 0;
-							slct_quitter = 0;
-							menu_principale = 1;
-							break;
-						}
-					}
-
-					if(menu_sauvegardes)
-					{
-						if(clic_gauche(760, 1240, 361, 403,event))
-						{
-							init_sauvegarde();	//"reinitialiser"
-							slct_reinitialiser = 1;
-							break;
-						}
-						if(clic_gauche(760, 1240, 443, 485,event))	//"supprimmer"
-						{
-							menu_sauvegardes = 0;
-							slct_supprimer = 0;
-							menu_supprimer = 1;
-							break;
-						}
-						if(clic_gauche(760, 1240, 525, 567,event))	//"quitter"
-						{
-							menu_sauvegardes = 0;
-							slct_quitter = 0;
-							menu_principale = 1;
-							break;
-						}
-					}
-
-					if(menu_supprimer)
-					{
-						if(clic_gauche(760, 1240, 115, 157,event))
-						{
-							supprimer_sauvegarde(1);	//sauvegarde 1
-							slct_sauvegarde1 = 1;
-							break;
-						}
-						if(clic_gauche(760, 1240, 197, 239,event))
-						{
-							supprimer_sauvegarde(2);	//sauvegarde 2
-							slct_sauvegarde2 = 1;
-							break;
-						}
-						if(clic_gauche(760, 1240, 279, 321,event))
-						{
-							supprimer_sauvegarde(3);	//sauvegarde 3
-							slct_sauvegarde3 = 1;
-							break;
-						}
-						if(clic_gauche(760, 1240, 361, 403,event))	//"quitter"
-						{
-							menu_supprimer = 0;
-							slct_quitter = 0;
-							menu_sauvegardes = 1;
-							break;
-						}
-					}
-
-					if(menu_partie)
-					{
-						if((tab_j[id_joueur].p[0].centre==6)&&(tab_j[id_joueur].p[1].centre==6))
-						{
-							menu_partie = 0;
-							slct_pion1 = 0;
-							slct_pion2 = 0;
-							slct_suivant = 0;
-							slct_retour = 0;
-							menu_principale = 1;
-							break;
-						}
-
-						if((clic_gauche(760, 1240, 279, 321,event))&&(tab_j[id_joueur].p[0].d[0]==1))
-						{
-							slct_pion1 = 1;
-							sortir(tab_j,nb_joueurs,id_joueur,0);
-							empiler_partie(&pile_p,partie);
-
-							de=jet();
-							copie_partie(&partie,id_joueur,de,tab_j);
-
-							for(i=0;i<NB_PIONS;i++){
-								for(j=0;j<TAILLE_LISTE_DRAPEAUX;j++) tab_j[id_joueur].p[i].d[j]=0;
-							}
-
-							liste_actions_possibles(tab_j,id_joueur,de);
-							break;
-						}
-						if((clic_gauche(760, 1240, 279, 321,event))&&(tab_j[id_joueur].p[0].d[1]==1))
-						{
-							slct_pion1 = 1;
-							tour(tab_j,nb_joueurs,id_joueur,0,de);
-							empiler_partie(&pile_p,partie);
-
-							if(de!=6)
 							{
-								tab_j[id_joueur].etat=0;
-								id_joueur++;
-								if(id_joueur==nb_joueurs) id_joueur=0;
+								charger_sauvegarde(1,&partie,tab_j,&de,&id_joueur,&nb_joueurs);
+								slct_sauvegarde1 = 0;
+								chargement_sauvegarde = 1;
+								menu = 5;
+
+								copie_partie(&partie,id_joueur,de,tab_j);
+								tab_j[id_joueur].etat=1;
+								liste_actions_possibles(tab_j,id_joueur,de);
+								break;
+							}
+							if((!emplacement_est_vide(2))&&(clic_gauche(760, 1240, 197, 239,event)))	//sauvegarde 2
+							{
+								charger_sauvegarde(2,&partie,tab_j,&de,&id_joueur,&nb_joueurs);
+								slct_sauvegarde2 = 0;
+								chargement_sauvegarde = 1;
+								menu = 5;
+
+								copie_partie(&partie,id_joueur,de,tab_j);
+								tab_j[id_joueur].etat=1;
+								liste_actions_possibles(tab_j,id_joueur,de);
+								break;
+							}
+							if((!emplacement_est_vide(3))&&(clic_gauche(760, 1240, 279, 321,event)))	//sauvegarde 3
+							{
+								charger_sauvegarde(3,&partie,tab_j,&de,&id_joueur,&nb_joueurs);
+								slct_sauvegarde3 = 0;
+								chargement_sauvegarde = 1;
+								menu = 5;
+
+								copie_partie(&partie,id_joueur,de,tab_j);
+								tab_j[id_joueur].etat=1;
+								liste_actions_possibles(tab_j,id_joueur,de);
+								break;
+							}
+							if(clic_gauche(760, 1240, 361, 403,event))	//"quitter"
+							{
+								slct_quitter = 0;
+								menu = 0;
+								break;
 							}
 
-							de=jet();
-							copie_partie(&partie,id_joueur,de,tab_j);
-
-							for(i=0;i<NB_PIONS;i++){
-								for(j=0;j<TAILLE_LISTE_DRAPEAUX;j++) tab_j[id_joueur].p[i].d[j]=0;
-							}
-
-							tab_j[id_joueur].etat=1;
-							liste_actions_possibles(tab_j,id_joueur,de);
 							break;
-						}
-						if((clic_gauche(760, 1240, 279, 321,event))&&(tab_j[id_joueur].p[0].d[2]==1))
-						{
-							slct_pion1 = 1;
-							centre(tab_j,nb_joueurs,id_joueur,0,de);
+
+						case 3 : //menu sauvegardes
+
+							if(clic_gauche(760, 1240, 361, 403,event))
+							{
+								init_sauvegarde();	//"reinitialiser"
+								slct_reinitialiser = 1;
+								break;
+							}
+							if(clic_gauche(760, 1240, 443, 485,event))	//"supprimmer"
+							{
+								slct_supprimer = 0;
+								menu = 4;
+								break;
+							}
+							if(clic_gauche(760, 1240, 525, 567,event))	//"quitter"
+							{
+								slct_quitter = 0;
+								menu = 0;
+								break;
+							}
+
+							break;
+
+						case 4 : //menu supprimer
+
+							if(clic_gauche(760, 1240, 115, 157,event))
+							{
+								supprimer_sauvegarde(1);	//sauvegarde 1
+								slct_sauvegarde1 = 1;
+								break;
+							}
+							if(clic_gauche(760, 1240, 197, 239,event))
+							{
+								supprimer_sauvegarde(2);	//sauvegarde 2
+								slct_sauvegarde2 = 1;
+								break;
+							}
+							if(clic_gauche(760, 1240, 279, 321,event))
+							{
+								supprimer_sauvegarde(3);	//sauvegarde 3
+								slct_sauvegarde3 = 1;
+								break;
+							}
+							if(clic_gauche(760, 1240, 361, 403,event))	//"quitter"
+							{
+								slct_quitter = 0;
+								menu = 3;
+								break;
+							}
+
+							break;
+
+						case 5 : //menu partie
 
 							if((tab_j[id_joueur].p[0].centre==6)&&(tab_j[id_joueur].p[1].centre==6))
 							{
-								programme_launched = SDL_FALSE; 
-
-								clear_image(NULL, NULL, texture);
+								slct_pion1 = 0;
+								slct_pion2 = 0;
+								slct_suivant = 0;
+								slct_retour = 0;
+								menu = 0;
+								break;
 							}
 
-							empiler_partie(&pile_p,partie);
-
-							if(de!=6)
+							if((clic_gauche(760, 1240, 279, 321,event))&&(tab_j[id_joueur].p[0].d[0]==1))
 							{
-								tab_j[id_joueur].etat=0;
-								id_joueur++;
-								if(id_joueur==nb_joueurs) id_joueur=0;
-							}
+								slct_pion1 = 1;
+								sortir(tab_j,nb_joueurs,id_joueur,0);
+								empiler_partie(&pile_p,partie);
 
-							de=jet();
-							copie_partie(&partie,id_joueur,de,tab_j);
+								de=jet();
+								copie_partie(&partie,id_joueur,de,tab_j);
 
-							for(i=0;i<NB_PIONS;i++){
-								for(j=0;j<TAILLE_LISTE_DRAPEAUX;j++) tab_j[id_joueur].p[i].d[j]=0;
-							}
-
-							tab_j[id_joueur].etat=1;
-							liste_actions_possibles(tab_j,id_joueur,de);
-							break;
-						}
-
-						if((clic_gauche(760, 1240, 361, 403,event))&&(tab_j[id_joueur].p[1].d[0]==1))
-						{
-							slct_pion2 = 1;
-							sortir(tab_j,nb_joueurs,id_joueur,1);
-							empiler_partie(&pile_p,partie);
-
-							de=jet();
-							copie_partie(&partie,id_joueur,de,tab_j);
-
-							for(i=0;i<NB_PIONS;i++){
-								for(j=0;j<TAILLE_LISTE_DRAPEAUX;j++) tab_j[id_joueur].p[i].d[j]=0;
-							}
-
-							liste_actions_possibles(tab_j,id_joueur,de);
-							break;
-						}
-
-						if((clic_gauche(760, 1240, 361, 403,event))&&(tab_j[id_joueur].p[1].d[1]==1))
-						{
-							slct_pion2 = 1;
-							tour(tab_j,nb_joueurs,id_joueur,1,de);
-							empiler_partie(&pile_p,partie);
-
-							if(de!=6)
-							{
-								tab_j[id_joueur].etat=0;
-								id_joueur++;
-								if(id_joueur==nb_joueurs) id_joueur=0;
-							}
-
-							de=jet();
-							copie_partie(&partie,id_joueur,de,tab_j);
-
-							for(i=0;i<NB_PIONS;i++){
-								for(j=0;j<TAILLE_LISTE_DRAPEAUX;j++) tab_j[id_joueur].p[i].d[j]=0;
-							}
-
-							tab_j[id_joueur].etat=1;
-							liste_actions_possibles(tab_j,id_joueur,de);
-							break;
-						}
-
-						if((clic_gauche(760, 1240, 361, 403,event))&&(tab_j[id_joueur].p[1].d[2]==1))
-						{
-							slct_pion2 = 1;
-							centre(tab_j,nb_joueurs,id_joueur,1,de);
-
-							if((tab_j[id_joueur].p[0].centre==6)&&(tab_j[id_joueur].p[1].centre==6))
-							{
-								programme_launched = SDL_FALSE; 
-
-								clear_image(NULL, NULL, texture);
-							}
-
-							empiler_partie(&pile_p,partie);
-
-							if(de!=6)
-							{
-								tab_j[id_joueur].etat=0;
-								id_joueur++;
-								if(id_joueur==nb_joueurs) id_joueur=0;
-							}
-
-							de=jet();
-							copie_partie(&partie,id_joueur,de,tab_j);
-
-							for(i=0;i<NB_PIONS;i++){
-								for(j=0;j<TAILLE_LISTE_DRAPEAUX;j++) tab_j[id_joueur].p[i].d[j]=0;
-							}
-
-							tab_j[id_joueur].etat=1;
-							liste_actions_possibles(tab_j,id_joueur,de);
-							break;
-						}
-
-						if((clic_gauche(760, 1240, 443, 485,event)&&(tab_j[id_joueur].p[0].d[3]==1)&&(tab_j[id_joueur].p[1].d[3]==1)))
-						{
-							slct_suivant = 1;
-							empiler_partie(&pile_p,partie);
-
-							tab_j[id_joueur].etat=0;
-							id_joueur++;
-							if(id_joueur==nb_joueurs) id_joueur=0;
-
-							de=jet();
-							copie_partie(&partie,id_joueur,de,tab_j);
-
-							for(i=0;i<NB_PIONS;i++){
-								for(j=0;j<TAILLE_LISTE_DRAPEAUX;j++) tab_j[id_joueur].p[i].d[j]=0;
-							}
-
-							tab_j[id_joueur].etat=1;
-							liste_actions_possibles(tab_j,id_joueur,de);
-							break;
-						}
-
-						if((!pile_est_vide(&pile_p))&&(clic_gauche(760, 1240, 525, 567,event)))
-						{
-							slct_retour = 1;
-							tab_j[id_joueur].etat=0;
-
-							partie=depiler(&pile_p);
-							for(i=0;i<MAX_JOUEURS;i++){
-								tab_j[i].depart=partie.tab_j[i].depart;
-								tab_j[i].arrivee=partie.tab_j[i].arrivee;
-								tab_j[i].etat=partie.tab_j[i].etat;
-								for(j=0;j<NB_PIONS;j++){
-									tab_j[i].p[j].etat=partie.tab_j[i].p[j].etat;
-									tab_j[i].p[j].tour=partie.tab_j[i].p[j].tour;
-									tab_j[i].p[j].centre=partie.tab_j[i].p[j].centre;
-									for(k=0;k<TAILLE_LISTE_DRAPEAUX;k++) tab_j[i].p[j].d[k]=partie.tab_j[i].p[j].d[k];
+								for(i=0;i<NB_PIONS;i++){
+									for(j=0;j<TAILLE_LISTE_DRAPEAUX;j++) tab_j[id_joueur].p[i].d[j]=0;
 								}
+
+								liste_actions_possibles(tab_j,id_joueur,de);
+								break;
 							}
-							de=partie.de;
-							id_joueur=partie.id_joueur;
-
-							copie_partie(&partie,id_joueur,de,tab_j);
-
-							for(i=0;i<NB_PIONS;i++){
-								for(j=0;j<TAILLE_LISTE_DRAPEAUX;j++) tab_j[id_joueur].p[i].d[j]=0;
-							}
-
-							tab_j[id_joueur].etat=1;
-							liste_actions_possibles(tab_j,id_joueur,de);
-							break;
-						}
-
-						if(clic_gauche(760, 1240, 607, 649, event)) //"quitter"
-						{
-							init_pile(&pile_p);
-							menu_partie = 0;
-							slct_quitter = 0;
-							menu_demmande_sauvegarder = 1;
-							break;
-						}
-					}
-
-					if(menu_demmande_sauvegarder)
-					{
-						if(clic_gauche(760, 1240, 197, 239, event))
-						{
-							menu_demmande_sauvegarder = 0;
-							slct_oui = 0;
-							menu_sauvegarder = 1;
-							break;
-						}
-						if(clic_gauche(760, 1240, 279, 321, event))
-						{
-							menu_demmande_sauvegarder = 0;
-							slct_non = 0;
-							menu_principale = 1;
-							break;
-						}
-
-					}
-
-					if(menu_sauvegarder)
-					{
-						if(clic_gauche(760, 1240, 115, 157, event))
-						{
-							if(emplacement_est_vide(1))
+							if((clic_gauche(760, 1240, 279, 321,event))&&(tab_j[id_joueur].p[0].d[1]==1))
 							{
-								sauvegarder(1,partie,nb_joueurs);
-								menu_sauvegarder = 0;
-								slct_sauvegarde1 = 0;
-								menu_principale = 1;
-							}
-							else
-							{
-								id_sauvegarde = 1;
-								menu_sauvegarder = 0;
-								slct_sauvegarde1 = 0;
-								menu_ecraser = 1;
-							}
-							break;
-						}
-						if(clic_gauche(760, 1240, 197, 239, event))
-						{
-							if(emplacement_est_vide(2))
-							{
-								sauvegarder(2,partie,nb_joueurs);
-								menu_sauvegarder = 0;
-								slct_sauvegarde2 = 0;
-								menu_principale = 1;
-							}
-							else
-							{
-								id_sauvegarde = 2;
-								menu_sauvegarder = 0;
-								slct_sauvegarde2 = 0;
-								menu_ecraser = 1;
-							}
-							break;
-						}
-						if(clic_gauche(760, 1240, 279, 321, event))
-						{
-							if(emplacement_est_vide(3))
-							{
-								id_sauvegarde = 3;
-								sauvegarder(3,partie,nb_joueurs);
-								menu_sauvegarder = 0;
-								slct_sauvegarde3 = 0;
-								menu_principale = 1;
-							}
-							else
-							{
-								menu_sauvegarder = 0;
-								slct_sauvegarde3 = 0;
-								menu_ecraser = 1;
-							}
-							break;
-						}
-					}
+								slct_pion1 = 1;
+								tour(tab_j,nb_joueurs,id_joueur,0,de);
+								empiler_partie(&pile_p,partie);
 
-					if(menu_ecraser)
-					{
-						if(clic_gauche(760, 1240, 197, 239, event))
-						{
-							sauvegarder(id_sauvegarde,partie,nb_joueurs);
-							id_sauvegarde=0;
-							menu_ecraser = 0;
-							slct_oui = 0;
-							menu_principale = 1;
+								if(de!=6)
+								{
+									tab_j[id_joueur].etat=0;
+									id_joueur++;
+									if(id_joueur==nb_joueurs) id_joueur=0;
+								}
+
+								de=jet();
+								copie_partie(&partie,id_joueur,de,tab_j);
+
+								for(i=0;i<NB_PIONS;i++){
+									for(j=0;j<TAILLE_LISTE_DRAPEAUX;j++) tab_j[id_joueur].p[i].d[j]=0;
+								}
+
+								tab_j[id_joueur].etat=1;
+								liste_actions_possibles(tab_j,id_joueur,de);
+								break;
+							}
+							if((clic_gauche(760, 1240, 279, 321,event))&&(tab_j[id_joueur].p[0].d[2]==1))
+							{
+								slct_pion1 = 1;
+								centre(tab_j,nb_joueurs,id_joueur,0,de);
+
+								if((tab_j[id_joueur].p[0].centre==6)&&(tab_j[id_joueur].p[1].centre==6))
+								{
+									programme_launched = SDL_FALSE; 
+
+									clear_image(NULL, NULL, texture);
+								}
+
+								empiler_partie(&pile_p,partie);
+
+								if(de!=6)
+								{
+									tab_j[id_joueur].etat=0;
+									id_joueur++;
+									if(id_joueur==nb_joueurs) id_joueur=0;
+								}
+
+								de=jet();
+								copie_partie(&partie,id_joueur,de,tab_j);
+
+								for(i=0;i<NB_PIONS;i++){
+									for(j=0;j<TAILLE_LISTE_DRAPEAUX;j++) tab_j[id_joueur].p[i].d[j]=0;
+								}
+
+								tab_j[id_joueur].etat=1;
+								liste_actions_possibles(tab_j,id_joueur,de);
+								break;
+							}
+
+							if((clic_gauche(760, 1240, 361, 403,event))&&(tab_j[id_joueur].p[1].d[0]==1))
+							{
+								slct_pion2 = 1;
+								sortir(tab_j,nb_joueurs,id_joueur,1);
+								empiler_partie(&pile_p,partie);
+
+								de=jet();
+								copie_partie(&partie,id_joueur,de,tab_j);
+
+								for(i=0;i<NB_PIONS;i++){
+									for(j=0;j<TAILLE_LISTE_DRAPEAUX;j++) tab_j[id_joueur].p[i].d[j]=0;
+								}
+
+								liste_actions_possibles(tab_j,id_joueur,de);
+								break;
+							}
+
+							if((clic_gauche(760, 1240, 361, 403,event))&&(tab_j[id_joueur].p[1].d[1]==1))
+							{
+								slct_pion2 = 1;
+								tour(tab_j,nb_joueurs,id_joueur,1,de);
+								empiler_partie(&pile_p,partie);
+
+								if(de!=6)
+								{
+									tab_j[id_joueur].etat=0;
+									id_joueur++;
+									if(id_joueur==nb_joueurs) id_joueur=0;
+								}
+
+								de=jet();
+								copie_partie(&partie,id_joueur,de,tab_j);
+
+								for(i=0;i<NB_PIONS;i++){
+									for(j=0;j<TAILLE_LISTE_DRAPEAUX;j++) tab_j[id_joueur].p[i].d[j]=0;
+								}
+
+								tab_j[id_joueur].etat=1;
+								liste_actions_possibles(tab_j,id_joueur,de);
+								break;
+							}
+
+							if((clic_gauche(760, 1240, 361, 403,event))&&(tab_j[id_joueur].p[1].d[2]==1))
+							{
+								slct_pion2 = 1;
+								centre(tab_j,nb_joueurs,id_joueur,1,de);
+
+								if((tab_j[id_joueur].p[0].centre==6)&&(tab_j[id_joueur].p[1].centre==6))
+								{
+									programme_launched = SDL_FALSE; 
+
+									clear_image(NULL, NULL, texture);
+								}
+
+								empiler_partie(&pile_p,partie);
+
+								if(de!=6)
+								{
+									tab_j[id_joueur].etat=0;
+									id_joueur++;
+									if(id_joueur==nb_joueurs) id_joueur=0;
+								}
+
+								de=jet();
+								copie_partie(&partie,id_joueur,de,tab_j);
+
+								for(i=0;i<NB_PIONS;i++){
+									for(j=0;j<TAILLE_LISTE_DRAPEAUX;j++) tab_j[id_joueur].p[i].d[j]=0;
+								}
+
+								tab_j[id_joueur].etat=1;
+								liste_actions_possibles(tab_j,id_joueur,de);
+								break;
+							}
+
+							if((clic_gauche(760, 1240, 443, 485,event)&&(tab_j[id_joueur].p[0].d[3]==1)&&(tab_j[id_joueur].p[1].d[3]==1)))
+							{
+								slct_suivant = 1;
+								empiler_partie(&pile_p,partie);
+
+								tab_j[id_joueur].etat=0;
+								id_joueur++;
+								if(id_joueur==nb_joueurs) id_joueur=0;
+
+								de=jet();
+								copie_partie(&partie,id_joueur,de,tab_j);
+
+								for(i=0;i<NB_PIONS;i++){
+									for(j=0;j<TAILLE_LISTE_DRAPEAUX;j++) tab_j[id_joueur].p[i].d[j]=0;
+								}
+
+								tab_j[id_joueur].etat=1;
+								liste_actions_possibles(tab_j,id_joueur,de);
+								break;
+							}
+
+							if((!pile_est_vide(&pile_p))&&(clic_gauche(760, 1240, 525, 567,event)))
+							{
+								slct_retour = 1;
+								tab_j[id_joueur].etat=0;
+
+								partie=depiler(&pile_p);
+								for(i=0;i<MAX_JOUEURS;i++){
+									tab_j[i].depart=partie.tab_j[i].depart;
+									tab_j[i].arrivee=partie.tab_j[i].arrivee;
+									tab_j[i].etat=partie.tab_j[i].etat;
+									for(j=0;j<NB_PIONS;j++){
+										tab_j[i].p[j].etat=partie.tab_j[i].p[j].etat;
+										tab_j[i].p[j].tour=partie.tab_j[i].p[j].tour;
+										tab_j[i].p[j].centre=partie.tab_j[i].p[j].centre;
+										for(k=0;k<TAILLE_LISTE_DRAPEAUX;k++) tab_j[i].p[j].d[k]=partie.tab_j[i].p[j].d[k];
+									}
+								}
+								de=partie.de;
+								id_joueur=partie.id_joueur;
+
+								copie_partie(&partie,id_joueur,de,tab_j);
+
+								for(i=0;i<NB_PIONS;i++){
+									for(j=0;j<TAILLE_LISTE_DRAPEAUX;j++) tab_j[id_joueur].p[i].d[j]=0;
+								}
+
+								tab_j[id_joueur].etat=1;
+								liste_actions_possibles(tab_j,id_joueur,de);
+								break;
+							}
+
+							if(clic_gauche(760, 1240, 607, 649, event)) //"quitter"
+							{
+								init_pile(&pile_p);
+								slct_quitter = 0;
+								menu = 6;
+								break;
+							}
+
 							break;
-						}
-						if(clic_gauche(760, 1240, 279, 321, event))
-						{
-							id_sauvegarde=0;
-							menu_ecraser = 0;
-							slct_non = 0;
-							menu_sauvegarder = 1;
+
+						case 6 : //menu demander sauvegarder
+
+							if(clic_gauche(760, 1240, 197, 239, event))
+							{
+								slct_oui = 0;
+								menu = 7;
+								break;
+							}
+							if(clic_gauche(760, 1240, 279, 321, event))
+							{
+								slct_non = 0;
+								menu = 0;
+								break;
+							}
+
 							break;
-						}
+
+						case 7 : //menu sauvegarder
+
+							if(clic_gauche(760, 1240, 115, 157, event))
+							{
+								if(emplacement_est_vide(1))
+								{
+									sauvegarder(1,partie,nb_joueurs);
+									slct_sauvegarde1 = 0;
+									menu = 0;
+								}
+								else
+								{
+									id_sauvegarde = 1;
+									slct_sauvegarde1 = 0;
+									menu = 8;
+								}
+								break;
+							}
+							if(clic_gauche(760, 1240, 197, 239, event))
+							{
+								if(emplacement_est_vide(2))
+								{
+									sauvegarder(2,partie,nb_joueurs);
+									slct_sauvegarde2 = 0;
+									menu = 0;
+								}
+								else
+								{
+									id_sauvegarde = 2;
+									slct_sauvegarde2 = 0;
+									menu = 8;
+								}
+								break;
+							}
+							if(clic_gauche(760, 1240, 279, 321, event))
+							{
+								if(emplacement_est_vide(3))
+								{
+									id_sauvegarde = 3;
+									sauvegarder(3,partie,nb_joueurs);
+									slct_sauvegarde3 = 0;
+									menu = 0;
+								}
+								else
+								{
+									slct_sauvegarde3 = 0;
+									menu = 8;
+								}
+								break;
+							}
+
+							break;
+
+						case 8 : //menu ecraser
+
+							if(clic_gauche(760, 1240, 197, 239, event))
+							{
+								sauvegarder(id_sauvegarde,partie,nb_joueurs);
+								id_sauvegarde=0;
+								slct_oui = 0;
+								menu = 0;
+								break;
+							}
+							if(clic_gauche(760, 1240, 279, 321, event))
+							{
+								id_sauvegarde=0;
+								slct_non = 0;
+								menu = 7;
+								break;
+							}
+
+							break;
+
+						default :
+							break;
 					}
 
 					break;
@@ -1172,160 +1168,153 @@ int main(int argc, char** argv){
 
 					//printf("en %d : %d\n", event.button.x, event.button.y);	//position du clic
 
-					if(menu_principale)
+					switch(menu)
 					{
-						slct_nouvelle_partie = anim_bouton2(760, 1240, 115, 157, event, slct_nouvelle_partie);
-						slct_charger_partie = anim_bouton2(760, 1240, 197, 239, event, slct_charger_partie);
-						slct_sauvegardes = anim_bouton2(760, 1240, 279, 321, event, slct_sauvegardes);
-						slct_quitter = anim_bouton2(760, 1240, 361, 403, event, slct_quitter);
-						break;
+						case 0 : //menu principale
+
+							slct_nouvelle_partie = anim_bouton2(760, 1240, 115, 157, event, slct_nouvelle_partie);
+							slct_charger_partie = anim_bouton2(760, 1240, 197, 239, event, slct_charger_partie);
+							slct_sauvegardes = anim_bouton2(760, 1240, 279, 321, event, slct_sauvegardes);
+							slct_quitter = anim_bouton2(760, 1240, 361, 403, event, slct_quitter);
+							break;
+
+						case 1 : //menu nouvelle partie
+
+							slct_2 = anim_bouton2(760, 1240, 197, 239, event, slct_2);
+							slct_3 = anim_bouton2(760, 1240, 279, 321, event, slct_3);
+							slct_4 = anim_bouton2(760, 1240, 361, 403,event, slct_4);
+							break;
+
+						case 2 : //menu charger partie
+
+							slct_sauvegarde1 = anim_bouton2(760, 1240, 115, 157, event, slct_sauvegarde2);
+							slct_sauvegarde2 = anim_bouton2(760, 1240, 197, 239, event, slct_sauvegarde2);
+							slct_sauvegarde3 = anim_bouton2(760, 1240, 279, 321, event, slct_sauvegarde3);
+							slct_quitter = anim_bouton2(760, 1240, 361, 403,event, slct_quitter);
+							break;
+
+						case 3 : //menu sauvegardes
+
+							slct_reinitialiser = anim_bouton2(760, 1240, 361, 403, event, slct_reinitialiser);
+							slct_supprimer = anim_bouton2(760, 1240, 443, 485, event, slct_supprimer);
+							slct_quitter = anim_bouton2(760, 1240, 525, 567, event, slct_quitter);
+							break;
+
+						case 4 : //menu supprimer
+
+							slct_sauvegarde1 = anim_bouton2(760, 1240, 115, 157, event, slct_sauvegarde2);
+							slct_sauvegarde2 = anim_bouton2(760, 1240, 197, 239, event, slct_sauvegarde2);
+							slct_sauvegarde3 = anim_bouton2(760, 1240, 279, 321, event, slct_sauvegarde3);
+							slct_quitter = anim_bouton2(760, 1240, 361, 403,event, slct_quitter);
+							break;
+
+						case 5 : //menu partie
+
+							slct_pion1 = anim_bouton2(760, 1240, 279, 321, event, slct_pion1);
+							slct_pion2 = anim_bouton2(760, 1240, 361, 403, event, slct_pion2);
+							slct_suivant = anim_bouton2(760, 1240, 443, 485, event, slct_suivant);
+							slct_retour = anim_bouton2(760, 1240, 525, 567,event, slct_retour);
+							slct_quitter = anim_bouton2(760, 1240, 607, 649, event, slct_quitter);
+							break;
+
+						case 6 : //menu demande sauvegarde
+
+							slct_oui = anim_bouton2(760, 1240, 197, 239, event, slct_oui);
+							slct_non = anim_bouton2(760, 1240, 279, 321, event, slct_non);
+							break;
+
+						case 7 : //menu sauvegarder
+
+							slct_sauvegarde1 = anim_bouton2(760, 1240, 115, 157, event, slct_sauvegarde2);
+							slct_sauvegarde2 = anim_bouton2(760, 1240, 197, 239, event, slct_sauvegarde2);
+							slct_sauvegarde3 = anim_bouton2(760, 1240, 279, 321, event, slct_sauvegarde3);
+							break;
+
+						case 8 : //menu ecraser
+
+							slct_oui = anim_bouton2(760, 1240, 197, 239, event, slct_oui);
+							slct_non = anim_bouton2(760, 1240, 279, 321, event, slct_non);
+							break;
+						default :
+							break;
 					}
 
-					if(menu_nb_joueurs)
-					{
-						slct_2 = anim_bouton2(760, 1240, 197, 239, event, slct_2);
-						slct_3 = anim_bouton2(760, 1240, 279, 321, event, slct_3);
-						slct_4 = anim_bouton2(760, 1240, 361, 403,event, slct_4);
-						break;
-					}
-
-					if(menu_charger_partie)
-					{
-						slct_sauvegarde1 = anim_bouton2(760, 1240, 115, 157, event, slct_sauvegarde2);
-						slct_sauvegarde2 = anim_bouton2(760, 1240, 197, 239, event, slct_sauvegarde2);
-						slct_sauvegarde3 = anim_bouton2(760, 1240, 279, 321, event, slct_sauvegarde3);
-						slct_quitter = anim_bouton2(760, 1240, 361, 403,event, slct_quitter);
-						break;
-					}
-
-					if(menu_sauvegardes)
-					{
-						slct_reinitialiser = anim_bouton2(760, 1240, 361, 403, event, slct_reinitialiser);
-						slct_supprimer = anim_bouton2(760, 1240, 443, 485, event, slct_supprimer);
-						slct_quitter = anim_bouton2(760, 1240, 525, 567, event, slct_quitter);
-						break;
-					}
-
-					if(menu_supprimer)
-					{
-						slct_sauvegarde1 = anim_bouton2(760, 1240, 115, 157, event, slct_sauvegarde2);
-						slct_sauvegarde2 = anim_bouton2(760, 1240, 197, 239, event, slct_sauvegarde2);
-						slct_sauvegarde3 = anim_bouton2(760, 1240, 279, 321, event, slct_sauvegarde3);
-						slct_quitter = anim_bouton2(760, 1240, 361, 403,event, slct_quitter);
-						break;
-					}
-
-					if(menu_partie)
-					{
-						slct_pion1 = anim_bouton2(760, 1240, 279, 321, event, slct_pion1);
-						slct_pion2 = anim_bouton2(760, 1240, 361, 403, event, slct_pion2);
-						slct_suivant = anim_bouton2(760, 1240, 443, 485, event, slct_suivant);
-						slct_retour = anim_bouton2(760, 1240, 525, 567,event, slct_retour);
-						slct_quitter = anim_bouton2(760, 1240, 607, 649, event, slct_quitter);
-						break;
-					}
-
-					if(menu_demmande_sauvegarder)
-					{
-						slct_oui = anim_bouton2(760, 1240, 197, 239, event, slct_oui);
-						slct_non = anim_bouton2(760, 1240, 279, 321, event, slct_non);
-						break;
-					}
-
-					if(menu_sauvegarder)
-					{
-						slct_sauvegarde1 = anim_bouton2(760, 1240, 115, 157, event, slct_sauvegarde2);
-						slct_sauvegarde2 = anim_bouton2(760, 1240, 197, 239, event, slct_sauvegarde2);
-						slct_sauvegarde3 = anim_bouton2(760, 1240, 279, 321, event, slct_sauvegarde3);
-						break;
-					}
-
-					if(menu_ecraser)
-					{
-						slct_oui = anim_bouton2(760, 1240, 197, 239, event, slct_oui);
-						slct_non = anim_bouton2(760, 1240, 279, 321, event, slct_non);
-						break;
-					}
+					break;
 
 				case SDL_MOUSEMOTION: 							//position de la souris
 	    			//position x, position y de la souris
 					//printf("position souris : %d : %d \n", event.motion.x, event.motion.y);
 					//position x relative (deplacement), position y relative (deplacement)
 					//printf("position souris relative : %d : %d \n", event.motion.xrel, event.motion.yrel);
-
-					if(menu_principale)
+					switch(menu)
 					{
-						slct_nouvelle_partie = anim_bouton(760, 1240, 115, 157, event, slct_nouvelle_partie);
-						slct_charger_partie = anim_bouton(760, 1240, 197, 239, event, slct_charger_partie);
-						slct_sauvegardes = anim_bouton(760, 1240, 279, 321, event, slct_sauvegardes);
-						slct_quitter = anim_bouton(760, 1240, 361, 403, event, slct_quitter);
-						break;
-					}
+						case 0 : //menu principale
 
-					if(menu_nb_joueurs)
-					{
-						slct_2 = anim_bouton(760, 1240, 197, 239, event, slct_2);
-						slct_3 = anim_bouton(760, 1240, 279, 321, event, slct_3);
-						slct_4 = anim_bouton(760, 1240, 361, 403,event, slct_4);
-						break;
-					}
+							slct_nouvelle_partie = anim_bouton(760, 1240, 115, 157, event, slct_nouvelle_partie);
+							slct_charger_partie = anim_bouton(760, 1240, 197, 239, event, slct_charger_partie);
+							slct_sauvegardes = anim_bouton(760, 1240, 279, 321, event, slct_sauvegardes);
+							slct_quitter = anim_bouton(760, 1240, 361, 403, event, slct_quitter);
+							break;
 
-					if(menu_charger_partie)
-					{
-						slct_sauvegarde1 = anim_bouton(760, 1240, 115, 157, event, slct_sauvegarde2);
-						slct_sauvegarde2 = anim_bouton(760, 1240, 197, 239, event, slct_sauvegarde2);
-						slct_sauvegarde3 = anim_bouton(760, 1240, 279, 321, event, slct_sauvegarde3);
-						slct_quitter = anim_bouton(760, 1240, 361, 403,event, slct_quitter);
-						break;
-					}
+						case 1 : //menu nouvelle partie
 
-					if(menu_sauvegardes)
-					{
-						slct_reinitialiser = anim_bouton(760, 1240, 361, 403, event, slct_reinitialiser);
-						slct_supprimer = anim_bouton(760, 1240, 443, 485, event, slct_supprimer);
-						slct_quitter = anim_bouton(760, 1240, 525, 567, event, slct_quitter);
-						break;
-					}
+							slct_2 = anim_bouton(760, 1240, 197, 239, event, slct_2);
+							slct_3 = anim_bouton(760, 1240, 279, 321, event, slct_3);
+							slct_4 = anim_bouton(760, 1240, 361, 403,event, slct_4);
+							break;
 
-					if(menu_supprimer)
-					{
-						slct_sauvegarde1 = anim_bouton(760, 1240, 115, 157, event, slct_sauvegarde2);
-						slct_sauvegarde2 = anim_bouton(760, 1240, 197, 239, event, slct_sauvegarde2);
-						slct_sauvegarde3 = anim_bouton(760, 1240, 279, 321, event, slct_sauvegarde3);
-						slct_quitter = anim_bouton(760, 1240, 361, 403,event, slct_quitter);
-						break;
-					}
+						case 2 : //menu charger partie
 
-					if(menu_partie)
-					{
-						slct_pion1 = anim_bouton(760, 1240, 279, 321, event, slct_pion1);
-						slct_pion2 = anim_bouton(760, 1240, 361, 403, event, slct_pion2);
-						slct_suivant = anim_bouton(760, 1240, 443, 485, event, slct_suivant);
-						slct_retour = anim_bouton(760, 1240, 525, 567,event, slct_retour);
-						slct_quitter = anim_bouton(760, 1240, 607, 649, event, slct_quitter);
-						break;
-					}
+							slct_sauvegarde1 = anim_bouton(760, 1240, 115, 157, event, slct_sauvegarde2);
+							slct_sauvegarde2 = anim_bouton(760, 1240, 197, 239, event, slct_sauvegarde2);
+							slct_sauvegarde3 = anim_bouton(760, 1240, 279, 321, event, slct_sauvegarde3);
+							slct_quitter = anim_bouton(760, 1240, 361, 403,event, slct_quitter);
+							break;
 
-					if(menu_demmande_sauvegarder)
-					{
-						slct_oui = anim_bouton(760, 1240, 197, 239, event, slct_oui);
-						slct_non = anim_bouton(760, 1240, 279, 321, event, slct_non);
-						break;
-					}
+						case 3 : //menu sauvegardes
 
-					if(menu_sauvegarder)
-					{
-						slct_sauvegarde1 = anim_bouton(760, 1240, 115, 157, event, slct_sauvegarde2);
-						slct_sauvegarde2 = anim_bouton(760, 1240, 197, 239, event, slct_sauvegarde2);
-						slct_sauvegarde3 = anim_bouton(760, 1240, 279, 321, event, slct_sauvegarde3);
-						break;
-					}
+							slct_reinitialiser = anim_bouton2(760, 1240, 361, 403, event, slct_reinitialiser);
+							slct_supprimer = anim_bouton2(760, 1240, 443, 485, event, slct_supprimer);
+							slct_quitter = anim_bouton2(760, 1240, 525, 567, event, slct_quitter);
+							break;
 
-					if(menu_ecraser)
-					{
-						slct_oui = anim_bouton(760, 1240, 197, 239, event, slct_oui);
-						slct_non = anim_bouton(760, 1240, 279, 321, event, slct_non);
-						break;
+						case 4 : //menu supprimer
+
+							slct_sauvegarde1 = anim_bouton(760, 1240, 115, 157, event, slct_sauvegarde2);
+							slct_sauvegarde2 = anim_bouton(760, 1240, 197, 239, event, slct_sauvegarde2);
+							slct_sauvegarde3 = anim_bouton(760, 1240, 279, 321, event, slct_sauvegarde3);
+							slct_quitter = anim_bouton(760, 1240, 361, 403,event, slct_quitter);
+							break;
+
+						case 5 : //menu partie
+
+							slct_pion1 = anim_bouton(760, 1240, 279, 321, event, slct_pion1);
+							slct_pion2 = anim_bouton(760, 1240, 361, 403, event, slct_pion2);
+							slct_suivant = anim_bouton(760, 1240, 443, 485, event, slct_suivant);
+							slct_retour = anim_bouton(760, 1240, 525, 567,event, slct_retour);
+							slct_quitter = anim_bouton(760, 1240, 607, 649, event, slct_quitter);
+							break;
+
+						case 6 : //menu demande sauvegarde
+
+							slct_oui = anim_bouton(760, 1240, 197, 239, event, slct_oui);
+							slct_non = anim_bouton(760, 1240, 279, 321, event, slct_non);
+							break;
+
+						case 7 : //menu sauvegarder
+
+							slct_sauvegarde1 = anim_bouton(760, 1240, 115, 157, event, slct_sauvegarde2);
+							slct_sauvegarde2 = anim_bouton(760, 1240, 197, 239, event, slct_sauvegarde2);
+							slct_sauvegarde3 = anim_bouton(760, 1240, 279, 321, event, slct_sauvegarde3);
+							break;
+
+						case 8 : //menu ecraser
+
+							slct_oui = anim_bouton(760, 1240, 197, 239, event, slct_oui);
+							slct_non = anim_bouton(760, 1240, 279, 321, event, slct_non);
+							break;
+						default :
+							break;
 					}
 
 					break;
@@ -1335,7 +1324,8 @@ int main(int argc, char** argv){
 					clear_image(NULL, NULL, texture);
 					break;		//quitte le programme (croix)
 
-	    		default:  break;	//affichage par defaut jul
+	    		default :
+					break;	//affichage par defaut jul
 
 			}
 		SDL_DestroyTexture(texture);
