@@ -25,6 +25,7 @@
 #define MAX_JOUEURS 4
 #define MAX_SAUVEGARDES 3
 #define MAX_DATE 30
+#define FPS_LIMITE 33
 
 /*structures petits chevaux*/
 
@@ -86,6 +87,9 @@ int position(int x_min, int x_max, int y_min, int y_max, SDL_Event event);
 //Animation
 int anim_bouton(int x_min, int x_max, int y_min, int y_max, SDL_Event event, int affiche_clear);
 int anim_bouton2(int x_min, int x_max, int y_min, int y_max, SDL_Event event, int affiche_clear);
+
+//limite fps
+void limite_FPS(unsigned int limite);
 
 //petits chevaux
 /*fonctions petits chevaux*/
@@ -177,12 +181,6 @@ int main(int argc, char** argv){
 	}
 	else fclose(fichier);
 
-
-	//affiche la version de la SDL
-	//SDL_version nb;
-	//SDL_VERSION(&nb);
-	//printf("bienvenu sur la SDL %d.%d.%d !\n", nb.minor, nb.major, nb.patch);
-
 	//** INITIALISATION **//
 
 	//pointeur pour fonction window
@@ -201,14 +199,11 @@ int main(int argc, char** argv){
 		SDL_ExitError("Creation de fenetre echouee"); //affiche l'erreur
 	}												
 
-	//Creation de rendu -> fenêtre, parametre affichage, parametre qualité
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	if(renderer == NULL)
-		SDL_ExitError("Rendu fenetre echouee");
-
 	//** EVENEMENTS **//
 
     SDL_bool programme_launched = SDL_TRUE; //boolean SDL
+
+	int destroy=0;
 
 	int slct_nouvelle_partie=0;
 	int slct_charger_partie=0;
@@ -235,7 +230,18 @@ int main(int argc, char** argv){
 	SDL_Texture *texture = NULL;
 	SDL_Rect pos_image;
 
+	//pour la limitation de FPS
+	unsigned int limite;
+	limite = SDL_GetTicks() + FPS_LIMITE;
+
     while(programme_launched){
+
+		//limitation de FPS
+		limite_FPS(limite);
+
+		//Creation du rendu -> fenêtre, parametre affichage, parametre qualité
+		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+		if(renderer == NULL) SDL_ExitError("Rendu fenetre echouee");
 
 		//affichage page acceuil
 		pos_image.w = WINDOW_WIDTH;
@@ -630,15 +636,15 @@ int main(int argc, char** argv){
 				break;
 		}
 
-		//affichage rendu page accueil
+		//affichage rendu page
 	    SDL_RenderPresent(renderer);
 
 		SDL_Event event;
 
-		while(SDL_PollEvent(&event)){		//capture des evenemets 
-
-			switch(event.type){
-
+		while(SDL_PollEvent(&event))		//capture des evenemets
+		{
+			switch(event.type)
+			{
 	    		case SDL_MOUSEBUTTONUP :		//relache clic gauche souris
 
 					switch(menu)
@@ -666,7 +672,6 @@ int main(int argc, char** argv){
 							if(clic_gauche(760, 1240, 361, 403, event))	//"quitter"
 							{
 								programme_launched = SDL_FALSE;
-								clear_image(NULL, NULL, texture);
 								break;
 							}
 
@@ -1285,33 +1290,22 @@ int main(int argc, char** argv){
 
 	    		case SDL_QUIT :
 					programme_launched = SDL_FALSE; 
-					clear_image(NULL, NULL, texture);
 					break;		//quitte le programme (croix)
 
 	    		default :
 					break;	//affichage par defaut jul
 
 			}
-		SDL_DestroyTexture(texture);
-		SDL_FreeSurface(image);
 		}
+
+		SDL_DestroyTexture(texture);
+		SDL_DestroyRenderer(renderer);
+		limite = SDL_GetTicks() + FPS_LIMITE;
 	}
-	//capture evenement
-	//SDL_Event event;
-	//SDL_PollEvent(&event);
-	//Affichage rendu
-	//SDL_RenderPresent(renderer); 
-	//temps d'ouverture de la fenêtre en seconde
-	//SDL_Delay(3000); 
 
-    //test FPS
-    //frame_limit = SDL_GetTicks() + FPS_LIMIT;
-	//fermeture du rendu
+	SDL_DestroyTexture(texture);
 	SDL_DestroyRenderer(renderer);
-	//fermeture de la fenêtre
 	SDL_DestroyWindow(window);
-
-	//on quite la SDL, liberation de la mémoire
 	SDL_Quit();
 	return EXIT_SUCCESS;
 }
@@ -1332,8 +1326,8 @@ void SDL_ExitError2(const char *message, SDL_Renderer *renderer, SDL_Window *win
 }
 
 //IMAGE
-void affiche_image(SDL_Surface *image, SDL_Texture *texture, SDL_Rect pos_image, const char* file, SDL_Renderer *renderer, SDL_Window *window){
-
+void affiche_image(SDL_Surface *image, SDL_Texture *texture, SDL_Rect pos_image, const char* file, SDL_Renderer *renderer, SDL_Window *window)
+{
 	//affichage image
 	//IMG_Init(IMG_INIT_PNG);
 	image = SDL_LoadBMP(file);
@@ -1575,6 +1569,19 @@ int anim_bouton2(int x_min, int x_max, int y_min, int y_max, SDL_Event event, in
 
 }
 
+// Limite FPS
+void limite_FPS(unsigned int limite)
+{
+	unsigned int ticks = SDL_GetTicks();
+
+	if(limite < ticks)
+	{
+		return;
+	}
+	else if(limite > ticks + FPS_LIMITE) SDL_Delay(FPS_LIMITE);
+	else SDL_Delay(limite - ticks);
+}
+
 /*fonctions petits chevaux*/
 
 void	init_partie(int nb_joueurs, JOUEUR *tab_j, int* id_joueur)
@@ -1739,21 +1746,22 @@ void	tour(JOUEUR *tab_j, int nb_joueurs, int num_j, int num_p, int de)
 	int case_actuelle=tab_j[num_j].p[num_p].tour;
 	int nouv_case=case_actuelle+de;
 	if(nouv_case>56) nouv_case=nouv_case-56;
-	int ecart;
+	int ecart_arrivee;
+	int ecart_pion;
 
 	/*mesure de l'ecart separant la case actuelle est la case d'arrivee*/
 
-	if(tab_j[num_j].arrivee>=case_actuelle) ecart=tab_j[num_j].arrivee-case_actuelle;
-	else ecart=56-case_actuelle+tab_j[num_j].arrivee;
+	if(tab_j[num_j].arrivee>=case_actuelle) ecart_arrivee=tab_j[num_j].arrivee-case_actuelle;
+	else ecart_arrivee=56-case_actuelle+tab_j[num_j].arrivee;
 
 	/*si l'ecart est superieur a la valeur du de, on peut avancer sans soucis*/
 
-	if(ecart>de) tab_j[num_j].p[num_p].tour=nouv_case;
+	if(ecart_arrivee>de) tab_j[num_j].p[num_p].tour=nouv_case;
 
 	/*sinon on verifie si le pion tombe parfaitement sur la case d'arrive*/
 
 	else{
-		if(ecart==de){
+		if(ecart_arrivee==de){
 			tab_j[num_j].p[num_p].tour=nouv_case;
 			tab_j[num_j].p[num_p].etat=2;
 		}
@@ -1767,9 +1775,9 @@ void	tour(JOUEUR *tab_j, int nb_joueurs, int num_j, int num_p, int de)
 		if(i!=num_j)
 		{
 			for(j=0;j<NB_PIONS;j++){
-				if(tab_j[i].p[j].tour>=case_actuelle) ecart=tab_j[i].p[j].tour-case_actuelle;
-				else ecart=56-case_actuelle+tab_j[i].p[j].tour;
-				if((ecart<=de)&&(tab_j[i].p[j].tour!=0)){
+				if(tab_j[i].p[j].tour>=case_actuelle) ecart_pion=tab_j[i].p[j].tour-case_actuelle;
+				else ecart_pion=56-case_actuelle+tab_j[i].p[j].tour;
+				if((ecart_pion<=de)&&(tab_j[i].p[j].tour!=0)&&(ecart_pion<=ecart_arrivee)){
 					tab_j[i].p[j].tour=0;
 					tab_j[i].p[j].etat=0;
 				}
