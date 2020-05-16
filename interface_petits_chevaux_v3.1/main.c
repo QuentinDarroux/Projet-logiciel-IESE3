@@ -822,16 +822,6 @@ int main(int argc, char** argv){
 
 						case 5 : //menu partie
 
-							if((tab_j[id_joueur].p[0].centre==6)&&(tab_j[id_joueur].p[1].centre==6))
-							{
-								slct_pion1 = 0;
-								slct_pion2 = 0;
-								slct_suivant = 0;
-								slct_retour = 0;
-								menu = 0;
-								break;
-							}
-
 							if((clic_gauche(760, 1240, 279, 321,event))&&(tab_j[id_joueur].p[0].d[0]==1))
 							{
 								slct_pion1 = 1;
@@ -879,9 +869,13 @@ int main(int argc, char** argv){
 
 								if((tab_j[id_joueur].p[0].centre==6)&&(tab_j[id_joueur].p[1].centre==6))
 								{
-									programme_launched = SDL_FALSE; 
-
-									clear_image(NULL, NULL, texture);
+									printf("fin\n");
+									slct_pion1 = 0;
+									slct_pion2 = 0;
+									slct_suivant = 0;
+									slct_retour = 0;
+									menu = 0;
+									break;
 								}
 
 								empiler_partie(&pile_p,partie);
@@ -954,9 +948,13 @@ int main(int argc, char** argv){
 
 								if((tab_j[id_joueur].p[0].centre==6)&&(tab_j[id_joueur].p[1].centre==6))
 								{
-									programme_launched = SDL_FALSE; 
-
-									clear_image(NULL, NULL, texture);
+									printf("fin\n");
+									slct_pion1 = 0;
+									slct_pion2 = 0;
+									slct_suivant = 0;
+									slct_retour = 0;
+									menu = 0;
+									break;
 								}
 
 								empiler_partie(&pile_p,partie);
