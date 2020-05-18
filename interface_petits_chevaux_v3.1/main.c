@@ -27,24 +27,23 @@
 #define MAX_DATE 30
 #define FPS_LIMITE 33
 
-/*structures petits chevaux*/
+//structures petits chevaux
 
 typedef struct {
-	int		etat;				/*0-->ecurie  1-->tour du plateau  2-->centre du plateau*/
-	int		tour;				/*emplacement entre 0 et 57*/
-	int		centre;				/*emplacement entre 0 et 6*/
-	int		d[TAILLE_LISTE_DRAPEAUX];	/*liste de drapeaux qui permet de connaître*/
-							/*la liste d'acion possible pour le pion*/
+	int		etat;						//0-->ecurie  1-->tour du plateau  2-->centre du plateau
+	int		tour;						//emplacement entre 0 et 56
+	int		centre;						//emplacement entre 0 et 6
+	int		d[TAILLE_LISTE_DRAPEAUX];	//liste de drapeaux qui permet de connaître la liste d'acion possible pour le pion
 } PION;
 
 
 
 typedef struct {
-	char	nom[MAX_NOM];	/*le nom du joueur*/
-	PION	p[NB_PIONS];		/*les 2 pion du joueur*/
-	int		depart;		/*la case de départ des pions du joueur a la sortie de l'écurie*/
-	int		arrivee;		/*la case d'arrivee des pions du joueur a l'entrée du centre du plateau*/
-	int		etat;		/*1 si actif, 0 sinon*/
+	char	nom[MAX_NOM];	//le nom du joueur
+	PION	p[NB_PIONS];	//les 2 pion du joueur
+	int		depart;			//la case de départ des pions du joueur a la sortie de l'écurie
+	int		arrivee;		//la case d'arrivee des pions du joueur a l'entrée du centre du plateau
+	int		etat;			//1 si actif, 0 sinon
 } JOUEUR;
 
 typedef struct {
@@ -61,7 +60,7 @@ typedef struct {
 	int		etat;
 } SAUVEGARDE;
 
-/*structure pile LIFO*/
+//structure pile LIFO
 
 typedef struct {
 	int sommet;
@@ -76,10 +75,6 @@ void SDL_ExitError2(const char *message, SDL_Renderer *renderer, SDL_Window *win
 void affiche_image(SDL_Surface *image, SDL_Texture *texture, SDL_Rect pos_image, const char* file, SDL_Renderer *renderer, SDL_Window *window);
 void affiche_animation(int slct, SDL_Surface *image, SDL_Texture *texture, SDL_Rect pos_image, const char* file, SDL_Renderer *renderer, SDL_Window *window);
 void affichage_pions(int plateau_tour[56][2], int plateau_centre[4][6][2], int plateau_ecurie[4][2], JOUEUR *tab_j, int id_joueur,SDL_Surface *image, SDL_Texture *texture, SDL_Rect pos_image, SDL_Renderer *renderer, SDL_Window *window);
-void clear_image(SDL_Window *w, SDL_Renderer *r, SDL_Texture *t);
-
-//Clic
-int clic_gauche(int x_min, int x_max, int y_min, int y_max, SDL_Event event);
 
 //Position
 int position(int x_min, int x_max, int y_min, int y_max, SDL_Event event);
@@ -92,7 +87,6 @@ int anim_bouton2(int x_min, int x_max, int y_min, int y_max, SDL_Event event, in
 void limite_FPS(unsigned int limite);
 
 //petits chevaux
-/*fonctions petits chevaux*/
 
 void	init_partie(int nb_joueurs, JOUEUR *tab_j, int* id_joueur);
 void	copie_partie(PARTIE *partie, int id_joueur, int de, JOUEUR *tab_j);
@@ -102,7 +96,7 @@ void	sortir(JOUEUR *tab_j, int nb_joueurs, int num_j, int num_p);
 void	tour(JOUEUR *tab_j, int nb_joueurs, int num_j, int num_p, int de);
 void	centre(JOUEUR *tab_j, int nb_joueurs, int num_j, int num_p, int de);
 
-/*auvegardes*/
+//sauvegardes
 
 void	init_sauvegarde();
 void	copier_sauvegarde();
@@ -115,7 +109,7 @@ void	sauvegarder(int id_sauvegarde, PARTIE partie, int nb_joueurs);
 void	charger_sauvegarde(int id_sauvegarde, PARTIE *partie, JOUEUR *tab_j, int* de, int* id_joueur, int* nb_joueurs);
 void	gerer_fichier_sauvegarde();
 
-/*fonctions pile LIFO*/
+//fonctions pile LIFO
 
 void init_pile(PILE *pile_p);
 int pile_est_pliene(PILE *pile_p);
@@ -157,8 +151,7 @@ int main(int argc, char** argv){
 
 	FILE*	fichier;
 
-	int		nb_joueurs;	/*explicite, cette variable édité par l'utilisateur*/
-					/*permet de connaître le nombre de joueur de la partie*/
+	int		nb_joueurs;
 	int		i,j,k;
 	int		id_joueur;
 	int		id_sauvegarde=0;
@@ -172,7 +165,7 @@ int main(int argc, char** argv){
 	int		int_rep;
 	char	rep[MAX_REP];
 
-	/*verification que le fichier de sauvegarde existe*/
+	//verification que le fichier de sauvegarde existe
 
 	fichier = fopen("./sauvegardes.txt","rb");
 	if(fichier==NULL){
@@ -189,15 +182,11 @@ int main(int argc, char** argv){
 	SDL_Renderer *renderer = NULL;
 
 	//initialistion de la SDL
-	if(SDL_Init(SDL_INIT_EVERYTHING) != 0){
-		 SDL_ExitError("Initialisation echouee"); //affiche l'erreur
-	}
+	if(SDL_Init(SDL_INIT_EVERYTHING) != 0) SDL_ExitError("Initialisation echouee");
 
 	//Creation de la fenêtre ->//position x,position y, largeur, hauteur, option fenêtre (0=DEFAUT, SDL_WINDOW_FULLSCREEN)
     window = SDL_CreateWindow("jeu des petits chevaux", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
-	if(window == NULL){								//verfication ouverture fenêtre
-		SDL_ExitError("Creation de fenetre echouee"); //affiche l'erreur
-	}												
+	if(window == NULL) SDL_ExitError("Creation de fenetre echouee");
 
 	//** EVENEMENTS **//
 
@@ -1518,17 +1507,6 @@ void affichage_pions(int plateau_tour[56][2], int plateau_centre[4][6][2], int p
 	}
 }
 
-void clear_image(SDL_Window *w, SDL_Renderer *r, SDL_Texture *t){
-	if(t != NULL)
-		SDL_DestroyTexture(t);
-	if(r != NULL)
-		SDL_DestroyRenderer(r);
-	if(w != NULL)
-		SDL_DestroyWindow(w);
-	//printf("clear\n");
-	//IMG_Quit();
-}
-
 //CLIC DANS UN ESPACE (a utiliser dans MOUSEBUTTONDOWN)
 
 int clic_gauche(int x_min, int x_max, int y_min, int y_max, SDL_Event event){
@@ -1580,13 +1558,13 @@ void limite_FPS(unsigned int limite)
 	else SDL_Delay(limite - ticks);
 }
 
-/*fonctions petits chevaux*/
+//fonctions petits chevaux
 
 void	init_partie(int nb_joueurs, JOUEUR *tab_j, int* id_joueur)
 {
 	int i,j,k;
 
-	/*initialisation des joueurs et des pions*/
+	//initialisation des joueurs et des pions
 
 	strcpy(tab_j[0].nom,"joueur 1");
 	tab_j[0].depart=1;
@@ -1608,7 +1586,7 @@ void	init_partie(int nb_joueurs, JOUEUR *tab_j, int* id_joueur)
 	tab_j[3].arrivee=42;
 	tab_j[3].etat=0;
 
-	/*tous les pion sont places dans l'ecurie et les drapeaux sont mient à 0*/
+	//tous les pion sont places dans l'ecurie et les drapeaux sont mient à 0
 
 	for(i=0;i<nb_joueurs;i++){
 		for(j=0;j<NB_PIONS;j++){
@@ -1619,7 +1597,7 @@ void	init_partie(int nb_joueurs, JOUEUR *tab_j, int* id_joueur)
 		}
 	}
 
-	/*le joeur 1 commence*/
+	//le joeur 1 commence
 
 	*id_joueur=0;
 }
@@ -1669,7 +1647,7 @@ void	copie_partie(PARTIE *partie, int id_joueur, int de, JOUEUR *tab_j)
 
 int	jet()
 {
-	/*cette fonction simule le jet d'un de a 6 faces*/
+	//cette fonction simule le jet d'un de a 6 faces
 	return 1+rand()*6.0/(RAND_MAX+1.0);
 }
 
@@ -1687,13 +1665,13 @@ void	liste_actions_possibles(JOUEUR *tab_j, int num_j, int de)
 
 	for(i=0;i<NB_PIONS;i++){
 		if(tab_j[num_j].p[i].etat==0){
-			if(de==6) tab_j[num_j].p[i].d[0]=1;				/*le pion i peu sortir de l'ecurie*/
-			else tab_j[num_j].p[i].d[3]=1;				/*le pion i ne peut pas bouger*/
+			if(de==6) tab_j[num_j].p[i].d[0]=1;				//le pion i peu sortir de l'ecurie
+			else tab_j[num_j].p[i].d[3]=1;				//le pion i ne peut pas bouger
 		}
-		if(tab_j[num_j].p[i].etat==1) tab_j[num_j].p[i].d[1]=1;			/*le pion i peu se deplacer autour du plateau*/
+		if(tab_j[num_j].p[i].etat==1) tab_j[num_j].p[i].d[1]=1;			//le pion i peu se deplacer autour du plateau
 		if(tab_j[num_j].p[i].etat==2){
-			if(tab_j[num_j].p[i].centre==de-1) tab_j[num_j].p[i].d[2]=1;	/*le pion i peu se deplacer au centre du plateua*/
-			else tab_j[num_j].p[i].d[3]=1;				/*le pion i ne peut pas bouger*/
+			if(tab_j[num_j].p[i].centre==de-1) tab_j[num_j].p[i].d[2]=1;	//le pion i peu se deplacer au centre du plateua
+			else tab_j[num_j].p[i].d[3]=1;				//le pion i ne peut pas bouger
 		}
 	}
 }
@@ -1710,12 +1688,12 @@ void	sortir(JOUEUR *tab_j, int nb_joueurs, int num_j, int num_p)
 {
 	int i,j;
 
-	/*on sort le pion*/
+	//on sort le pion
 
 	tab_j[num_j].p[num_p].etat=1;
 	tab_j[num_j].p[num_p].tour=tab_j[num_j].depart;
 
-	/*on verifie si le pion doit manger un pion en sortant*/
+	//on verifie si le pion doit manger un pion en sortant
 
 	for(i=0;i<nb_joueurs;i++){
 		if(i!=num_j)
@@ -1747,27 +1725,27 @@ void	tour(JOUEUR *tab_j, int nb_joueurs, int num_j, int num_p, int de)
 	int ecart_arrivee;
 	int ecart_pion;
 
-	/*mesure de l'ecart separant la case actuelle est la case d'arrivee*/
+	//mesure de l'ecart separant la case actuelle est la case d'arrivee
 
 	if(tab_j[num_j].arrivee>=case_actuelle) ecart_arrivee=tab_j[num_j].arrivee-case_actuelle;
 	else ecart_arrivee=56-case_actuelle+tab_j[num_j].arrivee;
 
-	/*si l'ecart est superieur a la valeur du de, on peut avancer sans soucis*/
+	//si l'ecart est superieur a la valeur du de, on peut avancer sans soucis
 
 	if(ecart_arrivee>de) tab_j[num_j].p[num_p].tour=nouv_case;
 
-	/*sinon on verifie si le pion tombe parfaitement sur la case d'arrive*/
+	//sinon on verifie si le pion tombe parfaitement sur la case d'arrive
 
 	else{
 		if(ecart_arrivee==de){
 			tab_j[num_j].p[num_p].tour=nouv_case;
 			tab_j[num_j].p[num_p].etat=2;
 		}
-		/*si le pion ne tombe pas parfaitement sur la case d'arrive, il est reflechit*/
+		//si le pion ne tombe pas parfaitement sur la case d'arrive, il est reflechit
 		else tab_j[num_j].p[num_p].tour=2*tab_j[num_j].arrivee-case_actuelle-de;
 	}
 
-	/*verification : le pion peut en manger un autre en se deplacant*/
+	//verification : le pion peut en manger un autre en se deplacant
 
 	for(i=0;i<nb_joueurs;i++){
 		if(i!=num_j)
@@ -1794,9 +1772,9 @@ void	tour(JOUEUR *tab_j, int nb_joueurs, int num_j, int num_p, int de)
 
 void	centre(JOUEUR *tab_j, int nb_joueurs, int num_j, int num_p, int de)
 {
-	/*si le numero du de correspond a la case suivante, le pion peut avancer*/
+	//si le numero du de correspond a la case suivante, le pion peut avancer
 	if(tab_j[num_j].p[num_p].centre==de-1) tab_j[num_j].p[num_p].centre=de;
-	/*si le pion avance sur la premiere case du centre, il quitte le tour du plateau*/
+	//si le pion avance sur la premiere case du centre, il quitte le tour du plateau
 	if(tab_j[num_j].p[num_p].centre==1) tab_j[num_j].p[num_p].tour=0;
 }
 
@@ -1818,7 +1796,7 @@ void	centre(JOUEUR *tab_j, int nb_joueurs, int num_j, int num_p, int de)
 
 
 
-/*systeme de sauvegarde*/
+//systeme de sauvegarde
 
 void	init_sauvegarde()
 {
