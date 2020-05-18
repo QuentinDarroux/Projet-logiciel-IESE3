@@ -65,6 +65,15 @@ int A=0;
 int SCANF_J1 = 0;			//indique si on saisie le joueur 1
 int SCANF_J2 = 0;			//indique si on saisie le joueur 2
 int ECRITURE_OK = 0;	    //nb de caractere max pour l'ID du joueur (voir fonction)
+/*MUSIQUE*/
+int INIT_MUSIC = 1;
+int OFF_MUSIC = 0;
+int PLAY_MUSIC = 1;
+int I_MUSIC = 0;
+int NB_MAX_MUSIC = 3;
+char TAB_MUSIC[3][40] = {"music/highlands.wav", "music/jul-cross.wav", "music/road.wav"};
+
+
 
 //Fonction erreur
 void SDL_ExitError(const char *message);
@@ -92,7 +101,7 @@ int anim_bouton(int x_min, int x_max, int y_min, int y_max, SDL_Event event, int
 Uint32 clignotement_accueil(Uint32 intervalle, void *parametre);
 
 //audio-musique
-void audio_musique(int set, int play, const char* file, SDL_Renderer *renderer, SDL_Window *window);
+void audio_musique(SDL_Renderer *renderer, SDL_Window *window, SDL_Event *event);
 
 /*PROTOTYPES MORPION*/
 //Selection morpion
@@ -153,9 +162,9 @@ int main(int argc, char** argv){
 
 
 	/*initialisation audio*/
-	initAudio();
-	int musique_accueil = 1;
-	audio_musique(1, musique_accueil, "music/jul-cross.wav", renderer, window);	//initialement on lance la musique d'accueil
+	//initAudio();
+	//playMusic(TAB_MUSIC[0], SDL_MIX_MAXVOLUME);
+	audio_musique(renderer, window, NULL);	//initialement on init_audio et on lance la musique 
 
     //** EVENEMENTS **//
 
@@ -219,7 +228,7 @@ int main(int argc, char** argv){
 				affiche_image(image_choix3, texture_choix3, pos_choix3, "image/choix_cheval.bmp", renderer, window);
 
 			//etat de la musique
-			audio_musique(0, musique_accueil, "music/jul-cross.wav", renderer, window);	//on lit la musique d'accueil
+			audio_musique(renderer, window, NULL);	//on lit la musique d'accueil
 		    
 		    //affichage rendu page accueil
 		    SDL_RenderPresent(renderer); 
@@ -267,11 +276,8 @@ int main(int argc, char** argv){
     					printf("Double Clic ! \n"); 								//double clic
 
     				//* musique *//
-    				if(clic_gauche(25,115,626,715,event)){
-    					musique_accueil ^= 1;
-    					printf("musique : %d", musique_accueil);
-    					audio_musique(0, musique_accueil, "music/jul-cross.wav", renderer, window);
-    				}
+    				if(clic_gauche(25,227,645,703,event))
+	    				audio_musique(renderer, window, &event);
 
 
     				//**-- MORPION --**//
@@ -1447,7 +1453,7 @@ void affiche_instruction(char* chaine, SDL_Renderer *renderer, SDL_Window *windo
 
 
 //Musique-Audio
-void audio_musique(int set, int play, const char* file, SDL_Renderer *renderer, SDL_Window *window){
+void audio_musique(SDL_Renderer *renderer, SDL_Window *window, SDL_Event *event){
 
 	SDL_Surface *image_son;
  	SDL_Texture *texture_son;
@@ -1457,16 +1463,62 @@ void audio_musique(int set, int play, const char* file, SDL_Renderer *renderer, 
 	pos_son.x = 68;
 	pos_son.y = 648;
 
-	if(set)
-		playMusic(file, SDL_MIX_MAXVOLUME);
+	if(event != NULL){
 
-	if(play){
-		unpauseAudio();
-		affiche_image(image_son, texture_son, pos_son, "image/son-on.bmp", renderer, window);
+		if(clic_gauche(26,93,658,690,*event)){					//INITIALISATION
+			OFF_MUSIC ^= 1;
+			if(OFF_MUSIC == 0){
+				INIT_MUSIC = 1;
+				PLAY_MUSIC = 1;
+			}
+		}
+		if(clic_gauche(204,224,664,684,*event) && !OFF_MUSIC){	//SUIVANT
+			I_MUSIC = (I_MUSIC + 1) % NB_MAX_MUSIC;
+			playMusic(TAB_MUSIC[I_MUSIC], SDL_MIX_MAXVOLUME);
+		}
+		if(clic_gauche(123,143,664,684,*event) && !OFF_MUSIC){	//PRECEDENT
+			if(I_MUSIC > 0)
+				I_MUSIC--;
+			playMusic(TAB_MUSIC[I_MUSIC], SDL_MIX_MAXVOLUME);
+		}
+		if(clic_gauche(156,190,658,690,*event) && !OFF_MUSIC){	//PLAY-PAUSE
+			PLAY_MUSIC ^= 1;
+		}
+
 	}
-	if(play == 0){
-		pauseAudio();
+
+	
+	if(OFF_MUSIC){								//extinction de la musique (éteint le lecteur)
 		affiche_image(image_son, texture_son, pos_son, "image/son-off.bmp", renderer, window);
+		pauseAudio();
+	}
+	else{
+		if(INIT_MUSIC){							//initialisation de la musique (allume le lecteur)
+			initAudio();
+			playMusic(TAB_MUSIC[0], SDL_MIX_MAXVOLUME);
+			I_MUSIC = 0;
+			INIT_MUSIC = 0;
+		}
+		if(PLAY_MUSIC){								//mettre en marche la musique
+			unpauseAudio();
+			affiche_image(image_son, texture_son, pos_son, "image/son-on.bmp", renderer, window);
+			pos_son.x += 40;
+			affiche_image(image_son, texture_son, pos_son, "image/son-precedent.bmp", renderer, window);
+			pos_son.x += 40;
+			affiche_image(image_son, texture_son, pos_son, "image/son-play.bmp", renderer, window);
+			pos_son.x += 40;
+			affiche_image(image_son, texture_son, pos_son, "image/son-suivant.bmp", renderer, window);
+		}
+		if(PLAY_MUSIC == 0){							//mettre en pause la musique
+			pauseAudio();
+			affiche_image(image_son, texture_son, pos_son, "image/son-on.bmp", renderer, window);
+			pos_son.x += 40;
+			affiche_image(image_son, texture_son, pos_son, "image/son-precedent.bmp", renderer, window);
+			pos_son.x += 40;
+			affiche_image(image_son, texture_son, pos_son, "image/son-pause.bmp", renderer, window);
+			pos_son.x += 40;
+			affiche_image(image_son, texture_son, pos_son, "image/son-suivant.bmp", renderer, window);
+		}
 	}
 
 }
