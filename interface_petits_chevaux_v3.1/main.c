@@ -76,6 +76,9 @@ void affiche_image(SDL_Surface *image, SDL_Texture *texture, SDL_Rect pos_image,
 void affiche_animation(int slct, SDL_Surface *image, SDL_Texture *texture, SDL_Rect pos_image, const char* file, SDL_Renderer *renderer, SDL_Window *window);
 void affichage_pions(int plateau_tour[56][2], int plateau_centre[4][6][2], int plateau_ecurie[4][2], JOUEUR *tab_j, int id_joueur,SDL_Surface *image, SDL_Texture *texture, SDL_Rect pos_image, SDL_Renderer *renderer, SDL_Window *window);
 
+//detection de clic gauche
+int clic_gauche(int x_min, int x_max, int y_min, int y_max, SDL_Event event);
+
 //Position
 int position(int x_min, int x_max, int y_min, int y_max, SDL_Event event);
 
@@ -1509,7 +1512,8 @@ void affichage_pions(int plateau_tour[56][2], int plateau_centre[4][6][2], int p
 
 //CLIC DANS UN ESPACE (a utiliser dans MOUSEBUTTONDOWN)
 
-int clic_gauche(int x_min, int x_max, int y_min, int y_max, SDL_Event event){
+int clic_gauche(int x_min, int x_max, int y_min, int y_max, SDL_Event event)
+{
 
 		if( (x_min < event.motion.x) && (event.motion.x < x_max) )			
 	    	if( (y_min < event.motion.y) && (event.motion.y < y_max) ) 
