@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
+/*hello*/
 /*---------------------------declaration des variables-------------------*/
 int Tjoue; /* Tjoue indique quel joueur dois jouer son tour 1 = humain , 0 = robot */
 int rond; /* compteur de rond */
