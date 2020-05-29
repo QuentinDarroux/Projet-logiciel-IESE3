@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include <time.h>
 #include <unistd.h> //temporisation
 #include <stdbool.h>
@@ -29,30 +30,34 @@
 
 //structures petits chevaux
 
-typedef struct {
+typedef struct
+{
 	int		etat;				//0-->ecurie  1-->tour du plateau  2-->centre du plateau
-	int		tour;						//emplacement entre 0 et 56
-	int		centre;						//emplacement entre 0 et 6
+	int		tour;				//emplacement entre 0 et 56
+	int		centre;				//emplacement entre 0 et 6
 	int		d[TAILLE_LISTE_DRAPEAUX];	//liste de drapeaux qui permet de connaître la liste d'acion possible pour le pion
 } PION;
 
 
 
-typedef struct {
-	char	nom[MAX_NOM];	//le nom du joueur
-	PION	p[NB_PIONS];	//les 2 pion du joueur
-	int		depart;			//la case de départ des pions du joueur a la sortie de l'écurie
-	int		arrivee;		//la case d'arrivee des pions du joueur a l'entrée du centre du plateau
-	int		etat;			//1 si actif, 0 sinon
+typedef struct
+{
+	char	nom[MAX_NOM];		//le nom du joueur
+	PION	p[NB_PIONS];		//les 2 pion du joueur
+	int		depart;		//la case de départ des pions du joueur a la sortie de l'écurie
+	int		arrivee;	//la case d'arrivee des pions du joueur a l'entrée du centre du plateau
+	int		etat;		//1 si actif, 0 sinon
 } JOUEUR;
 
-typedef struct {
+typedef struct
+{
 	int		id_joueur;
 	int		de;
 	JOUEUR	tab_j[MAX_JOUEURS];
 } PARTIE;
 
-typedef struct {
+typedef struct
+{
 	char		date_sauvegarde[MAX_DATE];
 	int		nb_joueurs;
 	PARTIE	partie;
@@ -62,7 +67,8 @@ typedef struct {
 
 //structure pile LIFO
 
-typedef struct {
+typedef struct
+{
 	int sommet;
 	PARTIE T[MAX_PILE];
 } PILE;
@@ -75,6 +81,9 @@ void SDL_ExitError2(const char *message, SDL_Renderer *renderer, SDL_Window *win
 void affiche_image(SDL_Surface *image, SDL_Texture *texture, SDL_Rect pos_image, const char* file, SDL_Renderer *renderer, SDL_Window *window);
 void affiche_animation(int slct, SDL_Surface *image, SDL_Texture *texture, SDL_Rect pos_image, const char* file, SDL_Renderer *renderer, SDL_Window *window);
 void affichage_pions(int plateau_tour[56][2], int plateau_centre[4][6][2], int plateau_ecurie[4][2], JOUEUR *tab_j, int id_joueur,SDL_Surface *image, SDL_Texture *texture, SDL_Rect pos_image, SDL_Renderer *renderer, SDL_Window *window);
+
+//text
+void affiche_text(SDL_Surface *image, SDL_Texture *texture, TTF_Font *police, SDL_Color couleur, SDL_Rect pos_image, const char* text, SDL_Renderer *renderer, SDL_Window *window);
 
 //detection de clic gauche
 int clic_gauche(int x_min, int x_max, int y_min, int y_max, SDL_Event event);
@@ -94,7 +103,7 @@ void limite_FPS(unsigned int limite);
 void	init_partie(int nb_joueurs, JOUEUR *tab_j, int* id_joueur);
 void	copie_partie(PARTIE *partie, int id_joueur, int de, JOUEUR *tab_j);
 void	liste_actions_possibles(JOUEUR *tab_j, int num_j, int de);
-int		jet();
+int	jet();
 void	sortir(JOUEUR *tab_j, int nb_joueurs, int num_j, int num_p);
 void	tour(JOUEUR *tab_j, int nb_joueurs, int num_j, int num_p, int de);
 void	centre(JOUEUR *tab_j, int nb_joueurs, int num_j, int num_p, int de);
@@ -103,8 +112,8 @@ void	centre(JOUEUR *tab_j, int nb_joueurs, int num_j, int num_p, int de);
 
 void	init_sauvegarde();
 void	copier_sauvegarde();
-int		nombre_de_sauvegardes();
-int		emplacement_est_vide(int id_sauvegarde);
+int	nombre_de_sauvegardes();
+int	emplacement_est_vide(int id_sauvegarde);
 void	afficher_sauvegardes();
 void	afficher_sauvegardes_inter();
 void	supprimer_sauvegarde(int id_sauvegarde);
@@ -114,14 +123,14 @@ void	gerer_fichier_sauvegarde();
 
 //fonctions pile LIFO
 
-void init_pile(PILE *pile_p);
-int pile_est_pliene(PILE *pile_p);
-int pile_est_vide(PILE *pile_p);
-void empiler(PILE *pile_p, PARTIE elem);
-PARTIE depiler(PILE *pile_p);
-void empiler_partie(PILE *pile_p, PARTIE partie);
+void	init_pile(PILE *pile_p);
+int	pile_est_pliene(PILE *pile_p);
+int	pile_est_vide(PILE *pile_p);
+void	empiler(PILE *pile_p, PARTIE elem);
+PARTIE	depiler(PILE *pile_p);
+void	empiler_partie(PILE *pile_p, PARTIE partie);
 
-int main(int argc, char** argv){
+int	main(int argc, char** argv){
 
 	int plateau_tour[56][2] =
 		{
@@ -154,19 +163,12 @@ int main(int argc, char** argv){
 
 	FILE*	fichier;
 
-	int		nb_joueurs;
-	int		i,j,k;
-	int		id_joueur;
-	int		id_sauvegarde=0;
-	int		quitter_menu=1;
-	int		chargement_sauvegarde=0;
-	int		compteur_tours=0;
-	int		retour=0;
-	int		quitter_partie=0;
-	int		victoire=0;
-	int		de;
-	int		int_rep;
-	char	rep[MAX_REP];
+	int	nb_joueurs;
+	int	i,j,k;
+	int	id_joueur;
+	int	id_sauvegarde=0;
+	int	chargement_sauvegarde=0;
+	int	de;
 
 	//verification que le fichier de sauvegarde existe
 
@@ -187,15 +189,25 @@ int main(int argc, char** argv){
 	//initialistion de la SDL
 	if(SDL_Init(SDL_INIT_EVERYTHING) != 0) SDL_ExitError("Initialisation echouee");
 
-	//Creation de la fenêtre ->//position x,position y, largeur, hauteur, option fenêtre (0=DEFAUT, SDL_WINDOW_FULLSCREEN)
-    window = SDL_CreateWindow("jeu des petits chevaux", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
+	//creation de la fenêtre ->//position x,position y, largeur, hauteur, option fenêtre (0=DEFAUT, SDL_WINDOW_FULLSCREEN)
+	window = SDL_CreateWindow("jeu des petits chevaux", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
 	if(window == NULL) SDL_ExitError("Creation de fenetre echouee");
+
+	//initialisation de ttf
+	if(TTF_Init() != 0)
+	{
+		SDL_Log("ERREUR : erreure initialisation ttf > %s\n", TTF_GetError());
+		SDL_Quit();
+		exit(EXIT_FAILURE);
+	}
+
+	TTF_Font *police = TTF_OpenFont("police/courrier.ttf", 40);
+	SDL_Color couleur_norm = {0, 0, 0, 255};
+	SDL_Color couleur_slct = {30, 31, 61, 255};
 
 	//** EVENEMENTS **//
 
-    SDL_bool programme_launched = SDL_TRUE; //boolean SDL
-
-	int destroy=0;
+	SDL_bool programme_launched = SDL_TRUE; //boolean SDL
 
 	int slct_nouvelle_partie=0;
 	int slct_charger_partie=0;
@@ -226,7 +238,7 @@ int main(int argc, char** argv){
 	unsigned int limite;
 	limite = SDL_GetTicks() + FPS_LIMITE;
 
-    while(programme_launched){
+	while(programme_launched){
 
 		//limitation de FPS
 		limite_FPS(limite);
@@ -329,7 +341,7 @@ int main(int argc, char** argv){
 
 				pos_image.y = 115;
 				if(emplacement_est_vide(1)) affiche_image(image, texture, pos_image, "image/imp_sauvegarde_vide.bmp", renderer, window);
-				else affiche_image(image, texture, pos_image, "image/imp_sauvegarde1.bmp", renderer, window);
+				else affiche_text(image, texture, police, couleur_norm, pos_image, "sauvegarde 1", renderer, window);
 
 				//affichage sauvegarde 2
 
@@ -629,15 +641,15 @@ int main(int argc, char** argv){
 		}
 
 		//affichage rendu page
-	    SDL_RenderPresent(renderer);
+		SDL_RenderPresent(renderer);
 
 		SDL_Event event;
 
-		while(SDL_PollEvent(&event))		//capture des evenemets
+		while(SDL_PollEvent(&event))	//capture des evenemets
 		{
 			switch(event.type)
 			{
-	    		case SDL_MOUSEBUTTONUP :		//relache clic gauche souris
+	    		case SDL_MOUSEBUTTONUP :	//relache clic gauche souris
 
 					switch(menu)
 					{
@@ -1232,9 +1244,9 @@ int main(int argc, char** argv){
 
 						case 3 : //menu sauvegardes
 
-							slct_reinitialiser = anim_bouton(760, 1240, 361, 403, event, slct_reinitialiser);
-							slct_supprimer = anim_bouton(760, 1240, 443, 485, event, slct_supprimer);
-							slct_quitter = anim_bouton(760, 1240, 525, 567, event, slct_quitter);
+							slct_reinitialiser = anim_bouton2(760, 1240, 361, 403, event, slct_reinitialiser);
+							slct_supprimer = anim_bouton2(760, 1240, 443, 485, event, slct_supprimer);
+							slct_quitter = anim_bouton2(760, 1240, 525, 567, event, slct_quitter);
 							break;
 
 						case 4 : //menu supprimer
@@ -1280,7 +1292,7 @@ int main(int argc, char** argv){
 
 	    		case SDL_QUIT :
 					programme_launched = SDL_FALSE; 
-					break;		//quitte le programme (croix)
+					break;	//quitte le programme (croix)
 
 	    		default :
 					break;	//affichage par defaut jul
@@ -1301,13 +1313,15 @@ int main(int argc, char** argv){
 }
 
 //ERREUR
-void SDL_ExitError(const char *message){
+void SDL_ExitError(const char *message)
+{
 	SDL_Log("ERREUR : %s > %s\n", message, SDL_GetError()); //affiche message et l'erreur
 	SDL_Quit();
 	exit(EXIT_FAILURE);	//quitte la sdl
 }
 
-void SDL_ExitError2(const char *message, SDL_Renderer *renderer, SDL_Window *window){
+void SDL_ExitError2(const char *message, SDL_Renderer *renderer, SDL_Window *window)
+{
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Log("ERREUR : %s > %s\n", message, SDL_GetError()); //affiche message et l'erreur
@@ -1510,6 +1524,26 @@ void affichage_pions(int plateau_tour[56][2], int plateau_centre[4][6][2], int p
 	}
 }
 
+//text
+void affiche_text(SDL_Surface *image, SDL_Texture *texture, TTF_Font *police, SDL_Color couleur, SDL_Rect pos_image, const char* text, SDL_Renderer *renderer, SDL_Window *window)
+{
+	image = TTF_RenderText_solide(police, text, couleur);
+	if(image == NULL)
+		SDL_ExitError2("Affichage image echouee", renderer, window);
+
+	texture = SDL_CreateTextureFromSurface(renderer, image);
+	SDL_FreeSurface(image);
+	if(texture == NULL)
+		SDL_ExitError2("Creation texture echouee", renderer, window);
+
+	if(SDL_QueryTexture(texture, NULL, NULL, &pos_image.w, &pos_image.h) != 0)
+		SDL_ExitError2("Chargement texture echouee", renderer, window);
+
+	if(SDL_RenderCopy(renderer, texture, NULL, &pos_image) != 0)
+		SDL_ExitError2("Affichage texture echouee", renderer, window);
+
+}
+
 //CLIC DANS UN ESPACE (a utiliser dans MOUSEBUTTONDOWN)
 
 int clic_gauche(int x_min, int x_max, int y_min, int y_max, SDL_Event event)
@@ -1670,12 +1704,12 @@ void	liste_actions_possibles(JOUEUR *tab_j, int num_j, int de)
 	for(i=0;i<NB_PIONS;i++){
 		if(tab_j[num_j].p[i].etat==0){
 			if(de==6) tab_j[num_j].p[i].d[0]=1;				//le pion i peu sortir de l'ecurie
-			else tab_j[num_j].p[i].d[3]=1;				//le pion i ne peut pas bouger
+			else tab_j[num_j].p[i].d[3]=1;					//le pion i ne peut pas bouger
 		}
 		if(tab_j[num_j].p[i].etat==1) tab_j[num_j].p[i].d[1]=1;			//le pion i peu se deplacer autour du plateau
 		if(tab_j[num_j].p[i].etat==2){
 			if(tab_j[num_j].p[i].centre==de-1) tab_j[num_j].p[i].d[2]=1;	//le pion i peu se deplacer au centre du plateua
-			else tab_j[num_j].p[i].d[3]=1;				//le pion i ne peut pas bouger
+			else tab_j[num_j].p[i].d[3]=1;					//le pion i ne peut pas bouger
 		}
 	}
 }
@@ -2116,8 +2150,10 @@ void	charger_sauvegarde(int id_sauvegarde, PARTIE *partie, JOUEUR *tab_j, int* d
 
 void	gerer_fichier_sauvegarde()
 {
-	/*affiche les sauvegarde, propose de reinisialiser le fichier ou de supprimmer une sauvegarde*/
-	/*propose egalement de visionner le contenu d'une sauvegarde -> pas encore fait*/
+/*
+	affiche les sauvegarde, propose de reinisialiser le fichier ou de supprimmer une sauvegarde
+	propose egalement de visionner le contenu d'une sauvegarde -> pas encore fait
+*/
 
 	char	rep[MAX_REP];
 
