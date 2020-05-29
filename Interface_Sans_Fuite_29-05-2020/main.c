@@ -623,14 +623,11 @@ int main(int argc, char** argv){
 										affiche_image(&image_fond_morpion, &texture_fond_morpion, pos_image, "image/morpion.bmp", renderer, window);		//chargement image morpion
 										croix_morpion(renderer,window,image_croix,texture_croix,image_rond,texture_rond);
 										while(SDL_PollEvent(&event_morpion)){
-											printf("clear image \n");
-
 
 											switch(event_morpion.type){
 
 													//clic
 													case SDL_MOUSEBUTTONDOWN :
-													printf("clear image \n");
 														clear_image(&texture_croix,&image_croix);	
 														clear_image(&texture_rond,&image_rond); 
 														click_morpion(renderer, window, &event_morpion,0,Grille, &Tjoue,image_fond_morpion ,texture_fond_morpion); /* on teste si le clique correspond à un endroit utile */
@@ -1176,7 +1173,7 @@ void verification(int y,int x,int **Grille,SDL_Renderer *renderer, SDL_Window *w
                 if (Grille[y][i]==2){
                     rond++;
                 }
-				printf("croix : %d rond : %d \n",croix,rond);
+
                 if (croix == a){
                     end = 1;
                     // Le joueur a gagné
@@ -1188,11 +1185,11 @@ void verification(int y,int x,int **Grille,SDL_Renderer *renderer, SDL_Window *w
 
                 }
                 if(croix==0 && rond == a-1){
-					printf("croix : %d rond : %d \n",croix,rond);
+
                     lignegagn ='h'; //L'ordinateur lancera sa stratégie défensive concernant la ligne horizontale
                 }
                 if(croix==a-1 && rond ==0){
-					printf("croix : %d rond : %d \n",croix,rond);
+
                     lignedef ='h'; //L'ordinateur lancera sa stratégie défensive concernant la ligne horizontale
                 }
 
@@ -1207,7 +1204,7 @@ void verification(int y,int x,int **Grille,SDL_Renderer *renderer, SDL_Window *w
                     if (Grille[k][x]==2){
                         rond++;
                     }
-					printf("croix : %d rond : %d \n",croix,rond);
+
                     if (croix == a){
                         end =1;
                         // Le joueur a gagné
@@ -1219,11 +1216,11 @@ void verification(int y,int x,int **Grille,SDL_Renderer *renderer, SDL_Window *w
 
                     }
                     if(croix==0 && rond ==a-1){
-						printf("croix : %d rond : %d \n",croix,rond);
+
                         lignegagn ='v'; //L'ordinateur lancera sa stratégie gagnante concernant la ligne verticale
                     }
                     if(croix==a-1 && rond ==0){
-						printf("croix : %d rond : %d \n",croix,rond);
+
                         lignedef ='v'; //L'ordinateur lancera sa stratégie défensive concernant la ligne verticale
                     }
                 }
@@ -1240,7 +1237,7 @@ void verification(int y,int x,int **Grille,SDL_Renderer *renderer, SDL_Window *w
                 if (Grille[y][i]==2){
                     rond++;
                 }
-				printf("croix : %d rond : %d \n",croix,rond);
+
                 if (croix == a){
                     end =1;
                     // Le joueur a gagné
@@ -1250,11 +1247,11 @@ void verification(int y,int x,int **Grille,SDL_Renderer *renderer, SDL_Window *w
                     //L'ordinateur a gagné
                 }
                 if(croix==0 && rond ==a-1){
-					printf("croix : %d rond : %d \n",croix,rond);
+
                     lignegagn ='h'; //L'ordinateur lancera sa stratégie gagnante concernant la ligne horizontale
                 }
                 if(croix==a-1 && rond ==0){
-					printf("croix : %d rond : %d \n",croix,rond);
+
                     lignedef ='h'; //L'ordinateur lancera sa stratégie défensive concernant la ligne horizontale
                 }
             }
@@ -1269,7 +1266,7 @@ void verification(int y,int x,int **Grille,SDL_Renderer *renderer, SDL_Window *w
                     if (Grille[k][x]==2){
                         rond++;
                     }
-					printf("croix : %d rond : %d \n",croix,rond);
+
                     if (croix == a){
                         end =1;
                         // Le joueur a gagné
@@ -1281,11 +1278,11 @@ void verification(int y,int x,int **Grille,SDL_Renderer *renderer, SDL_Window *w
 
                     }
                     if(croix==0 && rond ==a-1){
-						printf("croix : %d rond : %d \n",croix,rond);
+
                         lignegagn ='v';  //L'ordinateur lancera sa stratégie défensive concernant la ligne verticale
                     }
                     if(croix==a-1 && rond ==0){
-						printf("croix : %d rond : %d \n",croix,rond);
+
                         lignedef ='v';  //L'ordinateur lancera sa stratégie défensive concernant la ligne verticale
                     }
                 }
@@ -1300,7 +1297,7 @@ void verification(int y,int x,int **Grille,SDL_Renderer *renderer, SDL_Window *w
                 if (Grille[z][z]==2){
                     rond++;
                 }
-				printf("croix : %d rond : %d \n",croix,rond);
+
                 if (croix == a){
                     end =1;
                     // Le joueur  gagné
@@ -1314,11 +1311,11 @@ void verification(int y,int x,int **Grille,SDL_Renderer *renderer, SDL_Window *w
 
                 }
                 if(croix==0 && rond ==a-1){
-					printf("croix : %d rond : %d \n",croix,rond);
+
                     lignegagn ='d';   //L'ordinateur lancera sa stratégie défensive concernant la diagonale descendante
                 }
                 if(croix==a-1 && rond ==0){
-					printf("croix : %d rond : %d \n",croix,rond);
+
                     lignedef ='d';   //L'ordinateur lancera sa stratégie défensive concernant la diagonale descendante
                 }
             }
@@ -1335,7 +1332,7 @@ void verification(int y,int x,int **Grille,SDL_Renderer *renderer, SDL_Window *w
                 if (Grille[y][i]==2){
                     rond++;
                 }
-				printf("croix : %d rond : %d \n",croix,rond);
+
                 if (croix == a){
                     end =1;
                     //Le joueur a gagné
@@ -1345,11 +1342,11 @@ void verification(int y,int x,int **Grille,SDL_Renderer *renderer, SDL_Window *w
                     //L'ordinateur a gagné
                 }
                 if(croix==0 && rond ==a-1){
-					printf("croix : %d rond : %d \n",croix,rond);
+
                     lignegagn ='h';  //L'ordinateur lancera sa stratégie défensive concernant la ligne horizontale
                 }
                 if(croix==a-1 && rond ==0){
-					printf("croix : %d rond : %d \n",croix,rond);
+	
                     lignedef ='h';  //L'ordinateur lancera sa stratégie défensive concernant la ligne horizontale
                 }
             }
@@ -1364,7 +1361,7 @@ void verification(int y,int x,int **Grille,SDL_Renderer *renderer, SDL_Window *w
                     if (Grille[k][x]==2){
                         rond++;
                     }
-					printf("croix : %d rond : %d \n",croix,rond);
+		
                     if (croix == a){
                         end =1;
                         //Le joueur a gagné
@@ -1374,11 +1371,11 @@ void verification(int y,int x,int **Grille,SDL_Renderer *renderer, SDL_Window *w
                         //L'ordinateur a gagné
                     }
                     if(croix==0 && rond ==a-1){
-						printf("croix : %d rond : %d \n",croix,rond);
+	
                         lignegagn ='v'; //L'ordinateur lancera sa stratégie défensive concernant la ligne verticale
                     }
                     if(croix==a-1 && rond ==0){
-						printf("croix : %d rond : %d \n",croix,rond);
+
                         lignedef ='v'; //L'ordinateur lancera sa stratégie défensive concernant la ligne verticale
                     }
                 }
@@ -1393,7 +1390,7 @@ void verification(int y,int x,int **Grille,SDL_Renderer *renderer, SDL_Window *w
                     if (Grille[z-1][a-z]==2){
                         rond++;
                     }
-					printf("croix : %d rond : %d \n",croix,rond);
+
                     if (croix == a){
                         end =1;
                         // Le joueur a gagné
@@ -1403,11 +1400,11 @@ void verification(int y,int x,int **Grille,SDL_Renderer *renderer, SDL_Window *w
                         //L'ordinateur a gagné
                     }
                     if(croix==0 && rond ==a-1){
-						printf("croix : %d rond : %d \n",croix,rond);
+
                         lignegagn ='D';    //L'ordinateur lancera sa stratégie défensive concernant la diagonale ascendante 
                     }
                     if(croix==a-1 && rond ==0){
-						printf("croix : %d rond : %d \n",croix,rond);
+
                         lignedef ='D';    //L'ordinateur lancera sa stratégie défensive concernant la diagonale ascendante
                     }
                 }
@@ -1424,7 +1421,7 @@ void verification(int y,int x,int **Grille,SDL_Renderer *renderer, SDL_Window *w
                 if (Grille[y][i]==2){
                     rond++;
                 }
-				printf("croix : %d rond : %d \n",croix,rond);
+
                 if (croix == a){
                     end =1;
                     // Le joueur a gagné
@@ -1434,11 +1431,11 @@ void verification(int y,int x,int **Grille,SDL_Renderer *renderer, SDL_Window *w
                     //L'ordinateur a gagné
                 }
                 if(croix==0 && rond ==a-1){
-					printf("croix : %d rond : %d \n",croix,rond);
+
                     lignegagn ='h';    //L'ordinateur lancera sa stratégie défensive concernant la ligne horizontale
                 }
                 if(croix==a-1 && rond ==0){
-					printf("croix : %d rond : %d \n",croix,rond);
+
                     lignedef ='h';    //L'ordinateur lancera sa stratégie défensive concernant la ligne horizontale
                 }
             }
@@ -1454,7 +1451,7 @@ void verification(int y,int x,int **Grille,SDL_Renderer *renderer, SDL_Window *w
                 if (Grille[k][x]==2){
                     rond++;
                 }
-				printf("croix : %d rond : %d \n",croix,rond);
+
                 if (croix == a){
                     end =1;
                     // Le joueur a gagné
@@ -1464,11 +1461,11 @@ void verification(int y,int x,int **Grille,SDL_Renderer *renderer, SDL_Window *w
                     //L'ordinateur a gagné
                 }
                 if(croix==0 && rond == a-1){
-					printf("croix : %d rond : %d \n",croix,rond);
+
                     lignegagn ='v';  //L'ordinateur lancera sa stratégie défensive concernant la ligne horizontale
                 }
                 if(croix==a-1 && rond ==0){
-					printf("croix : %d rond : %d \n",croix,rond);
+
                     lignedef ='v';  //L'ordinateur lancera sa stratégie défensive concernant la ligne horizontale
                 }
             }
@@ -1483,7 +1480,6 @@ void verification(int y,int x,int **Grille,SDL_Renderer *renderer, SDL_Window *w
                     if (Grille[z][a-z-1]==2){
                         rond++;
                     }
-					printf("croix : %d rond : %d \n",croix,rond);
                     if (croix == a){
                         end =1;
                         // Le joueur a gagné
@@ -1496,11 +1492,9 @@ void verification(int y,int x,int **Grille,SDL_Renderer *renderer, SDL_Window *w
 
                     }
                     if(croix==0 && rond ==a-1){
-						printf("croix : %d rond : %d \n",croix,rond);
                         lignegagn ='D';    //L'ordinateur lancera sa stratégie défensive concernant la diagonale ascendante
                     }
                     if(croix==a-1 && rond ==0){
-						printf("croix : %d rond : %d \n",croix,rond);
                         lignedef ='D';    //L'ordinateur lancera sa stratégie défensive concernant la diagonale ascendante
                     }
                 }
@@ -1515,7 +1509,6 @@ void verification(int y,int x,int **Grille,SDL_Renderer *renderer, SDL_Window *w
                     if (Grille[z][z]==2){
                         rond++;
                     }
-					printf("croix : %d rond : %d \n",croix,rond);
                     if (croix == a){
                         end =1;
                         // Le joueur a gagné
@@ -1525,11 +1518,9 @@ void verification(int y,int x,int **Grille,SDL_Renderer *renderer, SDL_Window *w
                         //L'ordinateur a gagné
                     }
                     if(croix==0 && rond ==1){
-						printf("croix : %d rond : %d \n",croix,rond);
                         lignegagn ='d';     //L'ordinateur lancera sa stratégie défensive concernant la diagonale descendante
                     }
                     if(croix==a-1 && rond ==0){
-						printf("croix : %d rond : %d \n",croix,rond);
                         lignedef ='d';     //L'ordinateur lancera sa stratégie défensive concernant la diagonale descendante
                     }
                 }
@@ -1548,9 +1539,7 @@ void verification(int y,int x,int **Grille,SDL_Renderer *renderer, SDL_Window *w
         Partie_running = 0;
     }
     else{
-        printf("Verification : \n");
-        printf("Tjoue = %d \n",*Tjoue);
-         printf("end = %d \n",end);
+       
         printf("def %c gagn %c \n",lignedef,lignegagn);
         if(*Tjoue== 0 && end != 1){
             /* l'ordinateur doit jouer */
@@ -1595,7 +1584,7 @@ void ordiJoue(int X, int Y, char lignegagn , char lignedef, int ** Grille,SDL_Re
     if(lignegagn != NULL){
 		X = Xtemp;
 		Y = Ytemp;
-		printf("peut win \n");
+
         switch(lignegagn){
             case 'h' :
 				lignegagn = NULL;
@@ -1609,7 +1598,6 @@ void ordiJoue(int X, int Y, char lignegagn , char lignedef, int ** Grille,SDL_Re
 				if(Grille[Y][0] != 0 && Grille[Y][1] != 0 && Grille[Y][2] != 0){
 					counter = 1;
 				}
-				printf("je sort de la boucle\n");
             break;
             case 'v':
 				lignegagn = NULL;
@@ -1623,7 +1611,6 @@ void ordiJoue(int X, int Y, char lignegagn , char lignedef, int ** Grille,SDL_Re
 				if(Grille[0][X] != 0 && Grille[1][X] != 0 && Grille[2][X] != 0){
 					counter = 1;
 				}
-				printf("je sort de la boucle\n");
             break;
             case 'd':
 				lignegagn = NULL;
@@ -1637,7 +1624,6 @@ void ordiJoue(int X, int Y, char lignegagn , char lignedef, int ** Grille,SDL_Re
 				if(Grille[0][0] != 0 && Grille[1][1] != 0 && Grille[1][1] != 0){
 					counter = 1;
 				}
-				printf("je sort de la boucle\n");
             break;
             case 'D':
 				lignegagn = NULL;
@@ -1653,19 +1639,18 @@ void ordiJoue(int X, int Y, char lignegagn , char lignedef, int ** Grille,SDL_Re
 				if(Grille[3-1][3-3] != 0 && Grille[2-1][3-2] != 0 && Grille[1-1][3-1] != 0){
 					counter = 1;
 				}
-				printf("je sort de la boucle\n");
             break;
         }
     }
 	else if(lignedef != NULL){ /* on met en place la stratégie gagante de l'ordinateur */
-		printf("doit def \n");
+
         switch(lignedef){
             case 'h' :
                 for(i=0;i<3;i++){ /* horizontale */
                     printf(" y = %d\n",Y);
                     if(Grille[Y][i]== 0){
 						printf("Y = %d et X = %d",Y,i);
-                        printf(" i = %d\n",i);
+
                         click_vide(Y,i,Grille,renderer,window,Tjoue,image_croix,texture_croix,image_rond,texture_rond);
 						play =1;
                     }
@@ -1720,7 +1705,6 @@ void ordiJoue(int X, int Y, char lignegagn , char lignedef, int ** Grille,SDL_Re
         int try =1;
         while(try == 1){
             clock_t aleatoire = clock();
-            printf("ticks :%lu\n",aleatoire);
             srand(aleatoire*time(NULL));
             X = rand()*3/(RAND_MAX+1.0);
             srand(aleatoire*time(NULL)*96);
@@ -1736,7 +1720,7 @@ void ordiJoue(int X, int Y, char lignegagn , char lignedef, int ** Grille,SDL_Re
         int try =1;
         while(try == 1){
             clock_t aleatoire = clock();
-            printf("ticks :%lu\n",aleatoire);
+
             srand(aleatoire*time(NULL));
             X = rand()*3/(RAND_MAX+1.0);
             srand(aleatoire*time(NULL)*96);
@@ -1905,7 +1889,7 @@ void click_morpion(SDL_Renderer *renderer, SDL_Window *window, SDL_Event *event1
 	
 	if(clic_gauche(300, 500,190, 342, *event1))	{			//case 1
 		printf(" case 1");
-		printf("Tjoue = %d\n",*Tjoue);
+
 		valide =1;
 		Xa =0;
 		Ya =0;
@@ -2046,24 +2030,19 @@ void click_morpion(SDL_Renderer *renderer, SDL_Window *window, SDL_Event *event1
 	if(clic_gauche(62, 242,645,681, *event1) || clic_gauche(1167, 1257, 8, 74, *event1)){
 		CROIX1 = 0; CROIX2 = 0; CROIX3 = 0; CROIX4 = 0; CROIX5 = 0; CROIX6 = 0; CROIX7 = 0; CROIX8 = 0; CROIX9 = 0; 
 		ROND1 = 0; ROND2 = 0; ROND3 = 0; ROND4 = 0; ROND5 = 0; ROND6 = 0; ROND7 = 0; ROND8 = 0; ROND9 = 0; 
-		printf("test1\n");
 		Partie_running = 0;
-		printf("test3\n");
+
 
 		clear_image(&texture_fond_morpion,&image_fond_morpion);
-		printf("clear croix\n");
+
 	}
 
 	if(event1->type == SDL_QUIT){
 		CROIX1 = 0; CROIX2 = 0; CROIX3 = 0; CROIX4 = 0; CROIX5 = 0; CROIX6 = 0; CROIX7 = 0; CROIX8 = 0; CROIX9 = 0; 
 		ROND1 = 0; ROND2 = 0; ROND3 = 0; ROND4 = 0; ROND5 = 0; ROND6 = 0; ROND7 = 0; ROND8 = 0; ROND9 = 0; 
-		printf("test1\n");
 
-		printf("test2\n");
-
-		printf("test3\n");
 		clear_image(&texture_fond_morpion,&image_fond_morpion);
-		printf("clear croix\n");
+
 	}
 }
 void afficher_symbole(SDL_Renderer *renderer, SDL_Window *window,int posy , int posx, int* Tjoue,SDL_Surface *image_croix,SDL_Texture *texture_croix,SDL_Surface *image_rond,SDL_Texture *texture_rond){
@@ -2097,18 +2076,14 @@ void afficher_symbole(SDL_Renderer *renderer, SDL_Window *window,int posy , int 
         pos_shape.x = 820;
         break;
     }
-	printf("*Tjoue = %d",*Tjoue);
-	printf("Tjoue = %d",Tjoue);
+
 	if(*Tjoue == 0){ /* tour du joueur */
 
-	printf(" j'affiche un croix");
 
     affiche_image(&image_croix, &texture_croix, pos_shape, "image/croix_morpion.bmp", renderer, window);
     }
     else{
 
-	printf(" j'affiche un rond");
-	printf("texutre : %d et image rond : %d\n",&texture_rond,&image_rond);
     affiche_image(&image_croix, &texture_croix, pos_shape, "image/rond_morpion.bmp", renderer, window);
 	
     }
