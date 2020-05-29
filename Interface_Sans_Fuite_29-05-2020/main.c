@@ -622,14 +622,17 @@ int main(int argc, char** argv){
 										clear_image(&texture_fond_morpion, &image_fond_morpion);																//liberation image morpion
 										affiche_image(&image_fond_morpion, &texture_fond_morpion, pos_image, "image/morpion.bmp", renderer, window);		//chargement image morpion
 										croix_morpion(renderer,window,image_croix,texture_croix,image_rond,texture_rond);
-
 										while(SDL_PollEvent(&event_morpion)){
+											printf("clear image \n");
+
 
 											switch(event_morpion.type){
 
 													//clic
 													case SDL_MOUSEBUTTONDOWN :
-
+													printf("clear image \n");
+														clear_image(&texture_croix,&image_croix);	
+														clear_image(&texture_rond,&image_rond); 
 														click_morpion(renderer, window, &event_morpion,0,Grille, &Tjoue,image_fond_morpion ,texture_fond_morpion); /* on teste si le clique correspond à un endroit utile */
 
 														//clic sur la croix rouge -> quitte le jeu 
@@ -657,8 +660,6 @@ int main(int argc, char** argv){
 													default: 
 													continue;
 													break;
-							
-											
 											}
 										}
 
@@ -1765,18 +1766,22 @@ void croix_morpion(SDL_Renderer *renderer, SDL_Window *window,SDL_Surface *image
 		pos_shape.x = 370;
 		pos_shape.y = 230;
 		affiche_image(&image_croix, &texture_croix, pos_shape, "image/croix_morpion.bmp", renderer, window);
+		clear_image(&texture_croix,&image_croix);	
+		
 	}
 	
 	if(CROIX2 == 1){
 		pos_shape.x = 595;
 		pos_shape.y = 230;
 		affiche_image(&image_croix, &texture_croix, pos_shape, "image/croix_morpion.bmp", renderer, window);
+		clear_image(&texture_croix,&image_croix);	
 	}
 
 	if(CROIX3 == 1){
 		pos_shape.x = 820;
 		pos_shape.y = 230;
 		affiche_image(&image_croix, &texture_croix, pos_shape, "image/croix_morpion.bmp", renderer, window);
+		clear_image(&texture_croix,&image_croix);	
 	}
 
 	//LIGNE2
@@ -1785,16 +1790,19 @@ void croix_morpion(SDL_Renderer *renderer, SDL_Window *window,SDL_Surface *image
 		pos_shape.x = 370;
 		pos_shape.y = 385;
 		affiche_image(&image_croix, &texture_croix, pos_shape, "image/croix_morpion.bmp", renderer, window);
+		clear_image(&texture_croix,&image_croix);	
 	}
 	if(CROIX5 == 1){
 		pos_shape.x = 595;
 		pos_shape.y = 385;
 		affiche_image(&image_croix, &texture_croix, pos_shape, "image/croix_morpion.bmp", renderer, window);
+		clear_image(&texture_croix,&image_croix);	
 	}
 	if(CROIX6 == 1){
 		pos_shape.x = 820;
 		pos_shape.y = 385;
 		affiche_image(&image_croix, &texture_croix, pos_shape, "image/croix_morpion.bmp", renderer, window);
+		clear_image(&texture_croix,&image_croix);	
 	}
 
 	//LIGNE3
@@ -1802,34 +1810,40 @@ void croix_morpion(SDL_Renderer *renderer, SDL_Window *window,SDL_Surface *image
 		pos_shape.x = 370;
 		pos_shape.y = 530;
 		affiche_image(&image_croix, &texture_croix, pos_shape, "image/croix_morpion.bmp", renderer, window);
+		clear_image(&texture_croix,&image_croix);	
 	}
 	if(CROIX8 == 1){
 		pos_shape.x = 595;
 		pos_shape.y = 530;
 		affiche_image(&image_croix, &texture_croix, pos_shape, "image/croix_morpion.bmp", renderer, window);
+		clear_image(&texture_croix,&image_croix);	
 	}
 	if(CROIX9 == 1){
 		pos_shape.x = 820;
 		pos_shape.y = 530;
 		affiche_image(&image_croix, &texture_croix, pos_shape, "image/croix_morpion.bmp", renderer, window);
+		clear_image(&texture_croix,&image_croix);	
 	}
-	clear_image(&texture_croix,&image_croix);
+
 	if(ROND1 == 1){
 		pos_shape.x = 370;
 		pos_shape.y = 230;
 		affiche_image(&image_rond, &texture_rond, pos_shape, "image/rond_morpion.bmp", renderer, window);
+		clear_image(&texture_rond,&image_rond);
 	}
 	
 	if(ROND2 == 1){
 		pos_shape.x = 595;
 		pos_shape.y = 230;
 		affiche_image(&image_rond, &texture_rond, pos_shape, "image/rond_morpion.bmp", renderer, window);
+		clear_image(&texture_rond,&image_rond);
 	}
 
 	if(ROND3 == 1){
 		pos_shape.x = 820;
 		pos_shape.y = 230;
 		affiche_image(&image_rond, &texture_rond, pos_shape, "image/rond_morpion.bmp", renderer, window);
+		clear_image(&texture_rond,&image_rond);
 	}
 
 	//LIGNE2
@@ -1838,16 +1852,19 @@ void croix_morpion(SDL_Renderer *renderer, SDL_Window *window,SDL_Surface *image
 		pos_shape.x = 370;
 		pos_shape.y = 385;
 		affiche_image(&image_rond, &texture_rond, pos_shape, "image/rond_morpion.bmp", renderer, window);
+		clear_image(&texture_rond,&image_rond);
 	}
 	if(ROND5 == 1){
 		pos_shape.x = 595;
 		pos_shape.y = 385;
 		affiche_image(&image_rond, &texture_rond, pos_shape, "image/rond_morpion.bmp", renderer, window);
+		clear_image(&texture_rond,&image_rond);
 	}
 	if(ROND6 == 1){
 		pos_shape.x = 820;
 		pos_shape.y = 385;
 		affiche_image(&image_rond, &texture_rond, pos_shape, "image/rond_morpion.bmp", renderer, window);
+		clear_image(&texture_rond,&image_rond);
 	}
 
 	//LIGNE3
@@ -1855,6 +1872,7 @@ void croix_morpion(SDL_Renderer *renderer, SDL_Window *window,SDL_Surface *image
 		pos_shape.x = 370;
 		pos_shape.y = 530;
 		affiche_image(&image_rond, &texture_rond, pos_shape, "image/rond_morpion.bmp", renderer, window);
+		clear_image(&texture_rond,&image_rond);
 	}
 	if(ROND8 == 1){
 		pos_shape.x = 595;
@@ -1867,9 +1885,9 @@ void croix_morpion(SDL_Renderer *renderer, SDL_Window *window,SDL_Surface *image
 		pos_shape.x = 820;
 		pos_shape.y = 530;
 		affiche_image(&image_rond, &texture_rond, pos_shape, "image/rond_morpion.bmp", renderer, window);
+		clear_image(&texture_rond,&image_rond);
 
 	}
-	clear_image(&texture_rond,&image_rond);
 }
 
 void click_morpion(SDL_Renderer *renderer, SDL_Window *window, SDL_Event *event1, int restart,int ** Grille,int *Tjoue,SDL_Surface *image_fond_morpion,SDL_Texture *texture_fond_morpion){
@@ -2012,7 +2030,7 @@ void click_morpion(SDL_Renderer *renderer, SDL_Window *window, SDL_Event *event1
 			
 		}	
 	}
-
+	
 
 	//restart
 	if(restart){
@@ -2031,6 +2049,7 @@ void click_morpion(SDL_Renderer *renderer, SDL_Window *window, SDL_Event *event1
 		printf("test1\n");
 		Partie_running = 0;
 		printf("test3\n");
+
 		clear_image(&texture_fond_morpion,&image_fond_morpion);
 		printf("clear croix\n");
 	}
@@ -2039,9 +2058,9 @@ void click_morpion(SDL_Renderer *renderer, SDL_Window *window, SDL_Event *event1
 		CROIX1 = 0; CROIX2 = 0; CROIX3 = 0; CROIX4 = 0; CROIX5 = 0; CROIX6 = 0; CROIX7 = 0; CROIX8 = 0; CROIX9 = 0; 
 		ROND1 = 0; ROND2 = 0; ROND3 = 0; ROND4 = 0; ROND5 = 0; ROND6 = 0; ROND7 = 0; ROND8 = 0; ROND9 = 0; 
 		printf("test1\n");
-		clear_image(&texture_croix,&image_croix);
+
 		printf("test2\n");
-		clear_image(&texture_rond,&image_rond);
+
 		printf("test3\n");
 		clear_image(&texture_fond_morpion,&image_fond_morpion);
 		printf("clear croix\n");
@@ -2093,4 +2112,6 @@ void afficher_symbole(SDL_Renderer *renderer, SDL_Window *window,int posy , int 
     affiche_image(&image_croix, &texture_croix, pos_shape, "image/rond_morpion.bmp", renderer, window);
 	
     }
+/*	clear_image(&texture_croix,&image_croix);	
+	clear_image(&texture_rond,&image_rond); */
 } 
