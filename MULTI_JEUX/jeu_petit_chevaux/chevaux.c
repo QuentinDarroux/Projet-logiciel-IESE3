@@ -1240,9 +1240,9 @@ int jeu_chevaux(SDL_Event event, SDL_Window *window, SDL_Renderer *renderer){
 
 						case 3 : //menu sauvegardes
 
-							slct_reinitialiser = anim_bouton2(760, 1240, 361, 403, event, slct_reinitialiser);
-							slct_supprimer = anim_bouton2(760, 1240, 443, 485, event, slct_supprimer);
-							slct_quitter = anim_bouton2(760, 1240, 525, 567, event, slct_quitter);
+							slct_reinitialiser = anim_bouton(760, 1240, 361, 403, event, slct_reinitialiser);
+							slct_supprimer = anim_bouton(760, 1240, 443, 485, event, slct_supprimer);
+							slct_quitter = anim_bouton(760, 1240, 525, 567, event, slct_quitter);
 							break;
 
 						case 4 : //menu supprimer
